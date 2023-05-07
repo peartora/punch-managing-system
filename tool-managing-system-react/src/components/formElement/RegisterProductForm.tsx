@@ -7,11 +7,21 @@ function RegisterProductForm() {
   const [inspectionSize, setInspectionSize] = useState("");
 
   function handleSubmit() {
-    request.post(`/api/tool-managing-system/addProduct`, {
-      product: productName,
-      batchSize,
-      inspectionSize,
-    });
+    request
+      .post(`/api/tool-managing-system/addProduct`, {
+        product: productName,
+        batchSize,
+        inspectionSize,
+      })
+      .then((response) => {
+        if (!response.ok) {
+          // console.error(response.statusText);
+          throw new Error(`제품명 등록 중 error가 발생 하였습니다.`);
+        }
+        return response.text();
+      })
+      .then((result) => alert(result))
+      .catch((error) => console.error(error));
   }
 
   return (
