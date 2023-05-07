@@ -17,6 +17,9 @@ export default function NavBar() {
         <li className="nav-item">
           <Link to="/sign-in">로그인</Link>
         </li>
+        <li className="nav-item">
+          <Link to="/register-product">제품등록</Link>
+        </li>
         <ul>
           <button type="button" onClick={() => navigate("/gogogo")}>
             누르면 이동!

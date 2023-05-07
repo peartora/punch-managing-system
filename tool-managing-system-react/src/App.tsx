@@ -2,6 +2,7 @@ import { createHashRouter, RouterProvider } from "react-router-dom";
 
 import HomePage from "./pages/HomePage";
 import SignInPage from "./pages/SignInPage";
+import RegisterProductPage from "./pages/RegisterProductPage";
 
 const router = createHashRouter([
   {
@@ -11,6 +12,10 @@ const router = createHashRouter([
   {
     path: "/sign-in",
     element: <SignInPage />,
+  },
+  {
+    path: "/register-product",
+    element: <RegisterProductPage />,
   },
 ]);
 

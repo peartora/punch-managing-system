@@ -7,10 +7,10 @@ import { type PunchRow as PunchRowType } from "@/common/types";
 function PunchTable() {
   const [rows, setRows] = useState<Array<PunchRowType>>([]);
 
-  useEffect(() => {
-    const query = new URLSearchParams();
-    query.append("status", "사용중");
+  const query = new URLSearchParams();
+  query.append("status", "사용중");
 
+  useEffect(() => {
     request
       .get(`/api/tool-managing-system/display?${query}`)
       .then((response) => {
