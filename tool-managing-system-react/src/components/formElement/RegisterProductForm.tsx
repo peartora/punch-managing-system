@@ -6,22 +6,37 @@ function RegisterProductForm() {
   const [batchSize, setBatchSize] = useState("");
   const [inspectionSize, setInspectionSize] = useState("");
 
+  const query = new URLSearchParams();
+  query.append("product", productName);
+
   function handleSubmit() {
     request
-      .post(`/api/tool-managing-system/addProduct`, {
-        product: productName,
-        batchSize,
-        inspectionSize,
-      })
+      .get(`/api/tool-managing-system//duplicateProduct?${query}`)
       .then((response) => {
-        if (!response.ok) {
-          // console.error(response.statusText);
-          throw new Error(`제품명 등록 중 error가 발생 하였습니다.`);
-        }
+        if (!response.ok)
+          throw new Error(`동일 제품 확인 중 error가 발생 하였습니다.`);
         return response.text();
       })
-      .then((result) => alert(result))
-      .catch((error) => console.error(error));
+      .then((response) => {
+        if (response === "0") {
+          request
+            .post(`/api/tool-managing-system/addProduct`, {
+              product: productName,
+              batchSize,
+              inspectionSize,
+            })
+            .then((response) => {
+              if (!response.ok)
+                throw new Error(`제품명 등록 중 error가 발생 하였습니다.`);
+              return response.text();
+            })
+            .then((result) => alert(result))
+            .catch((error) => console.error(error));
+        } else {
+          throw new Error(`${productName}은 이미 등록 된 제품 입니다.`);
+        }
+      })
+      .catch((error) => alert(error));
   }
 
   return (
