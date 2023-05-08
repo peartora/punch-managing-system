@@ -57,9 +57,12 @@ public class ApiController
     }
 
     @GetMapping("/duplicate")
-    public int returnCheckResult(@RequestParam String id)
+    public int returnCheckResult(@RequestParam String punchId)
     {
-        int count = this.dao.checkDuplicate(id);
+        System.out.println("punchId");
+        System.out.println(punchId);
+
+        int count = this.dao.checkDuplicate(punchId);
 
         return count;
     }

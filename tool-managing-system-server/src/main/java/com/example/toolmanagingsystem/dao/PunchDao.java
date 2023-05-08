@@ -137,15 +137,15 @@ public class PunchDao
 
     public void updateNewStatus(Map<String, Object> params)
     {
-        this.template.update("update `punch-list` set `status` = :newStatus where `number` = :id", params);
+        this.template.update("update `punch-list` set `status` = :newStatus where `number` = :punchId", params);
     }
 
-    public int checkDuplicate(String id)
+    public int checkDuplicate(String punchId)
     {
         Map<String, String> idMap = new HashMap<>();
-        idMap.put("id", id);
+        idMap.put("punchId", punchId);
 
-        return this.template.queryForObject("select count(*) from `punch-list` where `number` = :id", idMap, Integer.class);
+        return this.template.queryForObject("select count(*) from `punch-list` where `number` = :punchId", idMap, Integer.class);
     }
 
     public void deletePunch(PunchScrapDao punchScrapDao)

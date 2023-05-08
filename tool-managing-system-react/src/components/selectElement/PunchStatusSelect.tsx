@@ -1,10 +1,19 @@
 import { type PunchStatus } from "@/common/types";
+import { request } from "./../../common/Service";
 
 type Props = {
   punchStatus: PunchStatus;
+  punchId: string;
 };
 
-function PunchStatusSelect({ punchStatus }: Props) {
+type Data = {
+  punchId: string;
+  newStatus: string;
+};
+
+function PunchStatusSelect({ punchStatus, punchId }: Props) {
+  console.log(punchId);
+
   const options = ["사용대기", "사용가능", "사용중", "사용불가", "폐기"];
 
   const results = options.map((option) => {
@@ -49,8 +58,27 @@ function PunchStatusSelect({ punchStatus }: Props) {
     }
   });
 
+  function handleChange(e: any) {
+    const newStatus = e.target.value;
+
+    const data: Data = {
+      punchId: punchId,
+      newStatus: newStatus,
+    };
+
+    request
+      .post(`/api/tool-managing-system/updateStatus`, data)
+      .then((response) => {
+        if (!response.ok)
+          new Error(`새로운 펀치 상태 변경 중 error가 발생 하였습니다.`);
+        return response.text();
+      })
+      .then((result) => alert(result))
+      .catch((error) => console.error(error));
+  }
+
   return (
-    <select value={punchStatus} onChange={() => alert("바뀌었다!")}>
+    <select value={punchStatus} onChange={(e) => handleChange(e)}>
       {results}
     </select>
   );

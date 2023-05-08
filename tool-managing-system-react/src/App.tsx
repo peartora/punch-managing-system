@@ -3,6 +3,7 @@ import { createHashRouter, RouterProvider } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import SignInPage from "./pages/SignInPage";
 import RegisterProductPage from "./pages/RegisterProductPage";
+import RegisterPunchPage from "./pages/RegisterPunchPage";
 
 const router = createHashRouter([
   {
@@ -16,6 +17,10 @@ const router = createHashRouter([
   {
     path: "/register-product",
     element: <RegisterProductPage />,
+  },
+  {
+    path: "/register-punch",
+    element: <RegisterPunchPage />,
   },
 ]);
 
