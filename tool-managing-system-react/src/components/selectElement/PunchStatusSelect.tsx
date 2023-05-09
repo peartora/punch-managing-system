@@ -73,7 +73,10 @@ function PunchStatusSelect({ punchStatus, punchId }: Props) {
           new Error(`새로운 펀치 상태 변경 중 error가 발생 하였습니다.`);
         return response.text();
       })
-      .then((result) => alert(result))
+      .then((result) => {
+        alert(result);
+        e.target.value = newStatus;
+      })
       .catch((error) => console.error(error));
   }
 

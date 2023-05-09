@@ -18,30 +18,29 @@ type Props = {
 
 function PunchRow({ row }: Props) {
   return (
-    <>
-      <tr>
-        <PunchIdTd punchId={row.punchId} />
-        <SupplierTd supplier={row.supplier} />
-        <SpecificationTd specification={row.specification} />
-        <InspectionHistoryTd
-          latestInspectionHistory={row.latestInspectionHistory}
+    <tr>
+      <PunchIdTd punchId={row.punchId} />
+      <SupplierTd supplier={row.supplier} />
+      <SpecificationTd specification={row.specification} />
+      <InspectionHistoryTd
+        latestInspectionHistory={row.latestInspectionHistory}
+      />
+      <td>
+        <PunchStatusSelect
+          punchStatus={row.punchStatus}
+          punchId={row.punchId}
         />
-        <td>
-          <PunchStatusSelect punchStatus={row.punchStatus} />
-        </td>
-        <PunchStorageLocationTd
-          punchStorageLocation={row.punchStorageLocation}
-        />
-        <ProductTd product={row.product} />
-        <ProductTypeTd productType={row.productType} />
-        <CleaningHistoryTd latestCleaningHistory={row.latestCleaningHistory} />
-        <TotalUsageNumberTd totalUsageNumber={row.totalUsageNumber} />
-        <td>
-          <UsageInput />
-        </td>
-        <td>{row.maxUsageNumber}</td>
-      </tr>
-    </>
+      </td>
+      <PunchStorageLocationTd punchStorageLocation={row.punchStorageLocation} />
+      <ProductTd product={row.product} />
+      <ProductTypeTd productType={row.productType} />
+      <CleaningHistoryTd latestCleaningHistory={row.latestCleaningHistory} />
+      <TotalUsageNumberTd totalUsageNumber={row.totalUsageNumber} />
+      <td>
+        <UsageInput />
+      </td>
+      <td>{row.maxUsageNumber}</td>
+    </tr>
   );
 }
 
