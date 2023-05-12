@@ -11,7 +11,7 @@ function RegisterProductForm() {
 
   function handleSubmit() {
     request
-      .get(`/api/tool-managing-system//duplicateProduct?${query}`)
+      .get(`/api/tool-managing-system/duplicateProduct?${query}`)
       .then((response) => {
         if (!response.ok)
           throw new Error(`동일 제품 확인 중 error가 발생 하였습니다.`);

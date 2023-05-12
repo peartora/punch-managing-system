@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import PunchIdTd from "./tdElements/PunchIdTd";
 import SupplierTd from "./tdElements/SupplierTd";
 import SpecificationTd from "./tdElements/SpecificationTd";
@@ -7,18 +9,34 @@ import ProductTd from "./tdElements/ProductTd";
 import ProductTypeTd from "./tdElements/ProductTypeTd";
 import CleaningHistoryTd from "./tdElements/CleaningHistoryTd";
 import TotalUsageNumberTd from "./tdElements/TotalUsageNumberTd";
-import UsageInput from "./inputElement/UsageInput";
 
 import { type PunchRow } from "@/common/types";
 import PunchStatusSelect from "./selectElement/PunchStatusSelect";
+import CheckBox from "./checkBox/CheckBox";
 
 type Props = {
   row: PunchRow;
+  selected: boolean;
 };
 
-function PunchRow({ row }: Props) {
+function PunchRow({ row, selected }: Props) {
+  const punchId = row.punchId;
+
+  console.log(selected);
+
+  function handlerChange(event: any) {
+    console.log(event.target.checked);
+  }
+
   return (
     <tr>
+      <td>
+        <CheckBox
+          onChange={(event) => handlerChange(event)}
+          punchId={punchId}
+          checked={selected}
+        />
+      </td>
       <PunchIdTd punchId={row.punchId} />
       <SupplierTd supplier={row.supplier} />
       <SpecificationTd specification={row.specification} />
@@ -36,9 +54,6 @@ function PunchRow({ row }: Props) {
       <ProductTypeTd productType={row.productType} />
       <CleaningHistoryTd latestCleaningHistory={row.latestCleaningHistory} />
       <TotalUsageNumberTd totalUsageNumber={row.totalUsageNumber} />
-      <td>
-        <UsageInput />
-      </td>
       <td>{row.maxUsageNumber}</td>
     </tr>
   );

@@ -16,18 +16,6 @@ type Data = {
   productType: string;
 };
 
-// private String number;
-// private LocalDate date;
-// private String type;
-// private String manufacturer;
-// private String specification;
-// private PunchStatus status;
-// private String location;
-// private int batchSize;
-// private int inspectionSize;
-// private String product;
-// private String productType;
-
 function RegisterPunchForm() {
   const [products, setProduct] = useState<string[]>([]);
   const [startNumber, setStartNumber] = useState("");

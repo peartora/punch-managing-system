@@ -12,7 +12,7 @@ type Data = {
 };
 
 function PunchStatusSelect({ punchStatus, punchId }: Props) {
-  console.log(punchId);
+  // console.log(punchId);
 
   const options = ["사용대기", "사용가능", "사용중", "사용불가", "폐기"];
 

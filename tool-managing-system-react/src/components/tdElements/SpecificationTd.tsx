@@ -1,4 +1,8 @@
-function SpecificationTd({ specification }) {
+type Props = {
+  specification: string;
+};
+
+function SpecificationTd({ specification }: Props) {
   return <td>{specification}</td>;
 }
 

@@ -6,9 +6,7 @@ import { type PunchRow as PunchRowType } from "@/common/types";
 
 function PunchTable() {
   const [rows, setRows] = useState<Array<PunchRowType>>([]);
-
-  // const query = new URLSearchParams();
-  // query.append("status", "사용중");
+  const [selected, setSelected] = useState(false);
 
   useEffect(() => {
     request
@@ -24,14 +22,19 @@ function PunchTable() {
       .catch((error) => console.error(error));
   }, []);
 
+  function handlerChange() {
+    setSelected((selected) => !selected);
+    console.log(selected);
+  }
+
   return (
     <>
       <thead>
-        <TableHeader />
+        <TableHeader selected={selected} handlerChange={handlerChange} />
       </thead>
       <tbody>
         {rows.map((row) => {
-          return <PunchRow key={row.punchId} row={row} />;
+          return <PunchRow key={row.punchId} row={row} selected={selected} />;
         })}
       </tbody>
     </>

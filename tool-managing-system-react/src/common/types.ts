@@ -21,3 +21,15 @@ export type PunchRow = {
   usageNumber: number;
   maxUsageNumber: number;
 };
+
+export type Data = {
+  number: string;
+  date: string;
+  type: string;
+  manufacturer: string;
+  specification: string;
+  status: string;
+  location: string;
+  product: string;
+  productType: string;
+};

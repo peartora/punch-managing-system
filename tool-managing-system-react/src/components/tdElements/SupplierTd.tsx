@@ -1,4 +1,8 @@
-function SupplierTd({ supplier }) {
+type Props = {
+  supplier: string;
+};
+
+function SupplierTd({ supplier }: Props) {
   return <td>{supplier}</td>;
 }
 

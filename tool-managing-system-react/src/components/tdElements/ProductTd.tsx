@@ -1,4 +1,8 @@
-function ProductTd({ product }) {
+type Props = {
+  product: string;
+};
+
+function ProductTd({ product }: Props) {
   return <td>{product}</td>;
 }
 
