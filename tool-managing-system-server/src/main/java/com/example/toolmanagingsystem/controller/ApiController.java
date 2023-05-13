@@ -3,6 +3,7 @@ package com.example.toolmanagingsystem.controller;
 import com.example.toolmanagingsystem.dao.PunchDao;
 import com.example.toolmanagingsystem.dto.PunchScrapDao;
 import com.example.toolmanagingsystem.dto.Punch;
+import com.example.toolmanagingsystem.error.DuplicatedIdError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,12 @@ import java.util.Map;
 public class ApiController
 {
     private final PunchDao dao;
+
+    @GetMapping("/hello")
+    public String hello() {
+        //throw new DuplicatedIdError("errorororor");
+        return "hello";
+    }
 
     @PostMapping("/register")
     public String registerPunch(@RequestBody Punch punch)
