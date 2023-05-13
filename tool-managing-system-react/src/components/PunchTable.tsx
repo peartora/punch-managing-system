@@ -6,7 +6,7 @@ import { type PunchRow as PunchRowType } from "@/common/types";
 
 function PunchTable() {
   const [rows, setRows] = useState<Array<PunchRowType>>([]);
-  const [selected, setSelected] = useState(false);
+  const [checked, setChecked] = useState(false);
 
   useEffect(() => {
     request
@@ -18,23 +18,68 @@ function PunchTable() {
         }
         return response.json();
       })
-      .then((response) => setRows(response))
+      .then((response) => {
+        setRows(response);
+      })
       .catch((error) => console.error(error));
   }, []);
 
-  function handlerChange() {
-    setSelected((selected) => !selected);
-    console.log(selected);
+  function handlerChangeForAllCheckBox(event: any) {
+    setChecked((checked) => !checked);
+
+    const changedChecked = !checked;
+
+    const newRows: PunchRow[] = rows.map((row) => {
+      return {
+        ...row,
+        isSelected: changedChecked,
+      };
+    });
+
+    setRows(newRows);
+  }
+
+  console.log(`rows`);
+  console.log(rows);
+
+  function handlerChangeForSingleCheckBox(event: any, punchId: string) {
+    const newStatus = event.target.checked;
+
+    const newRows: PunchRow[] = rows.map((row) => {
+      if (row.punchId === punchId) {
+        return {
+          ...row,
+          isSelected: newStatus,
+        };
+      }
+
+      return row;
+    });
+
+    setRows(newRows);
   }
 
   return (
     <>
       <thead>
-        <TableHeader selected={selected} handlerChange={handlerChange} />
+        <TableHeader
+          selected={checked}
+          handlerChange={(event) => handlerChangeForAllCheckBox(event)}
+        />
       </thead>
       <tbody>
         {rows.map((row) => {
-          return <PunchRow key={row.punchId} row={row} selected={selected} />;
+          console.log(row);
+
+          return (
+            <PunchRow
+              key={row.punchId}
+              row={row}
+              handlerChangeForSingleBox={(event) =>
+                handlerChangeForSingleCheckBox(event, row.punchId)
+              }
+            />
+          );
         })}
       </tbody>
     </>

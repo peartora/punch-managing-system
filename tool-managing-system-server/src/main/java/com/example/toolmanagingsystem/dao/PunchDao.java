@@ -112,7 +112,7 @@ public class PunchDao
             int inspectionSize = rs.getInt("inspectionSize");
             singleRow.put("maxUsageNumber", inspectionSize);
 
-            int batchSize = rs.getInt("batchSize");
+//            int batchSize = rs.getInt("batchSize");
 
 //            if ((inspectionSize - count) > batchSize)
 //            {
@@ -122,6 +122,9 @@ public class PunchDao
 //            {
 //                singleRow.add(false);
 //            }
+
+            singleRow.put("isSelected", false);
+
             rowFromDB.add(singleRow);
         });
         return rowFromDB;

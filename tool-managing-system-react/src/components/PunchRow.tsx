@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent } from "react";
 
 import PunchIdTd from "./tdElements/PunchIdTd";
 import SupplierTd from "./tdElements/SupplierTd";
@@ -17,22 +17,21 @@ import CheckBox from "./checkBox/CheckBox";
 type Props = {
   row: PunchRow;
   selected: boolean;
+  handlerChangeForSingleBox: (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => void;
 };
 
-function PunchRow({ row, selected }: Props) {
+function PunchRow({ row, selected, handlerChangeForSingleBox }: Props) {
   const punchId = row.punchId;
 
-  console.log(selected);
-
-  function handlerChange(event: any) {
-    console.log(event.target.checked);
-  }
+  // console.log(selected);
 
   return (
     <tr>
       <td>
         <CheckBox
-          onChange={(event) => handlerChange(event)}
+          onChange={(event) => handlerChangeForSingleBox}
           punchId={punchId}
           checked={selected}
         />
