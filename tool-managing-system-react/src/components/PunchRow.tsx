@@ -16,13 +16,13 @@ import CheckBox from "./checkBox/CheckBox";
 
 type Props = {
   row: PunchRow;
-  selected: boolean;
   handlerChangeForSingleBox: (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
+    punchId: string
   ) => void;
 };
 
-function PunchRow({ row, selected, handlerChangeForSingleBox }: Props) {
+function PunchRow({ row, handlerChangeForSingleBox }: Props) {
   const punchId = row.punchId;
 
   // console.log(selected);
@@ -31,9 +31,9 @@ function PunchRow({ row, selected, handlerChangeForSingleBox }: Props) {
     <tr>
       <td>
         <CheckBox
-          onChange={(event) => handlerChangeForSingleBox}
+          onChange={(event) => handlerChangeForSingleBox(event, row.punchId)}
           punchId={punchId}
-          checked={selected}
+          checked={row["isSelected"]}
         />
       </td>
       <PunchIdTd punchId={row.punchId} />

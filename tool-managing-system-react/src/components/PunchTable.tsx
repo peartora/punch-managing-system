@@ -24,23 +24,33 @@ function PunchTable() {
       .catch((error) => console.error(error));
   }, []);
 
+  // function handlerChangeForAllCheckBox(event: any) {
+  //   setChecked((checked) => !checked);
+
+  //   const changedChecked = !checked;
+
+  //   const newRows: PunchRow[] = rows.map((row) => {
+  //     return {
+  //       ...row,
+  //       isSelected: changedChecked,
+  //     };
+  //   });
+
+  //   setRows(newRows);
+  // }
+
   function handlerChangeForAllCheckBox(event: any) {
-    setChecked((checked) => !checked);
+    setChecked((checked) => {
+      const changedChecked = !checked;
 
-    const changedChecked = !checked;
-
-    const newRows: PunchRow[] = rows.map((row) => {
-      return {
+      const newRows: PunchRow[] = rows.map((row) => ({
         ...row,
         isSelected: changedChecked,
-      };
+      }));
+      setRows(newRows);
+      return changedChecked;
     });
-
-    setRows(newRows);
   }
-
-  console.log(`rows`);
-  console.log(rows);
 
   function handlerChangeForSingleCheckBox(event: any, punchId: string) {
     const newStatus = event.target.checked;
@@ -52,10 +62,8 @@ function PunchTable() {
           isSelected: newStatus,
         };
       }
-
       return row;
     });
-
     setRows(newRows);
   }
 
