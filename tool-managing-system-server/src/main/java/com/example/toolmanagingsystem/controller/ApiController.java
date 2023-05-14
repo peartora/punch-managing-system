@@ -45,12 +45,12 @@ public class ApiController
         return "등록 요청이 정상적으로 처리 되지 않았습니다.";
     }
 
-    @PostMapping("/update")
-    public void updateUsageNumber(@RequestBody List<Map<String, Object>> usageNumber)
+    @PostMapping("/updateUsageNumber")
+    public void updateUsageNumber(@RequestBody HashMap<String, Object> number)
     {
-        System.out.println("usageNumber");
-        System.out.println(usageNumber);
-        this.dao.updateUsageNumber(usageNumber);
+        System.out.println("number");
+        System.out.println(number);
+        // this.dao.updateUsageNumber(usageNumber);
     }
 
 

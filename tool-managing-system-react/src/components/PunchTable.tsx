@@ -5,10 +5,9 @@ import { request } from "@/common/Service";
 import { type PunchRow as PunchRowType } from "@/common/types";
 import Button from "./buttonElement/Button";
 
-// type rows = {
-//   punchId: string;
-//   date: Date;
-// };
+type Props = {
+  handlerChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+};
 
 function PunchTable() {
   const [rows, setRows] = useState<Array<PunchRowType>>([]);
@@ -59,7 +58,7 @@ function PunchTable() {
   }
 
   function handlerClick() {
-    // button을 위한, callback 함수
+    // 청소이력 추가를 위한 버튼.
     const targetRows: Record<string, unknown>[] = rows
       .filter((row) => row.isSelected === true)
       .map((row) => ({
@@ -73,12 +72,44 @@ function PunchTable() {
     request.post(`/api/tool-managing-system/addCleanHistory`, requestBody);
   }
 
+  function handlerChangeForUsageNumber(
+    event: React.ChangeEvent<HTMLInputElement>
+  ) {
+    const usageNumber = event.target.value;
+
+    const targetRows: Record<string, unknown>[] = rows
+      .filter((row) => row.isSelected === true)
+      .map((row) => ({
+        punchId: row.punchId,
+        usageNumber: usageNumber,
+      }));
+
+    const requestBody = {
+      rows: targetRows,
+    };
+
+    request.post(`/api/tool-managing-system/updateUsageNumber`, requestBody);
+  }
+
   return (
     <>
       <thead>
         <tr>
           <th>
             <Button text="청소이력 추가" handlerClick={handlerClick} />
+          </th>
+          <th>
+            <label htmlFor="usageNumber" className="form-label">
+              금일 사용 횟수를 입력하세요:
+            </label>
+            <input
+              id="usageNumber"
+              className="form-control"
+              value="0"
+              type="number"
+              placeholder="usage number"
+              onChange={(event) => handlerChangeForUsageNumber(event)}
+            />
           </th>
         </tr>
         <TableHeader
