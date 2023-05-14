@@ -5,13 +5,7 @@ type Props = {
 };
 
 function CleaningHistoryTd({ latestCleaningHistory }: Props) {
-  return (
-    <td>
-      {latestCleaningHistory}
-      <MyButton text="이력 추가" />
-      <MyButton text="이력 확인" />
-    </td>
-  );
+  return <td>{latestCleaningHistory}</td>;
 }
 
 export default CleaningHistoryTd;

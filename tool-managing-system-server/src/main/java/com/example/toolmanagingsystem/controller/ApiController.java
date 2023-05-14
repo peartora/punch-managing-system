@@ -95,12 +95,12 @@ public class ApiController
     }
 
     @PostMapping("/addCleanHistory")
-    public String addCleanHistory(@RequestBody String number)
+    public void addCleanHistory(@RequestBody HashMap<String, Object> number)
     {
         System.out.println("number");
         System.out.println(number);
 
-        return this.dao.addCleanHistory(number);
+        this.dao.addCleanHistory(number);
     }
 
     @PostMapping("/uploadFile")

@@ -164,17 +164,25 @@ public class PunchDao
         this.template.update("insert into `delete-history` (`punch-number`, `reason`, `date`) values (:number, :reason, now())", deleteInformation);
     }
 
-    public String addCleanHistory(String number)
+    public void addCleanHistory(HashMap<String, Object> number)
     {
         LocalDateTime now = LocalDateTime.now();
 
-        Map<String, Object> information = new HashMap<>();
-        information.put("number", number);
-        information.put("now", now);
+        List<HashMap<String, Object>> punchIds = (List<HashMap<String, Object>>)  number.get("rows");
 
-        this.template.update("insert into `clean-history` (`punch-number`, `when-cleaned`) values (:number, :now)", information);
+        for (HashMap<String, Object> map: punchIds)
+        {
+            for (String punchId: map.keySet())
+            {
+                Map<String, Object> information = new HashMap<>();
+                information.put("punchId", map.get(punchId));
+                information.put("now", now);
 
-        return now.toString();
+                System.out.println(information);
+
+                this.template.update("insert into `clean-history` (`punch-number`, `when-cleaned`) values (:punchId, :now)", information);
+            }
+        }
     }
 
     public int addInvestigationHistory(String number, String filePath)

@@ -19,7 +19,7 @@ function TableHeader({ selected, handlerChange }: Prop) {
       <th>보관위치</th>
       <th>제품</th>
       <th>제품 type</th>
-      <th>청소이력</th>
+      <th>최근 청소이력</th>
       <th>누적사용 횟 수</th>
       <th>최대사용 횟 수</th>
     </tr>
