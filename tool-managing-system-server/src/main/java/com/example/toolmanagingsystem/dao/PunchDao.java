@@ -130,11 +130,33 @@ public class PunchDao
         return rowFromDB;
     }
 
-    public void updateUsageNumber(List<Map<String, Object>> usageNumber)
+    public void updateUsageNumber(HashMap<String, Object> number)
     {
-        for (Map<String, Object> information: usageNumber)
+        List<HashMap<String, Object>> punchIdsWithUsageNumber = (List<HashMap<String, Object>>)  number.get("rows");
+
+        for (HashMap<String, Object> map: punchIdsWithUsageNumber)
         {
-            this.template.update("update `punch-list` set `count` = :totalNumber where number = :id", information);
+            Map<String, Object> information = new HashMap<>();
+
+            System.out.println("map");
+            System.out.println(map);
+
+            for (String key: map.keySet())
+            {
+                System.out.println(key);
+
+                if (Objects.equals(key, "punchId"))
+                {
+                    information.put("punchId", map.get(key));
+                }
+                else
+                {
+                    information.put("totalUsageNumber", map.get(key));
+                }
+
+                System.out.println(information);
+            }
+            this.template.update("update `punch-list` set `count` = :totalUsageNumber where number = :punchId", information);
         }
     }
 

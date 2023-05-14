@@ -5,13 +5,10 @@ import { request } from "@/common/Service";
 import { type PunchRow as PunchRowType } from "@/common/types";
 import Button from "./buttonElement/Button";
 
-type Props = {
-  handlerChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-};
-
 function PunchTable() {
   const [rows, setRows] = useState<Array<PunchRowType>>([]);
   const [checked, setChecked] = useState(false);
+  const [usageNumber, setUsageNumber] = useState(0);
 
   useEffect(() => {
     request
@@ -72,17 +69,17 @@ function PunchTable() {
     request.post(`/api/tool-managing-system/addCleanHistory`, requestBody);
   }
 
-  function handlerChangeForUsageNumber(
-    event: React.ChangeEvent<HTMLInputElement>
-  ) {
-    const usageNumber = event.target.value;
-
+  function handlerSubmitForUsageNumber() {
     const targetRows: Record<string, unknown>[] = rows
       .filter((row) => row.isSelected === true)
-      .map((row) => ({
-        punchId: row.punchId,
-        usageNumber: usageNumber,
-      }));
+      .map((row) => {
+        const totalUsageNumber = row.totalUsageNumber + usageNumber;
+
+        return {
+          punchId: row.punchId,
+          totalUsageNumber: totalUsageNumber,
+        };
+      });
 
     const requestBody = {
       rows: targetRows,
@@ -99,17 +96,24 @@ function PunchTable() {
             <Button text="청소이력 추가" handlerClick={handlerClick} />
           </th>
           <th>
-            <label htmlFor="usageNumber" className="form-label">
-              금일 사용 횟수를 입력하세요:
-            </label>
-            <input
-              id="usageNumber"
-              className="form-control"
-              value="0"
-              type="number"
-              placeholder="usage number"
-              onChange={(event) => handlerChangeForUsageNumber(event)}
-            />
+            <form onSubmit={handlerSubmitForUsageNumber}>
+              <div className="input-group mb-3">
+                <label htmlFor="usageNumber" className="form-label">
+                  금일 사용 횟수를 입력하세요:
+                </label>
+              </div>
+              <div className="input-group mb-3">
+                <input
+                  id="usageNumber"
+                  className="form-control"
+                  type="number"
+                  placeholder="사용 횟 수"
+                  onChange={(event) =>
+                    setUsageNumber(parseInt(event.target.value))
+                  }
+                />
+              </div>
+            </form>
           </th>
         </tr>
         <TableHeader

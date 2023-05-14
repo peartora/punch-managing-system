@@ -48,9 +48,9 @@ public class ApiController
     @PostMapping("/updateUsageNumber")
     public void updateUsageNumber(@RequestBody HashMap<String, Object> number)
     {
-        System.out.println("number");
-        System.out.println(number);
-        // this.dao.updateUsageNumber(usageNumber);
+//        System.out.println("number");
+//        System.out.println(number);
+         this.dao.updateUsageNumber(number);
     }
 
 
