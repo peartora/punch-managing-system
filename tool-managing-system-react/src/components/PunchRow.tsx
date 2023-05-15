@@ -1,5 +1,3 @@
-import { ChangeEvent } from "react";
-
 import PunchIdTd from "./tdElements/PunchIdTd";
 import SupplierTd from "./tdElements/SupplierTd";
 import SpecificationTd from "./tdElements/SpecificationTd";
@@ -24,8 +22,6 @@ type Props = {
 
 function PunchRow({ row, handlerChangeForSingleBox }: Props) {
   const punchId = row.punchId;
-
-  // console.log(selected);
 
   return (
     <tr>

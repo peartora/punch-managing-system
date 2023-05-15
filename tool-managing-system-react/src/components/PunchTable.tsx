@@ -54,7 +54,7 @@ function PunchTable() {
     setRows(newRows);
   }
 
-  function handlerClick() {
+  function handlerClickForCleanHistory() {
     // 청소이력 추가를 위한 버튼.
     const targetRows: Record<string, unknown>[] = rows
       .filter((row) => row.isSelected === true)
@@ -88,12 +88,31 @@ function PunchTable() {
     request.post(`/api/tool-managing-system/updateUsageNumber`, requestBody);
   }
 
+  function handlerSubmitForPdfUpload(event: any) {
+    const selectedFile = event.target.files[0];
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    const targetRows: void[] = rows
+      .filter((row) => row.isSelected === true)
+      .map((row) => {
+        const punchId = row.punchId;
+        formData.append("punchId", punchId);
+      });
+
+    request.post(`/api/tool-managing-system/uploadFile`, formData);
+  }
+
   return (
     <>
       <thead>
         <tr>
           <th>
-            <Button text="청소이력 추가" handlerClick={handlerClick} />
+            <Button
+              text="청소이력 추가"
+              handlerClick={handlerClickForCleanHistory}
+            />
           </th>
           <th>
             <form onSubmit={handlerSubmitForUsageNumber}>
@@ -111,6 +130,23 @@ function PunchTable() {
                   onChange={(event) =>
                     setUsageNumber(parseInt(event.target.value))
                   }
+                />
+              </div>
+            </form>
+          </th>
+          <th>
+            <form onSubmit={(event) => handlerSubmitForPdfUpload(event)}>
+              <div className="input-group mb-3">
+                <label htmlFor="uploadInspectionHistory" className="form-label">
+                  검수이력 pdf 파일을 업로드 하세요:
+                </label>
+              </div>
+              <div className="input-group mb-3">
+                <input
+                  id="uploadInspectionHistory"
+                  className="form-control"
+                  type="file"
+                  placeholder="검수이력 file"
                 />
               </div>
             </form>
