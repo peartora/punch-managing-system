@@ -173,14 +173,57 @@ public class ApiController
         return this.dao.checkDuplicateForProduct(product);
     }
 
+//    @PostMapping("/addProduct")
+//    public String addProduct(@RequestBody Map<String, Object> params)
+//    {
+//        int numberOfAffectedRows = this.dao.addProduct(params);
+//
+//        if (numberOfAffectedRows == 1)
+//        {
+//            return params.get("product") + " 정보가 정상적으로 등록 되었습니다.";
+//        }
+//
+//        return "제품등록 요청이 정상적으로 처리 되지 않았습니다.";
+//    }
+
     @PostMapping("/addProduct")
-    public String addProduct(@RequestBody Map<String, Object> params)
+    public String addProduct(
+            @RequestParam("product") String productName,
+            @RequestParam("batchSize") String batchSize,
+            @RequestParam("inspectionSize") String inspectionSize,
+            @RequestParam("specificationFile") MultipartFile specificationFile
+    )
     {
-        int numberOfAffectedRows = this.dao.addProduct(params);
+        System.out.println("addProductController");
+        System.out.println(productName);
+        System.out.println(batchSize);
+        System.out.println(inspectionSize);
+        System.out.println(specificationFile);
+
+        String fileName = specificationFile.getOriginalFilename();
+        String strFilePath = "C:\\Users\\lsm1dae\\Desktop\\specifications\\" + fileName;
+        try
+        {
+            byte[] fileBytes = specificationFile.getBytes();
+            Path filePath = Paths.get(strFilePath);
+            Files.write(filePath, fileBytes);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        HashMap<String, Object> mapParams = new HashMap<>();
+        mapParams.put("product", productName);
+        mapParams.put("batchSize", batchSize);
+        mapParams.put("inspectionSize", inspectionSize);
+        mapParams.put("specificationFilePath", strFilePath);
+
+        int numberOfAffectedRows = this.dao.addProduct(mapParams);
 
         if (numberOfAffectedRows == 1)
         {
-            return params.get("product") + " 정보가 정상적으로 등록 되었습니다.";
+            return mapParams.get("product") + " 정보가 정상적으로 등록 되었습니다.";
         }
 
         return "제품등록 요청이 정상적으로 처리 되지 않았습니다.";

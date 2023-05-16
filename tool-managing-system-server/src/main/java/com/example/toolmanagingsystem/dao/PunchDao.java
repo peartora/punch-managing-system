@@ -266,10 +266,10 @@ public class PunchDao
         return this.template.queryForObject("select count(*) from `size-control` where `product` = :product", idMap, Integer.class);
     }
 
-    public int addProduct(Map<String, Object> params)
+    public int addProduct(Map<String, Object> mapParams)
     {
         return this.template.update(
-        "insert into `size-control` (`product`, `batch-size`, `inspection-size`, `date`) " +
-            "values (:product, :batchSize, :inspectionSize, now())", params);
+        "insert into `size-control` (`product`, `batch-size`, `inspection-size`, `specification-path`, `date`) " +
+            "values (:product, :batchSize, :inspectionSize, :specificationFilePath, now())", mapParams);
     }
 }

@@ -5,6 +5,8 @@ function RegisterProductForm() {
   const [productName, setProductName] = useState("");
   const [batchSize, setBatchSize] = useState("");
   const [inspectionSize, setInspectionSize] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
 
   const query = new URLSearchParams();
   query.append("product", productName);
@@ -19,12 +21,19 @@ function RegisterProductForm() {
       })
       .then((response) => {
         if (response === "0") {
+          
+          const formData = new FormData();
+          formData.append("product", productName);
+          formData.append("batchSize", batchSize);
+          formData.append("inspectionSize", inspectionSize);
+          if (selectedFile) formData.append("specificationFile", selectedFile);
+
+          console.log("formData");
+          const formDataMap = new Map(formData.entries());
+          console.log(formDataMap);
+
           request
-            .post(`/api/tool-managing-system/addProduct`, {
-              product: productName,
-              batchSize,
-              inspectionSize,
-            })
+            .post(`/api/tool-managing-system/addProduct`, formData)
             .then((response) => {
               if (!response.ok)
                 throw new Error(`제품명 등록 중 error가 발생 하였습니다.`);
@@ -80,6 +89,26 @@ function RegisterProductForm() {
           placeholder="inspection-size"
           value={inspectionSize}
           onChange={(event) => setInspectionSize(event.target.value)}
+        />
+      </div>
+
+      <div className="input-group mb-3">
+        <label htmlFor="specification" className="form-label">
+          등록할 specification(pdf file)을 선택 하세요 :
+        </label>
+        <input
+          id="specification"
+          className="form-control"
+          type="file"
+          accept=".pdf"
+          placeholder="specification"
+          onChange={
+            (event: React.ChangeEvent<HTMLInputElement>) => {
+            const files = event.target.files;
+            if (files && files.length > 0) {
+              setSelectedFile(files[0] as File);
+            }
+          }}
         />
       </div>
 
