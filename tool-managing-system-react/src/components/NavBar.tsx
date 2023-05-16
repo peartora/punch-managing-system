@@ -23,11 +23,9 @@ export default function NavBar() {
         <li className="nav-item">
           <Link to="/register-punch">펀치등록</Link>
         </li>
-        <ul>
-          <button type="button" onClick={() => navigate("/gogogo")}>
-            누르면 이동!
-          </button>
-        </ul>
+        <li className="nav-item">
+          <Link to="/modify-product">제품정보 변경</Link>
+        </li>
       </ul>
     </nav>
   );

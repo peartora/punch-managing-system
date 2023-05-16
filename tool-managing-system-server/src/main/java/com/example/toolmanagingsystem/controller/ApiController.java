@@ -155,13 +155,43 @@ public class ApiController
     }
 
     @PostMapping("/updateBatchInfor")
-    public String updateBatchSize(@RequestBody Map<String, Object> params)
+    public String updateBatchSize(
+            @RequestParam("product") String productName,
+            @RequestParam("batchSize") String batchSize,
+            @RequestParam("inspectionSize") String inspectionSize,
+            @RequestParam("specificationFile") MultipartFile specificationFile
+    )
     {
-        int numberOfAffectedRows = this.dao.updateSizeInformation(params);
+        System.out.println("I`m inside of update product controller"); // confirmed.
+
+        String fileName = specificationFile.getOriginalFilename();
+        String strFilePath = "C:\\Users\\lsm1dae\\Desktop\\specifications\\" + fileName;
+        try
+        {
+            byte[] fileBytes = specificationFile.getBytes();
+            Path filePath = Paths.get(strFilePath);
+            Files.write(filePath, fileBytes);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        HashMap<String, Object> mapParams = new HashMap<>();
+        mapParams.put("product", productName);
+        mapParams.put("newBatchSize", batchSize);
+        mapParams.put("newInspectionSize", inspectionSize);
+        mapParams.put("newSpecificationFilePath", strFilePath);
+
+        System.out.println("mapParams");
+        System.out.println(mapParams);
+
+
+        int numberOfAffectedRows = this.dao.updateSizeInformation(mapParams);
 
         if (numberOfAffectedRows == 1)
         {
-            return params.get("product") + "의 batch 정보가 변경 되었습니다.";
+            return mapParams.get("product") + "의 batch 정보가 변경 되었습니다.";
         }
 
         return "batch 정보 변경 요청이 정상적으로 처리 되지 않았습니다.";
@@ -181,11 +211,6 @@ public class ApiController
             @RequestParam("specificationFile") MultipartFile specificationFile
     )
     {
-        System.out.println("addProductController");
-        System.out.println(productName);
-        System.out.println(batchSize);
-        System.out.println(inspectionSize);
-        System.out.println(specificationFile);
 
         String fileName = specificationFile.getOriginalFilename();
         String strFilePath = "C:\\Users\\lsm1dae\\Desktop\\specifications\\" + fileName;

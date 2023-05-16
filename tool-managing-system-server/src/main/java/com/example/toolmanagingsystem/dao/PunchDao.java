@@ -247,11 +247,11 @@ public class PunchDao
         return this.template.queryForList( "select `product` from `size-control`", paramMap, String.class);
     }
 
-    public int updateSizeInformation(Map<String, Object> params)
+    public int updateSizeInformation(Map<String, Object> mapParams)
     {
         return this.template.update
         (
-        "update `size-control` set `batch-size` = :newBatchSize, `inspection-size` = :newInspectionSize where `product` = :product", params
+        "update `size-control` set `batch-size` = :newBatchSize, `inspection-size` = :newInspectionSize, `specification-path` = :newSpecificationFilePath where `product` = :product", mapParams
         );
     }
 
