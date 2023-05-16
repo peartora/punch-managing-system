@@ -173,19 +173,6 @@ public class ApiController
         return this.dao.checkDuplicateForProduct(product);
     }
 
-//    @PostMapping("/addProduct")
-//    public String addProduct(@RequestBody Map<String, Object> params)
-//    {
-//        int numberOfAffectedRows = this.dao.addProduct(params);
-//
-//        if (numberOfAffectedRows == 1)
-//        {
-//            return params.get("product") + " 정보가 정상적으로 등록 되었습니다.";
-//        }
-//
-//        return "제품등록 요청이 정상적으로 처리 되지 않았습니다.";
-//    }
-
     @PostMapping("/addProduct")
     public String addProduct(
             @RequestParam("product") String productName,

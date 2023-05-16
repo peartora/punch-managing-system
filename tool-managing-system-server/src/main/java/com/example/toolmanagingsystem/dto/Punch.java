@@ -19,7 +19,7 @@ public class Punch
     private LocalDate date;
     private String type;
     private String manufacturer;
-    private String specification;
+//    private String specification;
     private PunchStatus status;
     private String location;
     private int batchSize;
@@ -35,7 +35,7 @@ public class Punch
         registerInformation.put("date", this.date);
         registerInformation.put("type", this.type);
         registerInformation.put("manufacturer", this.manufacturer);
-        registerInformation.put("specification", this.specification);
+//        registerInformation.put("specification", this.specification);
         registerInformation.put("status", this.status.사용대기.toString());
         registerInformation.put("location", this.location);
         registerInformation.put("batchSize", this.batchSize);

@@ -23,15 +23,12 @@ public class PunchDao
 
     public int registerPunch(Punch punch)
     {
-        System.out.println("punch");
-        System.out.println(punch);
-
         Map<String, Object> registerInformation = punch.returnMapCollection();
 
-        System.out.println("registerInformation");
-        System.out.println(registerInformation);
+        String sql = "SELECT `specification-path` FROM `size-control` WHERE `product` = :product";
+        String specificationPath = this.template.queryForObject(sql, registerInformation, String.class);
 
-
+        registerInformation.put("specification", specificationPath);
 
         return this.template.update("insert into `punch-list` (`number`, `date`, `type`, `manufacturer`, `specification`, `status`, `location`, `product`, `ptype`, `count`) values (:number, :date, :type, :manufacturer, :specification, :status, :location, :product, :productType, 0)", registerInformation);
     }
