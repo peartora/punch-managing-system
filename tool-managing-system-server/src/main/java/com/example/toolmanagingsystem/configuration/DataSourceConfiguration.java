@@ -13,13 +13,13 @@ public class DataSourceConfiguration
     public HikariDataSource dataSource()
     {
         HikariDataSource dataSource = new HikariDataSource();
-//        dataSource.setJdbcUrl("jdbc:mysql://10.14.2.8/tool-managing-system");
-        dataSource.setJdbcUrl("jdbc:mysql://localhost/tool-managing-system");
+        dataSource.setJdbcUrl("jdbc:mysql://10.14.2.8/tool-managing-system");
+//        dataSource.setJdbcUrl("jdbc:mysql://localhost/tool-managing-system");
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUsername("root");
-        dataSource.setPassword("");
-//        dataSource.setUsername("lsm");
-//        dataSource.setPassword("lsm123");
+//        dataSource.setUsername("root");
+//        dataSource.setPassword("");
+        dataSource.setUsername("lsm");
+        dataSource.setPassword("lsm123");
 
         return dataSource;
     }
