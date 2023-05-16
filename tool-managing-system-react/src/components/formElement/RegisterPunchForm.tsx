@@ -47,7 +47,7 @@ function RegisterPunchForm() {
   }, []);
 
   function handleSubmit() {
-    for (let i = Number(startNumber); i < Number(endNumber); i++) {
+    for (let i = Number(startNumber); i <= Number(endNumber); i++) {
       const punchId = generatePunchId(i, registerDate, productName);
 
       const query = new URLSearchParams();
