@@ -85,6 +85,7 @@ function PunchTable() {
       rows: targetRows,
     };
 
+    console.log("haha");
     request.post(`/api/tool-managing-system/updateUsageNumber`, requestBody);
   }
 
