@@ -28,10 +28,6 @@ function RegisterProductForm() {
           formData.append("inspectionSize", inspectionSize);
           if (selectedFile) formData.append("specificationFile", selectedFile);
 
-          console.log("formData");
-          const formDataMap = new Map(formData.entries());
-          console.log(formDataMap);
-
           request
             .post(`/api/tool-managing-system/addProduct`, formData)
             .then((response) => {

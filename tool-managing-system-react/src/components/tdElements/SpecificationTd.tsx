@@ -1,9 +1,11 @@
+import { ReactNode } from "react";
+
 type Props = {
-  specification: string;
+  children: ReactNode;
 };
 
-function SpecificationTd({ specification }: Props) {
-  return <td>{specification}</td>;
+function SpecificationTd({ children }: Props) {
+  return <td>{children}</td>;
 }
 
 export default SpecificationTd;

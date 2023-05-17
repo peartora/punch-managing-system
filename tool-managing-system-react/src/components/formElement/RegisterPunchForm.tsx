@@ -9,7 +9,6 @@ type Data = {
   date: string;
   type: string;
   manufacturer: string;
-  specification: string;
   status: string;
   location: string;
   product: string;
@@ -25,7 +24,6 @@ function RegisterPunchForm() {
   );
   const [punchType, setPunchType] = useState("");
   const [supplier, setSupplier] = useState("");
-  const [specification, setSpecification] = useState("");
   const [storageLocation, setStorageLocation] = useState("");
   const [productName, setProductName] = useState("");
   const [productType, setProductType] = useState("");
@@ -71,7 +69,6 @@ function RegisterPunchForm() {
               date: registerDate,
               type: punchType,
               manufacturer: supplier,
-              specification: specification,
               status: `사용대기`,
               location: storageLocation,
               product: productName,
@@ -177,20 +174,6 @@ function RegisterPunchForm() {
           placeholder="제조사"
           value={supplier}
           onChange={(event) => setSupplier(event.target.value)}
-        />
-      </div>
-
-      <div className="input-group mb-3">
-        <label htmlFor="specification" className="form-label">
-          규격서:
-        </label>
-        <input
-          id="specification"
-          className="form-control"
-          type="text"
-          placeholder="규격서"
-          value={specification}
-          onChange={(event) => setSpecification(event.target.value)}
         />
       </div>
 

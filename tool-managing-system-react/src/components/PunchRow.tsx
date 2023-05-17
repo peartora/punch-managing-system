@@ -7,6 +7,8 @@ import ProductTd from "./tdElements/ProductTd";
 import ProductTypeTd from "./tdElements/ProductTypeTd";
 import CleaningHistoryTd from "./tdElements/CleaningHistoryTd";
 import TotalUsageNumberTd from "./tdElements/TotalUsageNumberTd";
+import OpenFileButton from "./buttonElement/OpenFileButton";
+
 
 import { type PunchRow } from "@/common/types";
 import PunchStatusSelect from "./selectElement/PunchStatusSelect";
@@ -23,6 +25,13 @@ type Props = {
 function PunchRow({ row, handlerChangeForSingleBox }: Props) {
   const punchId = row.punchId;
 
+function handlerClick() {
+  const filePath = row.specification;
+  const fileUrl = `file://${filePath}`;
+  window.open(fileUrl);
+}
+
+
   return (
     <tr>
       <td>
@@ -34,7 +43,11 @@ function PunchRow({ row, handlerChangeForSingleBox }: Props) {
       </td>
       <PunchIdTd punchId={row.punchId} />
       <SupplierTd supplier={row.supplier} />
-      <SpecificationTd specification={row.specification} />
+
+      <td>
+        <OpenFileButton text="규격문서 확인" onClick={handlerClick}></OpenFileButton>
+      </td>
+      
       <InspectionHistoryTd
         latestInspectionHistory={row.latestInspectionHistory}
       />

@@ -42,6 +42,8 @@ function PunchTable() {
   function handlerChangeForSingleCheckBox(event: any, punchId: string) {
     const newStatus = event.target.checked;
 
+    setChecked(false);
+
     const newRows: PunchRow[] = rows.map((row) => {
       if (row.punchId === punchId) {
         return {
