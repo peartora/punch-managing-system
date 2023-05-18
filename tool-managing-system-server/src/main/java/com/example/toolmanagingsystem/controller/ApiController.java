@@ -200,10 +200,10 @@ public class ApiController
 
     @PostMapping("/addProduct")
     public String addProduct(
-            @RequestParam("product") String productName,
-            @RequestParam("batchSize") String batchSize,
-            @RequestParam("inspectionSize") String inspectionSize,
-            @RequestParam("specificationFile") MultipartFile specificationFile
+            @RequestParam(value = "product") String productName,
+            @RequestParam(value = "batchSize", required = false) String batchSize,
+            @RequestParam(value = "inspectionSize", required = false) String inspectionSize,
+            @RequestParam(value = "specificationFile", required = false) MultipartFile specificationFile
     )
     {
 
