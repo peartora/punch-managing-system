@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useBringProductList } from "./../../common/CustomHooks";
 import { request } from "./../../common/Service";
 
 const options = ["상부", "하부", "다이"];
@@ -16,7 +17,6 @@ type Data = {
 };
 
 function RegisterPunchForm() {
-  const [products, setProduct] = useState<string[]>([]);
   const [startNumber, setStartNumber] = useState("");
   const [endNumber, setEndNumber] = useState("");
   const [registerDate, setRegisterDate] = useState(
@@ -28,21 +28,23 @@ function RegisterPunchForm() {
   const [productName, setProductName] = useState("");
   const [productType, setProductType] = useState("");
 
-  useEffect(() => {
-    request
-      .get(`/api/tool-managing-system/getProducts`)
-      .then((response) => {
-        if (!response.ok)
-          throw new Error(
-            `펀치등록을 위한 제품 항목을 불러오는데 실패 하였습니다.`
-          );
-        return response.json();
-      })
-      .then((productList) => {
-        setProduct([...productList]);
-      })
-      .catch((error) => console.log(error));
-  }, []);
+  // useEffect(() => {
+  //   request
+  //     .get(`/api/tool-managing-system/getProducts`)
+  //     .then((response) => {
+  //       if (!response.ok)
+  //         throw new Error(
+  //           `펀치등록을 위한 제품 항목을 불러오는데 실패 하였습니다.`
+  //         );
+  //       return response.json();
+  //     })
+  //     .then((productList) => {
+  //       setProduct([...productList]);
+  //     })
+  //     .catch((error) => console.log(error));
+  // }, []);
+
+  const productList = useBringProductList();
 
   function handleSubmit() {
     for (let i = Number(startNumber); i <= Number(endNumber); i++) {
@@ -201,7 +203,7 @@ function RegisterPunchForm() {
           value={productName}
           onChange={(event) => setProductName(event.target.value)}
         >
-          {products.map((productName) => {
+          {productList.map((productName) => {
             return (
               <option key={productName} value={productName}>
                 {productName}

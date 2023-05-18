@@ -1,29 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useBringProductList } from "@/common/CustomHooks";
 import { request } from "./../../common/Service";
 
 function ModifyProductForm() {
 
-  const [products, setProduct] = useState<string[]>([]);
   const [productName, setProductName] = useState("");
   const [batchSize, setBatchSize] = useState("");
   const [inspectionSize, setInspectionSize] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  useEffect(() => {
-    request
-      .get(`/api/tool-managing-system/getProducts`)
-      .then((response) => {
-        if (!response.ok)
-          throw new Error(
-            `펀치수정을 위한 제품 항목을 불러오는데 실패 하였습니다.`
-          );
-        return response.json();
-      })
-      .then((productList) => {
-        setProduct([...productList]);
-      })
-      .catch((error) => console.log(error));
-  }, []);
+  const productList = useBringProductList();
 
   function handleSubmit() {
     const formData = new FormData();
@@ -55,7 +41,7 @@ function ModifyProductForm() {
           value={productName}
           onChange={(event) => setProductName(event.target.value)}
         >
-          {products.map((productName) => {
+          {productList.map((productName) => {
             return (
               <option key={productName} value={productName}>
                 {productName}

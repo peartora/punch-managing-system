@@ -25,12 +25,6 @@ public class ApiController
 {
     private final PunchDao dao;
 
-    @GetMapping("/hello")
-    public String hello() {
-        //throw new DuplicatedIdError("errorororor");
-        return "hello";
-    }
-
     @PostMapping("/register")
     public String registerPunch(@RequestBody Punch punch)
     {
@@ -58,6 +52,7 @@ public class ApiController
     @GetMapping("/display")
     public List<HashMap<String, Object>> returnPunchList(@RequestParam Map<String, Object> params)
     {
+        System.out.println("params");
         System.out.println(params);
 
         return this.dao.getUsingPunchList(params);
