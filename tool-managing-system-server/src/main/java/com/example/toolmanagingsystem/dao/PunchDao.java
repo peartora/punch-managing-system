@@ -57,6 +57,29 @@ public class PunchDao
 
         List<HashMap<String, Object>> rowFromDB = new ArrayList<>();
 
+//        for (String key: params.keySet())
+//        {
+//            String value = (String) params.get(key);
+//
+//            System.out.println("key:" + key);
+//            System.out.println("value:" + value);
+//
+//            if (!Objects.equals(value, ""))
+//            {
+//                if (!Objects.equals(value, "All"))
+//                {
+//                    if (!(params.get(key) instanceof String))
+//                    {
+//                        sql += " AND " + key + " = " + params.get(key);
+//                    }
+//                    else
+//                    {
+//                        sql += " AND " + key + " = " + '"' + params.get(key) + '"';
+//                    }
+//                }
+//            }
+//        }
+
         for (String key: params.keySet())
         {
             String value = (String) params.get(key);
@@ -74,11 +97,18 @@ public class PunchDao
                     }
                     else
                     {
+                        if ((Objects.equals(key, "startDate")) || (Objects.equals(key, "endDate")))
+                        {
+                            sql += " AND date BETWEEN " + startDate + "' AND '" + endDate + "'";
+                        }
+
                         sql += " AND " + key + " = " + '"' + params.get(key) + '"';
                     }
                 }
             }
         }
+
+
         sql += " GROUP BY P.`number`";
 
         System.out.println(sql);

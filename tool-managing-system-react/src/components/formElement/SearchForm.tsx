@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useBringProductList } from "@/common/CustomHooks";
 import { request } from "./../../common/Service";
+import { formatDate } from "./../../common/Service";
 
 type Data = {
   startDate: Date;
@@ -39,21 +40,30 @@ function SearchForm() {
     const params = new URLSearchParams();
 
     for (let key in data) {
+      const value = data[key as keyof Data];
+
       if ((key == "punchType") || (key == "punchStatus") || (key == "product") || (key == "productType")) {
-        if (data[key] == "All") {
+        if (value == "All") {
           continue;
-        } else {
-          if (data[key] == "") {
-            continue;
-          }
+        } 
+      }
+      else {
+        if (value == "") {
+          continue;
         }
-        params.append(key, data[key]);
+      }
+
+      if (value instanceof Date) {
+        const formatedValue = formatDate(value);
+        params.append(key, formatedValue);
+      } else {
+        params.append(key, value.toString());
       }
     }
 
-    console.log(data);
+    alert(params.toString());
 
-    request.get(`/api/tool-managing-system/display${params}`)
+    request.get(`/api/tool-managing-system/display?${params.toString()}`)
     .then((response) => {
       if (!response.ok)
         throw new Error(`펀치 조회중 error가 발생 하였습니다.`);
