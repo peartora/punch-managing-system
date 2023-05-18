@@ -41,6 +41,7 @@ function ModifyProductForm() {
           value={productName}
           onChange={(event) => setProductName(event.target.value)}
         >
+          <option value="" disabled>아래 list 에서 선택 하세요.</option>
           {productList.map((productName) => {
             return (
               <option key={productName} value={productName}>

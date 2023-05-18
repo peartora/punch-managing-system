@@ -28,22 +28,6 @@ function RegisterPunchForm() {
   const [productName, setProductName] = useState("");
   const [productType, setProductType] = useState("");
 
-  // useEffect(() => {
-  //   request
-  //     .get(`/api/tool-managing-system/getProducts`)
-  //     .then((response) => {
-  //       if (!response.ok)
-  //         throw new Error(
-  //           `펀치등록을 위한 제품 항목을 불러오는데 실패 하였습니다.`
-  //         );
-  //       return response.json();
-  //     })
-  //     .then((productList) => {
-  //       setProduct([...productList]);
-  //     })
-  //     .catch((error) => console.log(error));
-  // }, []);
-
   const productList = useBringProductList();
 
   function handleSubmit() {
@@ -157,6 +141,7 @@ function RegisterPunchForm() {
           value={punchType}
           onChange={(event) => setPunchType(event.target.value)}
         >
+          <option value="" disabled>아래 list 에서 선택 하세요.</option>
           {options.map((option) => (
             <option key={option} value={option}>
               {option}
@@ -203,6 +188,7 @@ function RegisterPunchForm() {
           value={productName}
           onChange={(event) => setProductName(event.target.value)}
         >
+          <option value="" disabled>아래 list 에서 선택 하세요.</option>
           {productList.map((productName) => {
             return (
               <option key={productName} value={productName}>
@@ -223,6 +209,7 @@ function RegisterPunchForm() {
           value={productType}
           onChange={(event) => setProductType(event.target.value)}
         >
+          <option value="" disabled>아래 list 에서 선택 하세요.</option>
           {productTypeoptions.map((option) => (
             <option key={option} value={option}>
               {option}
