@@ -322,4 +322,11 @@ public class PunchDao
         "insert into `size-control` (`product`, `batch-size`, `inspection-size`, `specification-path`, `date`) " +
             "values (:product, :batchSize, :inspectionSize, :specificationFilePath, now())", mapParams);
     }
+
+    public int updateInspectionResult(Map<String, Object> mapParamsWithPdfFile)
+    {
+        return this.template.update("insert into `inspection-history` (`punch-number`, `when-inspected`, `file-path`) values (:punchId, now(), :filePath)", mapParamsWithPdfFile);
+    }
+
+//    "insert into `inspection-history` (`punch-number`, `when-inspected`, `file-path`) values (:number, now(), :filePath)"
 }

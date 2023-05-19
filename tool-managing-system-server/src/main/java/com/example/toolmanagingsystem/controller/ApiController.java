@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -254,6 +255,32 @@ public class ApiController
 
         return "제품등록 요청이 정상적으로 처리 되지 않았습니다.";
     }
+
+    @PostMapping("updateInspectionResult")
+    public void updateInspectionResult(MultipartHttpServletRequest params)
+    {
+        System.out.println("updateInspectionResult");
+
+        Map<String, MultipartFile> fileMap = params.getFileMap();
+        String filePath = saveSpecificationFile(fileMap.get("inspectionResultPdfFile"));
+
+        Map<String, String[]> parameterMap = params.getParameterMap();
+
+        for (String key: parameterMap.keySet())
+        {
+            Map<String, Object> mapParamsWithPdfFilePath = new HashMap<String, Object>();
+
+            String[] punchIdArrays = parameterMap.get(key);
+            for(int i = 0; i < punchIdArrays.length; i++)
+            {
+                mapParamsWithPdfFilePath.put("punchId", punchIdArrays[i]);
+                mapParamsWithPdfFilePath.put("filePath", filePath);
+
+                this.dao.updateInspectionResult(mapParamsWithPdfFilePath);
+            }
+        }
+    }
+
 
     private String saveSpecificationFile(MultipartFile specificationFile)
     {

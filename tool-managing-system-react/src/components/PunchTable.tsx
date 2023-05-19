@@ -9,6 +9,7 @@ function PunchTable() {
   const [rows, setRows] = useState<Array<PunchRowType>>([]);
   const [checked, setChecked] = useState(false);
   const [usageNumber, setUsageNumber] = useState(0);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   useEffect(() => {
     request
@@ -91,11 +92,10 @@ function PunchTable() {
     request.post(`/api/tool-managing-system/updateUsageNumber`, requestBody);
   }
 
-  function handlerSubmitForPdfUpload(event: any) {
-    const selectedFile = event.target.files[0];
+  function handlerSubmitForPdfUpload() {
 
     const formData = new FormData();
-    formData.append("file", selectedFile);
+    if (selectedFile) formData.append("inspectionResultPdfFile", selectedFile);
 
     const targetRows: void[] = rows
       .filter((row) => row.isSelected === true)
@@ -104,7 +104,7 @@ function PunchTable() {
         formData.append("punchId", punchId);
       });
 
-    request.post(`/api/tool-managing-system/uploadFile`, formData);
+    request.post(`/api/tool-managing-system/updateInspectionResult`, formData);
   }
 
   return (
@@ -138,7 +138,7 @@ function PunchTable() {
             </form>
           </th>
           <th>
-            <form onSubmit={(event) => handlerSubmitForPdfUpload(event)}>
+            <form onSubmit={handlerSubmitForPdfUpload}>
               <div className="input-group mb-3">
                 <label htmlFor="uploadInspectionHistory" className="form-label">
                   검수이력 pdf 파일을 업로드 하세요:
@@ -146,11 +146,21 @@ function PunchTable() {
               </div>
               <div className="input-group mb-3">
                 <input
-                  id="uploadInspectionHistory"
+                  id="inspectionHistory"
                   className="form-control"
                   type="file"
-                  placeholder="검수이력 file"
+                  accept=".pdf"
+                  placeholder="검수 결과"
+                  onChange={
+                    (event: React.ChangeEvent<HTMLInputElement>) => {
+                    const files = event.target.files;
+                    if (files && files.length > 0) {
+                      setSelectedFile(files[0] as File);
+                    }
+                  }}
                 />
+
+                <input type="submit" value="전송" />
               </div>
             </form>
           </th>
