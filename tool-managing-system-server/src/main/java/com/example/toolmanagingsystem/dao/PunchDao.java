@@ -279,10 +279,56 @@ public class PunchDao
 
     public int updateSizeInformation(Map<String, Object> mapParams)
     {
-        return this.template.update
-        (
-        "update `size-control` set `batch-size` = :newBatchSize, `inspection-size` = :newInspectionSize, `specification-path` = :newSpecificationFilePath where `product` = :product", mapParams
-        );
+        int counter = 0;
+
+        String sql = "update `size-control` set ";
+        String sqlWhereClauses = " where `product` = :product";
+
+        for (Map.Entry<String, Object> entry: mapParams.entrySet())
+        {
+            counter++;
+
+            String key = entry.getKey();
+            String keyForTable = "";
+
+            if (key == "batchSize")
+            {
+                keyForTable = "batch-size";
+            }
+            else if (key == "inspectionSize")
+            {
+                keyForTable = "inspection-size";
+            }
+            else if (key == "specificationFilePath")
+            {
+                keyForTable = "specification-path";
+            }
+
+            String value = (String) entry.getValue();
+
+            if (Objects.equals(key, "product"))
+            {
+                continue;
+            }
+
+            if (!Objects.equals(value, null))
+            {
+                if (counter == mapParams.size())
+                {
+                    sql += "`" + keyForTable + "`" + " = :" + key + ", " + "`date` = now()";
+                }
+                else
+                {
+                    sql += "`" + keyForTable + "`" + " = :" + key + ", ";
+                }
+            }
+        }
+        sql += sqlWhereClauses;
+
+        System.out.println("sql");
+        System.out.println(sql);
+
+        return this.template.update(sql, mapParams);
     }
 
     public int checkDuplicateForProduct(String product)

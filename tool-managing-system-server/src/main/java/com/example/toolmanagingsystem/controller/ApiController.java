@@ -151,36 +151,66 @@ public class ApiController
 
     @PostMapping("/updateBatchInfor")
     public String updateBatchSize(
-            @RequestParam("product") String productName,
-            @RequestParam("batchSize") String batchSize,
-            @RequestParam("inspectionSize") String inspectionSize,
-            @RequestParam("specificationFile") MultipartFile specificationFile
+            @RequestParam(value = "product") String productName,
+            @RequestParam(value = "batchSize", required = false) String batchSize,
+            @RequestParam(value = "inspectionSize", required = false) String inspectionSize,
+            @RequestParam(value = "specificationFile", required = false) MultipartFile specificationFile
     )
     {
-        System.out.println("I`m inside of update product controller"); // confirmed.
-
-        String fileName = specificationFile.getOriginalFilename();
-        String strFilePath = "C:\\Users\\lsm1dae\\Desktop\\specifications\\" + fileName;
-        try
-        {
-            byte[] fileBytes = specificationFile.getBytes();
-            Path filePath = Paths.get(strFilePath);
-            Files.write(filePath, fileBytes);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
         HashMap<String, Object> mapParams = new HashMap<>();
-        mapParams.put("product", productName);
-        mapParams.put("newBatchSize", batchSize);
-        mapParams.put("newInspectionSize", inspectionSize);
-        mapParams.put("newSpecificationFilePath", strFilePath);
 
-        System.out.println("mapParams");
-        System.out.println(mapParams);
+        if ((batchSize != null) && (inspectionSize != null) && (specificationFile != null))
+        {
+            String strFilePath = saveSpecificationFile(specificationFile);
 
+            mapParams.put("product", productName);
+            mapParams.put("batchSize", batchSize);
+            mapParams.put("inspectionSize", inspectionSize);
+            mapParams.put("specificationFilePath", strFilePath);
+        }
+        else if ((batchSize != null) && (inspectionSize != null))
+        {
+            mapParams.put("product", productName);
+            mapParams.put("batchSize", batchSize);
+            mapParams.put("inspectionSize", inspectionSize);
+        }
+        else if ((batchSize != null) && (specificationFile != null))
+        {
+            String strFilePath = saveSpecificationFile(specificationFile);
+
+            mapParams.put("product", productName);
+            mapParams.put("batchSize", batchSize);
+            mapParams.put("specificationFilePath", strFilePath);
+        }
+        else if ((inspectionSize != null) && (specificationFile != null))
+        {
+            String strFilePath = saveSpecificationFile(specificationFile);
+
+            mapParams.put("product", productName);
+            mapParams.put("inspectionSize", inspectionSize);
+            mapParams.put("specificationFilePath", strFilePath);
+        }
+        else if (batchSize != null)
+        {
+            mapParams.put("product", productName);
+            mapParams.put("batchSize", batchSize);
+        }
+        else if (inspectionSize != null)
+        {
+            mapParams.put("product", productName);
+            mapParams.put("inspectionSize", inspectionSize);
+        }
+        else if (specificationFile != null)
+        {
+            String strFilePath = saveSpecificationFile(specificationFile);
+
+            mapParams.put("product", productName);
+            mapParams.put("specificationFilePath", strFilePath);
+        }
+        else
+        {
+            return "변경하고자 하는 값이 하나도 입력 되지 않았습니다.";
+        }
 
         int numberOfAffectedRows = this.dao.updateSizeInformation(mapParams);
 
@@ -200,25 +230,13 @@ public class ApiController
 
     @PostMapping("/addProduct")
     public String addProduct(
-            @RequestParam(value = "product") String productName,
-            @RequestParam(value = "batchSize", required = false) String batchSize,
-            @RequestParam(value = "inspectionSize", required = false) String inspectionSize,
-            @RequestParam(value = "specificationFile", required = false) MultipartFile specificationFile
+            @RequestParam("product") String productName,
+            @RequestParam("batchSize") String batchSize,
+            @RequestParam("inspectionSize") String inspectionSize,
+            @RequestParam("specificationFile") MultipartFile specificationFile
     )
     {
-
-        String fileName = specificationFile.getOriginalFilename();
-        String strFilePath = "C:\\Users\\lsm1dae\\Desktop\\specifications\\" + fileName;
-        try
-        {
-            byte[] fileBytes = specificationFile.getBytes();
-            Path filePath = Paths.get(strFilePath);
-            Files.write(filePath, fileBytes);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        String strFilePath = saveSpecificationFile(specificationFile);
 
         HashMap<String, Object> mapParams = new HashMap<>();
         mapParams.put("product", productName);
@@ -234,5 +252,23 @@ public class ApiController
         }
 
         return "제품등록 요청이 정상적으로 처리 되지 않았습니다.";
+    }
+
+    private String saveSpecificationFile(MultipartFile specificationFile)
+    {
+        String fileName = specificationFile.getOriginalFilename();
+        String strFilePath = "C:\\Users\\lsm1dae\\Desktop\\specifications\\" + fileName;
+        try
+        {
+            byte[] fileBytes = specificationFile.getBytes();
+            Path filePath = Paths.get(strFilePath);
+            Files.write(filePath, fileBytes);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        return strFilePath;
     }
 }
