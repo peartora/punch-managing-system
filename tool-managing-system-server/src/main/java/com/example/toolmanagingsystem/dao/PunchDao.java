@@ -30,11 +30,14 @@ public class PunchDao
 
         registerInformation.put("specification", specificationPath);
 
-        return this.template.update("insert into `punch-list` (`number`, `date`, `type`, `manufacturer`, `specification`, `status`, `location`, `product`, `ptype`, `count`) values (:number, :date, :type, :manufacturer, :specification, :status, :location, :product, :productType, 0)", registerInformation);
+        return this.template.update("insert into `punch-list` (`number`, `register-date`, `type`, `manufacturer`, `specification`, `status`, `location`, `product`, `ptype`, `count`) values (:number, :date, :type, :manufacturer, :specification, :status, :location, :product, :productType, 0)", registerInformation);
     }
 
     public List<HashMap<String, Object>> getUsingPunchList(Map<String, Object> params)
     {
+        String startDate = "";
+        String endDate = "";
+
         String sql =
             "SELECT " +
                 "p.*, " +
@@ -61,6 +64,25 @@ public class PunchDao
         {
             String value = (String) params.get(key);
 
+            if (Objects.equals(key, "startDate"))
+            {
+                if (!Objects.equals(value, ""))
+                {
+                    startDate = value;
+                    continue;
+                }
+                continue;
+            }
+            else if(Objects.equals(key, "endDate"))
+            {
+                if (!Objects.equals(value, ""))
+                {
+                    endDate = value;
+                    continue;
+                }
+                continue;
+            }
+
             System.out.println("key:" + key);
             System.out.println("value:" + value);
 
@@ -80,35 +102,10 @@ public class PunchDao
             }
         }
 
-//        for (String key: params.keySet())
-//        {
-//            String value = (String) params.get(key);
-//
-//            System.out.println("key:" + key);
-//            System.out.println("value:" + value);
-//
-//            if (!Objects.equals(value, ""))
-//            {
-//                if (!Objects.equals(value, "All"))
-//                {
-//                    if (!(params.get(key) instanceof String))
-//                    {
-//                        sql += " AND " + key + " = " + params.get(key);
-//                    }
-//                    else
-//                    {
-//                        if ((Objects.equals(key, "startDate")) || (Objects.equals(key, "endDate")))
-//                        {
-//                            sql += " AND date BETWEEN " + startDate + "' AND '" + endDate + "'";
-//                        }
-//
-//                        sql += " AND " + key + " = " + '"' + params.get(key) + '"';
-//                    }
-//                }
-//            }
-//        }
-
-
+        if ((!Objects.equals(startDate, "")) && (!Objects.equals(endDate, "")))
+        {
+            sql += " AND `register-date` BETWEEN '" + startDate + "' AND '" + endDate + "'";
+        }
         sql += " GROUP BY P.`number`";
 
         System.out.println(sql);
@@ -118,37 +115,17 @@ public class PunchDao
             HashMap<String, Object> singleRow = new HashMap<>();
 
             singleRow.put("punchId", rs.getString("number"));
-
-//            Date dateFromDB = rs.getDate("date");
-//            LocalDate date = dateFromDB.toLocalDate();
-//            singleRow.add(date);
-
+            singleRow.put("punchType", rs.getString("type"));
             singleRow.put("supplier", rs.getString("manufacturer"));
             singleRow.put("specification", rs.getString("specification"));
-            singleRow.put("latestInspectionHistory", rs.getString("latestInspectionDate"));
             singleRow.put("punchStatus", rs.getString("status"));
             singleRow.put("punchStorageLocation", rs.getString("location"));
             singleRow.put("product", rs.getString("product"));
             singleRow.put("productType", rs.getString("ptype"));
-            singleRow.put("latestCleaningHistory", rs.getString("latestCleanDate"));
 
 
             int count = rs.getInt("count");
             singleRow.put("totalUsageNumber", count);
-
-            int inspectionSize = rs.getInt("inspectionSize");
-            singleRow.put("maxUsageNumber", inspectionSize);
-
-//            int batchSize = rs.getInt("batchSize");
-
-//            if ((inspectionSize - count) > batchSize)
-//            {
-//                singleRow.add(true);
-//            }
-//            else
-//            {
-//                singleRow.add(false);
-//            }
 
             singleRow.put("isSelected", false);
 

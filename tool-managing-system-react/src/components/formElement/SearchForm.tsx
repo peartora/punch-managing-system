@@ -6,12 +6,12 @@ import { formatDate } from "./../../common/Service";
 type Data = {
   startDate: Date;
   endDate: Date;
-  punchType: string;
+  type: string;
   supplier: string;
-  punchStatus: string;
+  status: string;
   storageLocation: string;
   product: string;
-  productType: string;
+  ptype: string;
 };
 
 function SearchForm() {
@@ -29,12 +29,12 @@ function SearchForm() {
     const data: Data = {
       startDate: startDate,
       endDate: endDate,
-      punchType: punchType,
+      type: punchType,
       supplier: supplier,
-      punchStatus: punchStatus,
+      status: punchStatus,
       storageLocation: storageLocation,
       product: product,
-      productType: productType
+      ptype: productType
     };
 
     const params = new URLSearchParams();
