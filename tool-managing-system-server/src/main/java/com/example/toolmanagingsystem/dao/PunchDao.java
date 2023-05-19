@@ -290,20 +290,6 @@ public class PunchDao
 
             String key = entry.getKey();
             String keyForTable = "";
-
-            if (key == "batchSize")
-            {
-                keyForTable = "batch-size";
-            }
-            else if (key == "inspectionSize")
-            {
-                keyForTable = "inspection-size";
-            }
-            else if (key == "specificationFilePath")
-            {
-                keyForTable = "specification-path";
-            }
-
             String value = (String) entry.getValue();
 
             if (Objects.equals(key, "product"))
@@ -311,7 +297,20 @@ public class PunchDao
                 continue;
             }
 
-            if (!Objects.equals(value, null))
+            if (Objects.equals(key, "batchSize"))
+            {
+                keyForTable = "batch" + "-" + "size";
+            }
+            else if (Objects.equals(key, "inspectionSize"))
+            {
+                keyForTable = "inspection" + "-" + "size";
+            }
+            else if (Objects.equals(key, "specificationFilePath"))
+            {
+                keyForTable = "specification" + "-" + "path";
+            }
+
+            if ((!Objects.equals(value, "")))
             {
                 if (counter == mapParams.size())
                 {
@@ -324,9 +323,6 @@ public class PunchDao
             }
         }
         sql += sqlWhereClauses;
-
-        System.out.println("sql");
-        System.out.println(sql);
 
         return this.template.update(sql, mapParams);
     }

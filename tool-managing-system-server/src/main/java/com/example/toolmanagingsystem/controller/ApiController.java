@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/tool-managing-system")
@@ -159,7 +160,7 @@ public class ApiController
     {
         HashMap<String, Object> mapParams = new HashMap<>();
 
-        if ((batchSize != null) && (inspectionSize != null) && (specificationFile != null))
+        if ((!Objects.equals(batchSize, "")) && (!Objects.equals(inspectionSize, "")) && (specificationFile != null))
         {
             String strFilePath = saveSpecificationFile(specificationFile);
 
@@ -168,13 +169,13 @@ public class ApiController
             mapParams.put("inspectionSize", inspectionSize);
             mapParams.put("specificationFilePath", strFilePath);
         }
-        else if ((batchSize != null) && (inspectionSize != null))
+        else if ((!Objects.equals(batchSize, "")) && (!Objects.equals(inspectionSize, "")))
         {
             mapParams.put("product", productName);
             mapParams.put("batchSize", batchSize);
             mapParams.put("inspectionSize", inspectionSize);
         }
-        else if ((batchSize != null) && (specificationFile != null))
+        else if ((!Objects.equals(batchSize, "")) && (specificationFile != null))
         {
             String strFilePath = saveSpecificationFile(specificationFile);
 
@@ -182,7 +183,7 @@ public class ApiController
             mapParams.put("batchSize", batchSize);
             mapParams.put("specificationFilePath", strFilePath);
         }
-        else if ((inspectionSize != null) && (specificationFile != null))
+        else if ((!Objects.equals(inspectionSize, "")) && (specificationFile != null))
         {
             String strFilePath = saveSpecificationFile(specificationFile);
 
@@ -190,12 +191,12 @@ public class ApiController
             mapParams.put("inspectionSize", inspectionSize);
             mapParams.put("specificationFilePath", strFilePath);
         }
-        else if (batchSize != null)
+        else if (!Objects.equals(batchSize, ""))
         {
             mapParams.put("product", productName);
             mapParams.put("batchSize", batchSize);
         }
-        else if (inspectionSize != null)
+        else if (!Objects.equals(inspectionSize, ""))
         {
             mapParams.put("product", productName);
             mapParams.put("inspectionSize", inspectionSize);

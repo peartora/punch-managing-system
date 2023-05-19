@@ -65,7 +65,6 @@ function ModifyProductForm() {
           className="form-control"
           type="number"
           placeholder="batch-size"
-          value={batchSize}
           onChange={(event) => setBatchSize(event.target.value)}
         />
       </div>
@@ -79,7 +78,6 @@ function ModifyProductForm() {
           className="form-control"
           type="number"
           placeholder="inspection-size"
-          value={inspectionSize}
           onChange={(event) => setInspectionSize(event.target.value)}
         />
       </div>
