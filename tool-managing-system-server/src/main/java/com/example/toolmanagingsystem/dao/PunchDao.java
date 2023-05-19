@@ -122,10 +122,14 @@ public class PunchDao
             singleRow.put("punchStorageLocation", rs.getString("location"));
             singleRow.put("product", rs.getString("product"));
             singleRow.put("productType", rs.getString("ptype"));
+            singleRow.put("latestCleaningHistory", rs.getString("latestCleanDate"));
 
 
             int count = rs.getInt("count");
             singleRow.put("totalUsageNumber", count);
+
+            int inspectionSize = rs.getInt("inspectionSize");
+            singleRow.put("maxUsageNumber", inspectionSize);
 
             singleRow.put("isSelected", false);
 
