@@ -1,6 +1,5 @@
 import PunchIdTd from "./tdElements/PunchIdTd";
 import SupplierTd from "./tdElements/SupplierTd";
-import SpecificationTd from "./tdElements/SpecificationTd";
 import InspectionHistoryTd from "./tdElements/InspectionHistoryTd";
 import PunchStorageLocationTd from "./tdElements/PunchStorageLocationTd";
 import ProductTd from "./tdElements/ProductTd";
@@ -8,8 +7,6 @@ import ProductTypeTd from "./tdElements/ProductTypeTd";
 import CleaningHistoryTd from "./tdElements/CleaningHistoryTd";
 import TotalUsageNumberTd from "./tdElements/TotalUsageNumberTd";
 import OpenFileButton from "./buttonElement/OpenFileButton";
-
-
 import { type PunchRow } from "@/common/types";
 import PunchStatusSelect from "./selectElement/PunchStatusSelect";
 import CheckBox from "./checkBox/CheckBox";
@@ -25,12 +22,14 @@ type Props = {
 function PunchRow({ row, handlerChangeForSingleBox }: Props) {
   const punchId = row.punchId;
 
-function handlerClick() {
-  const filePath = row.specification;
-  const fileUrl = `file://${filePath}`;
-  window.open(fileUrl);
-}
+  function handlerClick() {
+    const filePath = row.specification;
+    const fileUrl = `file://${filePath}`;
+    window.open(fileUrl);
+  }
 
+  console.log(`===========================================================================================`);
+  console.log(row.latestInspectionDate);
 
   return (
     <tr>
@@ -49,7 +48,7 @@ function handlerClick() {
       </td>
       
       <InspectionHistoryTd
-        latestInspectionHistory={row.latestInspectionHistory}
+        latestInspectionDate={row.latestInspectionDate}
       />
       <td>
         <PunchStatusSelect

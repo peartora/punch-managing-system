@@ -11,7 +11,7 @@ export type PunchRow = {
   punchId: string;
   supplier: string;
   specification: string;
-  latestInspectionHistory: string;
+  latestInspectionDate: string;
   punchStatus: PunchStatus;
   punchStorageLocation: string;
   product: string;

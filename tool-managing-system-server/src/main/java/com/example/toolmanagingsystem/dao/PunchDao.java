@@ -123,6 +123,7 @@ public class PunchDao
             singleRow.put("product", rs.getString("product"));
             singleRow.put("productType", rs.getString("ptype"));
             singleRow.put("latestCleaningHistory", rs.getString("latestCleanDate"));
+            singleRow.put("latestInspectionDate", rs.getString("latestInspectionDate"));
 
 
             int count = rs.getInt("count");

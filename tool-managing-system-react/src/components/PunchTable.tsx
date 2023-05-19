@@ -3,7 +3,9 @@ import TableHeader from "./TableHeader";
 import PunchRow from "./PunchRow";
 import { request } from "@/common/Service";
 import { type PunchRow as PunchRowType } from "@/common/types";
-import Button from "./buttonElement/Button";
+import Button from "./buttonElement/MyButton";
+import { useUpdatePuncState } from "@/common/CustomHooks";
+import { useDisplay } from "@/common/CustomHooks";
 
 function PunchTable() {
   const [rows, setRows] = useState<Array<PunchRowType>>([]);
@@ -88,7 +90,6 @@ function PunchTable() {
       rows: targetRows,
     };
 
-    console.log("haha");
     request.post(`/api/tool-managing-system/updateUsageNumber`, requestBody);
   }
 
@@ -105,6 +106,7 @@ function PunchTable() {
       });
 
     request.post(`/api/tool-managing-system/updateInspectionResult`, formData);
+    useUpdatePuncState(`사용가능`, formData);      
   }
 
   return (

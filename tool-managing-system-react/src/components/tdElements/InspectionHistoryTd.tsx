@@ -1,14 +1,14 @@
-import MyButton from "../buttonElement/Button";
+import OpenFileButton from "../buttonElement/OpenFileButton";
 
 type Props = {
-  latestInspectionHistory: string;
+  latestInspectionDate: string;
 };
 
-function InspectionHistoryTd({ latestInspectionHistory }: Props) {
+function InspectionHistoryTd({ latestInspectionDate }: Props) {
   return (
     <td>
-      {latestInspectionHistory}
-      <MyButton text="이력 확인" />
+      {latestInspectionDate}
+      <OpenFileButton text="이력 확인" onClick={() => alert(`!!!`)}  />
     </td>
   );
 }

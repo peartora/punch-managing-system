@@ -259,8 +259,29 @@ public class ApiController
     @PostMapping("updateInspectionResult")
     public void updateInspectionResult(MultipartHttpServletRequest params)
     {
-        System.out.println("updateInspectionResult");
+        Map<String, MultipartFile> fileMap = params.getFileMap();
+        String filePath = saveSpecificationFile(fileMap.get("inspectionResultPdfFile"));
 
+        Map<String, String[]> parameterMap = params.getParameterMap();
+
+        for (String key: parameterMap.keySet())
+        {
+            Map<String, Object> mapParamsWithPdfFilePath = new HashMap<String, Object>();
+
+            String[] punchIdArrays = parameterMap.get(key);
+            for(int i = 0; i < punchIdArrays.length; i++)
+            {
+                mapParamsWithPdfFilePath.put("punchId", punchIdArrays[i]);
+                mapParamsWithPdfFilePath.put("filePath", filePath);
+
+                this.dao.updateInspectionResult(mapParamsWithPdfFilePath);
+            }
+        }
+    }
+
+    @PostMapping("updateMultiplePunchStatus")
+    public void updateMultiplePunchStatus(MultipartHttpServletRequest params)
+    {
         Map<String, MultipartFile> fileMap = params.getFileMap();
         String filePath = saveSpecificationFile(fileMap.get("inspectionResultPdfFile"));
 
