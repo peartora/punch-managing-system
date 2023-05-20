@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useBringProductList from "@/common/hooks/use-bring-product-list";
-import { request } from "./../../common/Service";
-import { formatDate } from "./../../common/Service";
+import { request } from "@/common/service";
+import { formatDate } from "@/common/service";
 
 type Data = {
   startDate: Date;

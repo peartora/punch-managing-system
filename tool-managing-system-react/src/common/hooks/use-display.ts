@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { request } from "@/common/Service";
+import { request } from "@/common/service";
 
 export default function useDisplay() {
   let rows;

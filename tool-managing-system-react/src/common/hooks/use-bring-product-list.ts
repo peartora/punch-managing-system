@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { request } from "../Service";
+import { request } from "@/common/service";
 
 export default function useBringProductList() {
   const [productList, setProductList] = useState<Array<string>>([]);

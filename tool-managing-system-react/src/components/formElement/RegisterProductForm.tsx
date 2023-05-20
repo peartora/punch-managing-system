@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { request } from "./../../common/Service";
+import { request } from "@/common/service";
 
 function RegisterProductForm() {
   const [productName, setProductName] = useState("");
   const [batchSize, setBatchSize] = useState("");
   const [inspectionSize, setInspectionSize] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
 
   const query = new URLSearchParams();
   query.append("product", productName);
@@ -21,7 +20,6 @@ function RegisterProductForm() {
       })
       .then((response) => {
         if (response === "0") {
-          
           const formData = new FormData();
           formData.append("product", productName);
           formData.append("batchSize", batchSize);
@@ -98,8 +96,7 @@ function RegisterProductForm() {
           type="file"
           accept=".pdf"
           placeholder="specification"
-          onChange={
-            (event: React.ChangeEvent<HTMLInputElement>) => {
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             const files = event.target.files;
             if (files && files.length > 0) {
               setSelectedFile(files[0] as File);

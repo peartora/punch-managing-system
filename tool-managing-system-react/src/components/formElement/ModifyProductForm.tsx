@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useBringProductList from "@/common/hooks/use-bring-product-list";
-import { request } from "./../../common/Service";
+import { request } from "@/common/service";
 
 function ModifyProductForm() {
   const [productName, setProductName] = useState("");
