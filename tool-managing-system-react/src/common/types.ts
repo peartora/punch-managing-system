@@ -21,6 +21,7 @@ export type PunchRow = {
   usageNumber: number;
   maxUsageNumber: number;
   isSelected: boolean;
+  canUse: string;
 };
 
 export type Data = {

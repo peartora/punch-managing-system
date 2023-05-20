@@ -69,7 +69,26 @@ function PunchTable() {
       rows: targetRows,
     };
 
-    request.post(`/api/tool-managing-system/addCleanHistory`, requestBody);
+    request
+      .post(`/api/tool-managing-system/addCleanHistory`, requestBody)
+      .then((response) => {
+        console.log(response);
+
+        if (!response.ok)
+          throw new Error(`청소이력을 추가 하는 중 Error 발생 하였습니다.`);
+
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          return response.json();
+        } else {
+          throw new Error(`Response was not in JSON format.`);
+        }
+      })
+      .then((result) => {
+        alert("I`m here");
+        setRows(result);
+      })
+      .catch((error) => console.error(error));
   }
 
   function handlerSubmitForUsageNumber() {
@@ -88,7 +107,15 @@ function PunchTable() {
       rows: targetRows,
     };
 
-    request.post(`/api/tool-managing-system/updateUsageNumber`, requestBody);
+    request
+      .post(`/api/tool-managing-system/updateUsageNumber`, requestBody)
+      .then((response) => {
+        if (!response.ok)
+          throw new Error(`금일 사용 횟 수 update 중 error가 발생 하였습니다.`);
+        return response.json();
+      })
+      .then((result) => setRows(result))
+      .catch((error) => console.error(error));
   }
 
   function handlerSubmitForPdfUpload() {
