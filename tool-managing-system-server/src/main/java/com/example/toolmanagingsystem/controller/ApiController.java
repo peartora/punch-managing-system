@@ -105,7 +105,9 @@ public class ApiController
                                 @RequestParam("number") String number)
     {
         String fileName = file.getOriginalFilename();
+//        String strFilePath = "C:\\Users\\peart\\Desktop\\files\\" + fileName;
         String strFilePath = "C:\\Users\\peart\\Desktop\\files\\" + fileName;
+
         try
         {
             byte[] fileBytes = file.getBytes();

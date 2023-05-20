@@ -5,10 +5,14 @@ type Props = {
 };
 
 function InspectionHistoryTd({ latestInspectionDate }: Props) {
+  if (latestInspectionDate === null) {
+    latestInspectionDate = `검수 이력이 없습니다.`;
+  }
+
   return (
     <td>
       {latestInspectionDate}
-      <OpenFileButton text="이력 확인" onClick={() => alert(`!!!`)}  />
+      <OpenFileButton text="이력 확인" onClick={() => alert(`!!!`)} />
     </td>
   );
 }
