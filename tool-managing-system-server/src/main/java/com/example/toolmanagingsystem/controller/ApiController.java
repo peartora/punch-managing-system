@@ -3,10 +3,7 @@ package com.example.toolmanagingsystem.controller;
 import com.example.toolmanagingsystem.dao.PunchDao;
 import com.example.toolmanagingsystem.dto.PunchScrapDao;
 import com.example.toolmanagingsystem.dto.Punch;
-import com.example.toolmanagingsystem.error.DuplicatedIdError;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -44,8 +41,6 @@ public class ApiController
     @PostMapping("/updateUsageNumber")
     public void updateUsageNumber(@RequestBody HashMap<String, Object> number)
     {
-//        System.out.println("number");
-//        System.out.println(number);
          this.dao.updateUsageNumber(number);
     }
 
@@ -63,9 +58,6 @@ public class ApiController
     @GetMapping("/duplicate")
     public int returnCheckResult(@RequestParam String punchId)
     {
-        System.out.println("punchId");
-        System.out.println(punchId);
-
         int count = this.dao.checkDuplicate(punchId);
 
         return count;
@@ -74,29 +66,18 @@ public class ApiController
     @PostMapping("/updateStatus")
     public void updateNewStatus(@RequestBody Map<String, Object> params)
     {
-        System.out.println("updateNewStatus");
-        System.out.println(params);
-
         this.dao.updateNewStatus(params);
     }
 
     @PostMapping("/updateStatus/scrap")
     public void scrapPunch(@RequestBody PunchScrapDao punchScrapDao)
     {
-        System.out.println("punchScrapDao");
-        System.out.println(punchScrapDao.getNumber());
-        System.out.println(punchScrapDao.getNewStatus());
-        System.out.println(punchScrapDao.getReason());
-
         this.dao.deletePunch(punchScrapDao);
     }
 
     @PostMapping("/addCleanHistory")
     public void addCleanHistory(@RequestBody HashMap<String, Object> number)
     {
-        System.out.println("number");
-        System.out.println(number);
-
         this.dao.addCleanHistory(number);
     }
 

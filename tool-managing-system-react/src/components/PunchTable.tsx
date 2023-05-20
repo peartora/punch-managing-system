@@ -4,8 +4,6 @@ import PunchRow from "./PunchRow";
 import { request } from "@/common/Service";
 import { type PunchRow as PunchRowType } from "@/common/types";
 import Button from "./buttonElement/MyButton";
-import { useUpdatePuncState } from "@/common/CustomHooks";
-import { useDisplay } from "@/common/CustomHooks";
 
 function PunchTable() {
   const [rows, setRows] = useState<Array<PunchRowType>>([]);
@@ -94,7 +92,6 @@ function PunchTable() {
   }
 
   function handlerSubmitForPdfUpload() {
-
     const formData = new FormData();
     if (selectedFile) formData.append("inspectionResultPdfFile", selectedFile);
 
@@ -106,7 +103,6 @@ function PunchTable() {
       });
 
     request.post(`/api/tool-managing-system/updateInspectionResult`, formData);
-    useUpdatePuncState(`사용가능`, formData);      
   }
 
   return (
@@ -153,8 +149,7 @@ function PunchTable() {
                   type="file"
                   accept=".pdf"
                   placeholder="검수 결과"
-                  onChange={
-                    (event: React.ChangeEvent<HTMLInputElement>) => {
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     const files = event.target.files;
                     if (files && files.length > 0) {
                       setSelectedFile(files[0] as File);
@@ -175,6 +170,11 @@ function PunchTable() {
       <tbody>
         {rows.map((row) => {
           console.log(row);
+          let checkResult = "";
+
+          if (row.canUse === "초과") checkResult = "red";
+          if (row.canUse === "금일중만료") checkResult = "orange";
+          if (row.canUse === "양호") checkResult = "white";
 
           return (
             <PunchRow
@@ -183,6 +183,7 @@ function PunchTable() {
               handlerChangeForSingleBox={(event) =>
                 handlerChangeForSingleCheckBox(event, row.punchId)
               }
+              className={checkResult}
             />
           );
         })}

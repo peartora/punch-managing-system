@@ -125,7 +125,6 @@ public class PunchDao
             singleRow.put("latestCleaningHistory", rs.getString("latestCleanDate"));
             singleRow.put("latestInspectionDate", rs.getString("latestInspectionDate"));
 
-
             int count = rs.getInt("count");
             singleRow.put("totalUsageNumber", count);
 
@@ -133,6 +132,25 @@ public class PunchDao
             singleRow.put("maxUsageNumber", inspectionSize);
 
             singleRow.put("isSelected", false);
+
+            int batchSize = rs.getInt("batchSize");
+
+
+            if (count > inspectionSize)
+            {
+                singleRow.put("canUse", "초과");
+            }
+            else
+            {
+                if ((inspectionSize - count) <= batchSize)
+                {
+                    singleRow.put("canUse", "금일중만료");
+                }
+                else
+                {
+                    singleRow.put("canUse", "양호");
+                }
+            }
 
             rowFromDB.add(singleRow);
         });

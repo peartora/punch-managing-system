@@ -10,6 +10,7 @@ import OpenFileButton from "./buttonElement/OpenFileButton";
 import { type PunchRow } from "@/common/types";
 import PunchStatusSelect from "./selectElement/PunchStatusSelect";
 import CheckBox from "./checkBox/CheckBox";
+import "./../css/punchRow.css";
 
 type Props = {
   row: PunchRow;
@@ -17,9 +18,10 @@ type Props = {
     event: React.ChangeEvent<HTMLInputElement>,
     punchId: string
   ) => void;
+  className: string;
 };
 
-function PunchRow({ row, handlerChangeForSingleBox }: Props) {
+function PunchRow({ row, handlerChangeForSingleBox, className }: Props) {
   const punchId = row.punchId;
 
   function handlerClick() {
@@ -28,11 +30,8 @@ function PunchRow({ row, handlerChangeForSingleBox }: Props) {
     window.open(fileUrl);
   }
 
-  console.log(`===========================================================================================`);
-  console.log(row.latestInspectionDate);
-
   return (
-    <tr>
+    <tr className={className}>
       <td>
         <CheckBox
           onChange={(event) => handlerChangeForSingleBox(event, row.punchId)}
@@ -44,12 +43,13 @@ function PunchRow({ row, handlerChangeForSingleBox }: Props) {
       <SupplierTd supplier={row.supplier} />
 
       <td>
-        <OpenFileButton text="규격문서 확인" onClick={handlerClick}></OpenFileButton>
+        <OpenFileButton
+          text="규격문서 확인"
+          onClick={handlerClick}
+        ></OpenFileButton>
       </td>
-      
-      <InspectionHistoryTd
-        latestInspectionDate={row.latestInspectionDate}
-      />
+
+      <InspectionHistoryTd latestInspectionDate={row.latestInspectionDate} />
       <td>
         <PunchStatusSelect
           punchStatus={row.punchStatus}
