@@ -1,16 +1,16 @@
-import PunchIdTd from "./tdElements/PunchIdTd";
-import SupplierTd from "./tdElements/SupplierTd";
-import InspectionHistoryTd from "./tdElements/InspectionHistoryTd";
-import PunchStorageLocationTd from "./tdElements/PunchStorageLocationTd";
-import ProductTd from "./tdElements/ProductTd";
-import ProductTypeTd from "./tdElements/ProductTypeTd";
-import CleaningHistoryTd from "./tdElements/CleaningHistoryTd";
-import TotalUsageNumberTd from "./tdElements/TotalUsageNumberTd";
-import OpenFileButton from "./buttonElement/OpenFileButton";
+import PunchIdTd from "./td-elements/PunchIdTd";
+import SupplierTd from "./td-elements/SupplierTd";
+import InspectionHistoryTd from "./td-elements/InspectionHistoryTd";
+import PunchStorageLocationTd from "./td-elements/PunchStorageLocationTd";
+import ProductTd from "./td-elements/ProductTd";
+import ProductTypeTd from "./td-elements/ProductTypeTd";
+import CleaningHistoryTd from "./td-elements/CleaningHistoryTd";
+import TotalUsageNumberTd from "./td-elements/TotalUsageNumberTd";
+import OpenFileButton from "./button-element/OpenFileButton";
 import { type PunchRow } from "@/common/types";
-import PunchStatusSelect from "./selectElement/PunchStatusSelect";
-import CheckBox from "./checkBox/CheckBox";
-import "./../css/punchRow.css";
+import PunchStatusSelect from "./select-element/PunchStatusSelect";
+import CheckBox from "./check-box/CheckBox";
+import "@/css/punchRow.css";
 
 type Props = {
   row: PunchRow;

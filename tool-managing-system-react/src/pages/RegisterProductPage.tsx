@@ -1,5 +1,5 @@
 import NavBar from "@/components/NavBar";
-import RegisterProductForm from "@/components/formElement/RegisterProductForm";
+import RegisterProductForm from "@/components/form-element/RegisterProductForm";
 
 function RegisterProductPage() {
   return (

@@ -1,5 +1,5 @@
 import NavBar from "@/components/NavBar";
-import ModifyProductForm from "@/components/formElement/ModifyProductForm";
+import ModifyProductForm from "@/components/form-element/ModifyProductForm";
 
 function ModifyProductFormPage() {
   return (

@@ -3,7 +3,7 @@ import TableHeader from "./TableHeader";
 import PunchRow from "./PunchRow";
 import { request } from "@/common/service";
 import { type PunchRow as PunchRowType } from "@/common/types";
-import Button from "./buttonElement/MyButton";
+import Button from "./button-element/MyButton";
 
 function PunchTable() {
   const [rows, setRows] = useState<Array<PunchRowType>>([]);

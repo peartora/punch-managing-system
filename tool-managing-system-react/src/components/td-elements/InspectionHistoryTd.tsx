@@ -1,4 +1,4 @@
-import OpenFileButton from "../buttonElement/OpenFileButton";
+import OpenFileButton from "@/components/button-element/OpenFileButton";
 
 type Props = {
   latestInspectionDate: string;

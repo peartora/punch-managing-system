@@ -1,4 +1,4 @@
-import CheckBox from "./../components/checkBox/CheckBox";
+import CheckBox from "./check-box/CheckBox";
 
 type Prop = {
   handlerChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
