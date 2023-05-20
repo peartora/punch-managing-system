@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useBringProductList } from "./../../common/CustomHooks";
+import useBringProductList from "@/common/hooks/use-bring-product-list";
 import { request } from "./../../common/Service";
 
 const options = ["상부", "하부", "다이"];
@@ -141,7 +141,9 @@ function RegisterPunchForm() {
           value={punchType}
           onChange={(event) => setPunchType(event.target.value)}
         >
-          <option value="" disabled>아래 list 에서 선택 하세요.</option>
+          <option value="" disabled>
+            아래 list 에서 선택 하세요.
+          </option>
           {options.map((option) => (
             <option key={option} value={option}>
               {option}
@@ -188,7 +190,9 @@ function RegisterPunchForm() {
           value={productName}
           onChange={(event) => setProductName(event.target.value)}
         >
-          <option value="" disabled>아래 list 에서 선택 하세요.</option>
+          <option value="" disabled>
+            아래 list 에서 선택 하세요.
+          </option>
           {productList.map((productName) => {
             return (
               <option key={productName} value={productName}>
@@ -209,7 +213,9 @@ function RegisterPunchForm() {
           value={productType}
           onChange={(event) => setProductType(event.target.value)}
         >
-          <option value="" disabled>아래 list 에서 선택 하세요.</option>
+          <option value="" disabled>
+            아래 list 에서 선택 하세요.
+          </option>
           {productTypeoptions.map((option) => (
             <option key={option} value={option}>
               {option}
