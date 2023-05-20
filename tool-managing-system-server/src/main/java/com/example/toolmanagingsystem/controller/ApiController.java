@@ -25,6 +25,7 @@ public class ApiController
     private final PunchDao dao;
 
     @PostMapping("/register")
+    public String registerPunch(@RequestBody Punch punch)
     {
         System.out.println(punch);
 
@@ -73,7 +74,6 @@ public class ApiController
     {
         this.dao.deletePunch(punchScrapDao);
     }
-    public String registerPunch(@RequestBody Punch punch)
 
     @PostMapping("/addCleanHistory")
     public void addCleanHistory(@RequestBody HashMap<String, Object> number)
