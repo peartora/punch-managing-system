@@ -1,10 +1,10 @@
-import PunchTable from "./PunchTable";
+import SearchForm from "@/components/formElement/SearchForm";
 
 function FilterablePunchTable() {
   return (
-    <table className="table table-striped table-bordered table-hover">
-      <PunchTable />
-    </table>
+    <>
+      <SearchForm />
+    </>
   );
 }
 

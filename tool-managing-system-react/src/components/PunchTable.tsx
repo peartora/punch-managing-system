@@ -3,17 +3,24 @@ import TableHeader from "./TableHeader";
 import PunchRow from "./PunchRow";
 import { request } from "@/common/Service";
 import { type PunchRow as PunchRowType } from "@/common/types";
+import { URLSearchParams } from "url";
 import Button from "./buttonElement/MyButton";
 
-function PunchTable() {
+type PunchTableProps = {
+  params: URLSearchParams;
+};
+
+function PunchTable({ params }: PunchTableProps) {
   const [rows, setRows] = useState<Array<PunchRowType>>([]);
   const [checked, setChecked] = useState(false);
   const [usageNumber, setUsageNumber] = useState(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   useEffect(() => {
+    console.log(`punchTble`);
+
     request
-      .get(`/api/tool-managing-system/display`)
+      .get(`/api/tool-managing-system/display?${params.toString()}`)
       .then((response) => {
         if (!response.ok) {
           console.error(response.statusText);

@@ -6,10 +6,12 @@ export default function HomePage() {
   return (
     <main>
       <NavBar />
-      <br /><br />
+      <br />
+      <br />
 
-      <SearchForm />
-      <br /><br /><br />
+      <br />
+      <br />
+      <br />
 
       <FilterablePunchTable />
     </main>
