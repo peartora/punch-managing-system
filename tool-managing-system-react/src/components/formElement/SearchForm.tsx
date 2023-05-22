@@ -42,7 +42,7 @@ function SearchForm() {
       if (
         key == "type" ||
         key == "status" ||
-        key == "product" ||
+        key == "p.product" ||
         key == "ptype"
       ) {
         if (value == "All") {

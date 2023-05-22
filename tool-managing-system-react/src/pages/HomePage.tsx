@@ -8,11 +8,6 @@ export default function HomePage() {
       <NavBar />
       <br />
       <br />
-
-      <br />
-      <br />
-      <br />
-
       <FilterablePunchTable />
     </main>
   );
