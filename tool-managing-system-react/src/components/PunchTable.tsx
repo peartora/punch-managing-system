@@ -32,7 +32,7 @@ function PunchTable({ params }: PunchTableProps) {
         setRows(response);
       })
       .catch((error) => console.error(error));
-  }, []);
+  }, [params]);
 
   function handlerChangeForAllCheckBox(event: any) {
     setChecked((checked) => {

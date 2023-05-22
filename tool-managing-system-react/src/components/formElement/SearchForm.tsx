@@ -10,7 +10,7 @@ type FormData = {
   supplier: string;
   status: string;
   storageLocation: string;
-  product: string;
+  "p.product": string;
   ptype: string;
 };
 
@@ -24,7 +24,7 @@ function SearchForm() {
     supplier: "",
     status: "",
     storageLocation: "",
-    product: "",
+    "p.product": "",
     ptype: "",
   });
 
@@ -56,9 +56,9 @@ function SearchForm() {
 
       if (value instanceof Date) {
         const formatedValue = formatDate(value);
-        params.append(key, formatedValue);
+        newParams.append(key, formatedValue);
       } else {
-        params.append(key, value.toString());
+        newParams.append(key, value.toString());
       }
     }
 
@@ -204,11 +204,11 @@ function SearchForm() {
               required
               id="productName"
               className="form-control"
-              value={formData.product}
+              value={formData["p.product"]}
               onChange={(event) => {
                 setFormData((prevState) => ({
                   ...prevState,
-                  product: event.target.value,
+                  "p.product": event.target.value,
                 }));
               }}
             >
