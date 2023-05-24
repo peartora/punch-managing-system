@@ -80,7 +80,6 @@ public class ApiController
     public void addCleanHistory(@RequestBody HashMap<String, Object> number)
     {
         this.dao.addCleanHistory(number);
-
     }
 
     @PostMapping("/uploadFile")

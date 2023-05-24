@@ -16,9 +16,12 @@ function PunchTable({ params }: PunchTableProps) {
   const [isChecked, setIsChecked] = useState(false);
   const [usageNumber, setUsageNumber] = useState(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [triggerEffect, setTriggerEffect] = useState(false);
+  const [triggerEffect, setTriggerEffect] = useState(new Date());
 
   const rows = useDisplay(params, triggerEffect);
+  console.log("rows");
+
+  console.log(rows);
 
   function handlerChangeForAllCheckBox() {
     setIsChecked((prevChecked) => !prevChecked);
@@ -72,9 +75,9 @@ function PunchTable({ params }: PunchTableProps) {
         if (!response.ok)
           throw new Error(`청소이력을 추가 하는 중 Error 발생 하였습니다.`);
       })
-      .then((result) => {
-        setTriggerEffect(!triggerEffect);
-        alert(`${result}`);
+      .then(() => {
+        setTriggerEffect(new Date());
+        // alert(`${result}`);
       })
       .catch((error) => console.error(error));
   }
@@ -103,7 +106,7 @@ function PunchTable({ params }: PunchTableProps) {
         return response.json();
       })
       .then((result) => {
-        setTriggerEffect(!triggerEffect);
+        setTriggerEffect(new Date());
         alert(`${result}`);
       })
       .catch((error) => console.error(error));
@@ -128,7 +131,7 @@ function PunchTable({ params }: PunchTableProps) {
         return response.json();
       })
       .then((result) => {
-        setTriggerEffect(!triggerEffect);
+        setTriggerEffect(new Date());
         alert(`${result}`);
       })
       .catch((error) => console.error(error));
@@ -185,7 +188,6 @@ function PunchTable({ params }: PunchTableProps) {
                     }
                   }}
                 />
-
                 <input type="submit" value="전송" />
               </div>
             </form>
