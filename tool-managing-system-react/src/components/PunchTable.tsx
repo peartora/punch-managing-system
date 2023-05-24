@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useDisplay } from "@/common/CustomHooks";
 import TableHeader from "./TableHeader";
 import PunchRow from "./PunchRow";
 import { request } from "@/common/Service";
@@ -11,48 +12,37 @@ type PunchTableProps = {
 };
 
 function PunchTable({ params }: PunchTableProps) {
-  const [rows, setRows] = useState<Array<PunchRowType>>([]);
-  const [checked, setChecked] = useState(false);
+  const [selectedRows, setSelectedRows] = useState<Array<PunchRowType>>([]);
+  const [isChecked, setIsChecked] = useState(false);
   const [usageNumber, setUsageNumber] = useState(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [triggerEffect, setTriggerEffect] = useState(false);
 
-  useEffect(() => {
-    console.log(`punchTble`);
+  const rows = useDisplay(params, triggerEffect);
 
-    request
-      .get(`/api/tool-managing-system/display?${params.toString()}`)
-      .then((response) => {
-        if (!response.ok) {
-          console.error(response.statusText);
-          throw new Error(`Punch 리스트 로딩 중 error가 발생 하였습니다.`);
-        }
-        return response.json();
-      })
-      .then((response) => {
-        setRows(response);
-      })
-      .catch((error) => console.error(error));
-  }, [params]);
+  function handlerChangeForAllCheckBox() {
+    setIsChecked((prevChecked) => !prevChecked);
 
-  function handlerChangeForAllCheckBox(event: any) {
-    setChecked((checked) => {
-      const changedChecked = !checked;
+    const updatedIsChecked = !isChecked;
 
-      const newRows: PunchRow[] = rows.map((row) => ({
-        ...row,
-        isSelected: changedChecked,
-      }));
-      setRows(newRows);
-      return changedChecked;
-    });
+    const newlySelectedRows: PunchRow[] = (
+      selectedRows.length > 0 ? selectedRows : rows
+    ).map((row) => ({
+      ...row,
+      isSelected: updatedIsChecked,
+    }));
+    setSelectedRows(newlySelectedRows);
   }
 
-  function handlerChangeForSingleCheckBox(event: any, punchId: string) {
+  function handlerChangeForSingleCheckBox(
+    event: React.ChangeEvent<HTMLInputElement>,
+    punchId: string
+  ) {
     const newStatus = event.target.checked;
 
-    setChecked(false);
-
-    const newRows: PunchRow[] = rows.map((row) => {
+    const newlySelectedRows: PunchRow[] = (
+      selectedRows.length > 0 ? selectedRows : rows
+    ).map((row) => {
       if (row.punchId === punchId) {
         return {
           ...row,
@@ -61,12 +51,12 @@ function PunchTable({ params }: PunchTableProps) {
       }
       return row;
     });
-    setRows(newRows);
+    setSelectedRows(newlySelectedRows);
   }
 
   function handlerClickForCleanHistory() {
     // 청소이력 추가를 위한 버튼.
-    const targetRows: Record<string, unknown>[] = rows
+    const targetRows: Record<string, unknown>[] = selectedRows
       .filter((row) => row.isSelected === true)
       .map((row) => ({
         punchId: row.punchId,
@@ -79,27 +69,18 @@ function PunchTable({ params }: PunchTableProps) {
     request
       .post(`/api/tool-managing-system/addCleanHistory`, requestBody)
       .then((response) => {
-        console.log(response);
-
         if (!response.ok)
           throw new Error(`청소이력을 추가 하는 중 Error 발생 하였습니다.`);
-
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.includes("application/json")) {
-          return response.json();
-        } else {
-          throw new Error(`Response was not in JSON format.`);
-        }
       })
       .then((result) => {
-        alert("I`m here");
-        setRows(result);
+        setTriggerEffect(!triggerEffect);
+        alert(`${result}`);
       })
       .catch((error) => console.error(error));
   }
 
   function handlerSubmitForUsageNumber() {
-    const targetRows: Record<string, unknown>[] = rows
+    const targetRows: Record<string, unknown>[] = selectedRows
       .filter((row) => row.isSelected === true)
       .map((row) => {
         const totalUsageNumber = row.totalUsageNumber + usageNumber;
@@ -121,7 +102,10 @@ function PunchTable({ params }: PunchTableProps) {
           throw new Error(`금일 사용 횟 수 update 중 error가 발생 하였습니다.`);
         return response.json();
       })
-      .then((result) => setRows(result))
+      .then((result) => {
+        setTriggerEffect(!triggerEffect);
+        alert(`${result}`);
+      })
       .catch((error) => console.error(error));
   }
 
@@ -129,14 +113,25 @@ function PunchTable({ params }: PunchTableProps) {
     const formData = new FormData();
     if (selectedFile) formData.append("inspectionResultPdfFile", selectedFile);
 
-    const targetRows: void[] = rows
+    selectedRows
       .filter((row) => row.isSelected === true)
       .map((row) => {
         const punchId = row.punchId;
         formData.append("punchId", punchId);
       });
 
-    request.post(`/api/tool-managing-system/updateInspectionResult`, formData);
+    request
+      .post(`/api/tool-managing-system/updateInspectionResult`, formData)
+      .then((response) => {
+        if (!response.ok)
+          throw new Error(`file 핸들링 중 error 발생 하였습니다.`);
+        return response.json();
+      })
+      .then((result) => {
+        setTriggerEffect(!triggerEffect);
+        alert(`${result}`);
+      })
+      .catch((error) => console.error(error));
   }
 
   return (
@@ -197,12 +192,12 @@ function PunchTable({ params }: PunchTableProps) {
           </th>
         </tr>
         <TableHeader
-          selected={checked}
-          handlerChange={(event) => handlerChangeForAllCheckBox(event)}
+          selected={isChecked}
+          handlerChange={handlerChangeForAllCheckBox}
         />
       </thead>
       <tbody>
-        {rows.map((row) => {
+        {(selectedRows.length > 0 ? selectedRows : rows).map((row) => {
           console.log(row);
           let checkResult = "";
 

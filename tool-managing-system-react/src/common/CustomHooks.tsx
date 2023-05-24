@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
 import { request } from "./Service";
+import { type PunchRow as PunchRowType } from "@/common/types";
 
-export const useDisplay = function() {
-  let rows;
-  
+export const useDisplay = function (
+  params: URLSearchParams,
+  triggerEffect: boolean
+) {
+  const [rows, setRows] = useState<Array<PunchRowType>>([]);
+
   useEffect(() => {
+    console.log(`effect happen`);
+
     request
-      .get(`/api/tool-managing-system/display`)
+      .get(`/api/tool-managing-system/display?${params.toString()}`)
       .then((response) => {
         if (!response.ok) {
           console.error(response.statusText);
@@ -15,16 +21,13 @@ export const useDisplay = function() {
         return response.json();
       })
       .then((response) => {
-        rows = response;
-        // setRows(response);
+        setRows(response);
       })
       .catch((error) => console.error(error));
-  }, []);
+  }, [params, triggerEffect]);
 
   return rows;
-}
-
-
+};
 
 export const useBringProductList = function () {
   const [productList, setProductList] = useState<Array<string>>([]);
@@ -34,9 +37,7 @@ export const useBringProductList = function () {
       .get(`/api/tool-managing-system/getProducts`)
       .then((response) => {
         if (!response.ok)
-          throw new Error(
-            `제품 정보를 불러오는데 실패 하였습니다.`
-          );
+          throw new Error(`제품 정보를 불러오는데 실패 하였습니다.`);
         return response.json();
       })
       .then((productList) => {
@@ -46,19 +47,4 @@ export const useBringProductList = function () {
   }, []);
 
   return productList;
-}
-
-export const useUpdatePuncState = function(targetState: string, formData: any) {
-  useEffect(() => {
-    request.post(`/api/tool-managing-system/updateMultiplePunchStatus`, formData)
-    .then(response => {
-      if (!response.ok) throw new Error(`펀치 상태 변경중 error가 발생 하였습니다.`);
-      return response.text();
-    })
-    .then();
-  })
-}
-
-
-
-
+};
