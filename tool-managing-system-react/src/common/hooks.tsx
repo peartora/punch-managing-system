@@ -2,14 +2,14 @@ import { useState, useEffect } from "react";
 import { request } from "./Service";
 import { type PunchRow as PunchRowType } from "@/common/types";
 
-export const useDisplay = function (
-  params: URLSearchParams,
-  triggerEffect: Date
-) {
+export const useDisplay = function (params: URLSearchParams) {
+  const [key, setKey] = useState(() => Date.now());
+  const [isLoading, setLoading] = useState(true);
   const [rows, setRows] = useState<Array<PunchRowType>>([]);
 
   useEffect(() => {
     console.log(`effect happen`);
+    setLoading(true);
 
     request
       .get(`/api/tool-managing-system/display?${params.toString()}`)
@@ -23,16 +23,28 @@ export const useDisplay = function (
       .then((response) => {
         setRows(response);
       })
-      .catch((error) => console.error(error));
-  }, [params, triggerEffect]);
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+  }, [params, key]);
 
-  return rows;
+  const refetch = () => {
+    setKey(Date.now());
+  };
+
+  return {
+    rows,
+    isLoading,
+    refetch,
+  };
 };
 
 export const useBringProductList = function () {
+  const [isLoading, setLoading] = useState(true);
   const [productList, setProductList] = useState<Array<string>>([]);
 
   useEffect(() => {
+    setLoading(true);
+
     request
       .get(`/api/tool-managing-system/getProducts`)
       .then((response) => {
@@ -43,8 +55,12 @@ export const useBringProductList = function () {
       .then((productList) => {
         setProductList([...productList]);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error))
+      .finally(() => setLoading(false));
   }, []);
 
-  return productList;
+  return {
+    productList,
+    isLoading,
+  };
 };

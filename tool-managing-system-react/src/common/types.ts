@@ -20,7 +20,6 @@ export type PunchRow = {
   totalUsageNumber: number;
   usageNumber: number;
   maxUsageNumber: number;
-  isSelected: boolean;
   canUse: string;
 };
 
