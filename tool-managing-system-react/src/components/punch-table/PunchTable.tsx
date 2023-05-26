@@ -4,6 +4,7 @@ import { request } from "@/common/Service";
 import { type PunchRow as PunchRowType } from "@/common/types";
 import Button from "@/components/buttonElement/MyButton";
 import PunchRow from "./PunchRow";
+import InspectionHistoryForm from "./InspectionHistoryForm";
 
 type PunchTableProps = {
   rows: Array<PunchRowType>;
@@ -22,15 +23,15 @@ function PunchTable(props: PunchTableProps) {
   );
 
   const [usageNumber, setUsageNumber] = useState(0);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   /**
   {
     1: false,
     2: true,
     3: true
-  }
+  } normalization
    */
+
   const [selection, setSelection] = useState<Record<string, boolean>>(() =>
     props.rows.reduce((acc, row) => {
       acc[row.punchId] = false;
@@ -121,28 +122,6 @@ function PunchTable(props: PunchTableProps) {
       .catch((error) => console.error(error));
   }
 
-  function handlerSubmitForPdfUpload() {
-    const formData = new FormData();
-    if (selectedFile) formData.append("inspectionResultPdfFile", selectedFile);
-
-    selectedIds.forEach((id) => {
-      formData.append("punchId", id);
-    });
-
-    request
-      .post(`/api/tool-managing-system/updateInspectionResult`, formData)
-      .then((response) => {
-        if (!response.ok)
-          throw new Error(`file 핸들링 중 error 발생 하였습니다.`);
-        return response.json();
-      })
-      .then((result) => {
-        props.refetch();
-        alert(`${result}`);
-      })
-      .catch((error) => console.error(error));
-  }
-
   return (
     <>
       <thead>
@@ -174,29 +153,10 @@ function PunchTable(props: PunchTableProps) {
             </form>
           </th>
           <th>
-            <form onSubmit={handlerSubmitForPdfUpload}>
-              <div className="input-group mb-3">
-                <label htmlFor="uploadInspectionHistory" className="form-label">
-                  검수이력 pdf 파일을 업로드 하세요:
-                </label>
-              </div>
-              <div className="input-group mb-3">
-                <input
-                  id="inspectionHistory"
-                  className="form-control"
-                  type="file"
-                  accept=".pdf"
-                  placeholder="검수 결과"
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    const files = event.target.files;
-                    if (files && files.length > 0) {
-                      setSelectedFile(files[0] as File);
-                    }
-                  }}
-                />
-                <input type="submit" value="전송" />
-              </div>
-            </form>
+            <InspectionHistoryForm
+              selectedIds={selectedIds}
+              refetch={props.refetch}
+            />
           </th>
         </tr>
         <TableHeader
