@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { useBringProductList } from "@/common/CustomHooks";
+import { useBringProductList } from "@/common/hooks";
 import { request } from "./../../common/Service";
 
 function ModifyProductForm() {
-
   const [productName, setProductName] = useState("");
   const [batchSize, setBatchSize] = useState("");
   const [inspectionSize, setInspectionSize] = useState("");
@@ -13,26 +12,25 @@ function ModifyProductForm() {
 
   function handleSubmit() {
     const formData = new FormData();
-          formData.append("product", productName);
-          formData.append("batchSize", batchSize);
-          formData.append("inspectionSize", inspectionSize);
-          if (selectedFile) formData.append("specificationFile", selectedFile);
+    formData.append("product", productName);
+    formData.append("batchSize", batchSize);
+    formData.append("inspectionSize", inspectionSize);
+    if (selectedFile) formData.append("specificationFile", selectedFile);
 
-          console.log("formData")
-          console.log(formData)
+    console.log("formData");
+    console.log(formData);
 
+    request
+      .post(`/api/tool-managing-system/updateBatchInfor`, formData)
+      .then((response) => {
+        if (!response.ok)
+          throw new Error(`제품 정보 변경 중 error가 발생 하였습니다.`);
+        return response.text();
+      })
+      .then((result) => alert(result))
+      .catch((error) => console.error(error));
+  }
 
-          request
-            .post(`/api/tool-managing-system/updateBatchInfor`, formData)
-            .then((response) => {
-              if (!response.ok)
-                throw new Error(`제품 정보 변경 중 error가 발생 하였습니다.`);
-              return response.text();
-            })
-            .then((result) => alert(result))
-            .catch((error) => console.error(error));
-      } 
-    
   return (
     <form onSubmit={handleSubmit}>
       <div className="input-group mb-3">
@@ -45,7 +43,9 @@ function ModifyProductForm() {
           value={productName}
           onChange={(event) => setProductName(event.target.value)}
         >
-          <option value="" disabled>아래 list 에서 선택 하세요.</option>
+          <option value="" disabled>
+            아래 list 에서 선택 하세요.
+          </option>
           {productList.map((productName) => {
             return (
               <option key={productName} value={productName}>
@@ -71,7 +71,7 @@ function ModifyProductForm() {
 
       <div className="input-group mb-3">
         <label htmlFor="inspectionSize" className="form-label">
-        새로운 inspection-size를 입력 하세요 :
+          새로운 inspection-size를 입력 하세요 :
         </label>
         <input
           id="inspectionSize"
@@ -84,7 +84,7 @@ function ModifyProductForm() {
 
       <div className="input-group mb-3">
         <label htmlFor="specification" className="form-label">
-        새로운 specification(pdf file)을 선택 하세요 :
+          새로운 specification(pdf file)을 선택 하세요 :
         </label>
         <input
           id="specification"
@@ -92,8 +92,7 @@ function ModifyProductForm() {
           type="file"
           accept=".pdf"
           placeholder="specification"
-          onChange={
-            (event: React.ChangeEvent<HTMLInputElement>) => {
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             const files = event.target.files;
             if (files && files.length > 0) {
               setSelectedFile(files[0] as File);
@@ -103,7 +102,6 @@ function ModifyProductForm() {
       </div>
 
       <input type="submit" value="제품정보 변경" />
-
     </form>
   );
 }

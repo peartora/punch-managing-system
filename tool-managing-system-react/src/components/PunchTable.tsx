@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDisplay } from "@/common/CustomHooks";
+import { useDisplay } from "@/common/hooks";
 import TableHeader from "./TableHeader";
 import PunchRow from "./PunchRow";
 import { request } from "@/common/Service";
