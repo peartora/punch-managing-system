@@ -4,7 +4,7 @@ import { type PunchRow as PunchRowType } from "@/common/types";
 
 export const useDisplay = function (
   params: URLSearchParams,
-  triggerEffect: boolean
+  triggerEffect: Date
 ) {
   const [rows, setRows] = useState<Array<PunchRowType>>([]);
 
