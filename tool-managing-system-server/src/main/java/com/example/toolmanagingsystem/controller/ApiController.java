@@ -20,7 +20,6 @@ import java.util.*;
 public class ApiController
 {
     private final PunchDao dao;
-
     @PostMapping("/register")
     public String registerPunch(@RequestBody Punch punch)
     {
@@ -34,15 +33,11 @@ public class ApiController
         }
         return "등록 요청이 정상적으로 처리 되지 않았습니다.";
     }
-
     @PostMapping("/updateUsageNumber")
     public void updateUsageNumber(@RequestBody HashMap<String, Object> number)
     {
          this.dao.updateUsageNumber(number);
     }
-
-
-
     @GetMapping("/display")
     public List<HashMap<String, Object>> returnPunchList(@RequestParam Map<String, Object> params)
     {
@@ -86,49 +81,16 @@ public class ApiController
             }
         }
     }
-
     @PostMapping("/updateStatus/scrap")
     public void scrapPunch(@RequestBody PunchScrapDao punchScrapDao)
     {
         this.dao.deletePunch(punchScrapDao);
     }
-
-
     @PostMapping("/addCleanHistory")
     public void addCleanHistory(@RequestBody HashMap<String, Object> number)
     {
         this.dao.addCleanHistory(number);
     }
-
-    @PostMapping("/uploadFile")
-    public String uploadPdfFile(@RequestParam("file") MultipartFile file,
-                                @RequestParam("number") String number)
-    {
-        String fileName = file.getOriginalFilename();
-//        String strFilePath = "C:\\Users\\peart\\Desktop\\files\\" + fileName;
-        String strFilePath = "C:\\Users\\peart\\Desktop\\files\\" + fileName;
-
-        try
-        {
-            byte[] fileBytes = file.getBytes();
-            Path filePath = Paths.get(strFilePath);
-            Files.write(filePath, fileBytes);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        int numberOfAffectedRows = this.dao.addInvestigationHistory(number, strFilePath);
-
-        if (numberOfAffectedRows == 1)
-        {
-            return "펀치 ID :" + number + "의 검수기록이 정상적으로 등록 되었습니다.";
-        }
-
-        return "검수기록 등록이 정상적으로 처리 되지 않았습니다.";
-    }
-
     @PostMapping("/resetCount")
     public int resetCount(@RequestBody String number)
     {
@@ -261,7 +223,7 @@ public class ApiController
     public void updateInspectionResult(MultipartHttpServletRequest params)
     {
         Map<String, MultipartFile> fileMap = params.getFileMap();
-        String filePath = saveSpecificationFile(fileMap.get("inspectionResultPdfFile"));
+        String filePath = saveInspectionFile(fileMap.get("inspectionResultPdfFile"));
 
         Map<String, String[]> parameterMap = params.getParameterMap();
 
@@ -279,37 +241,30 @@ public class ApiController
             }
         }
     }
-
-    @PostMapping("updateMultiplePunchStatus")
-    public void updateMultiplePunchStatus(MultipartHttpServletRequest params)
-    {
-        Map<String, MultipartFile> fileMap = params.getFileMap();
-        String filePath = saveSpecificationFile(fileMap.get("inspectionResultPdfFile"));
-
-        Map<String, String[]> parameterMap = params.getParameterMap();
-
-        for (String key: parameterMap.keySet())
-        {
-            Map<String, Object> mapParamsWithPdfFilePath = new HashMap<String, Object>();
-
-            String[] punchIdArrays = parameterMap.get(key);
-            for(int i = 0; i < punchIdArrays.length; i++)
-            {
-                mapParamsWithPdfFilePath.put("punchId", punchIdArrays[i]);
-                mapParamsWithPdfFilePath.put("filePath", filePath);
-
-                this.dao.updateInspectionResult(mapParamsWithPdfFilePath);
-            }
-        }
-    }
-
 
     private String saveSpecificationFile(MultipartFile specificationFile)
     {
         String fileName = specificationFile.getOriginalFilename();
         // String strFilePath = "C:\\Users\\lsm1dae\\Desktop\\specifications\\" + fileName;
-        String strFilePath = "C:\\Users\\peart\\Desktop\\files\\" + fileName;
+        String strFilePath = "C:\\Users\\peart\\Desktop\\specifications\\" + fileName;
 
+        fileHandling(strFilePath, specificationFile);
+
+        return strFilePath;
+    }
+
+    private String saveInspectionFile(MultipartFile specificationFile)
+    {
+        String fileName = specificationFile.getOriginalFilename();
+        // String strFilePath = "C:\\Users\\lsm1dae\\Desktop\\inspection\\" + fileName;
+        String strFilePath = "C:\\Users\\peart\\Desktop\\inspection\\" + fileName;
+
+        fileHandling(strFilePath, specificationFile);
+
+        return strFilePath;
+    }
+    private void fileHandling(String strFilePath, MultipartFile specificationFile)
+    {
         try
         {
             byte[] fileBytes = specificationFile.getBytes();
@@ -320,7 +275,5 @@ public class ApiController
         {
             e.printStackTrace();
         }
-
-        return strFilePath;
     }
 }

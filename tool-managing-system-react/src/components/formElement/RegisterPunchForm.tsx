@@ -32,7 +32,7 @@ function RegisterPunchForm() {
 
   function handleSubmit() {
     for (let i = Number(startNumber); i <= Number(endNumber); i++) {
-      const punchId = generatePunchId(i, registerDate, productName);
+      const punchId = generatePunchId(i, registerDate, productName, punchType);
 
       const query = new URLSearchParams();
       query.append("punchId", punchId);
@@ -82,9 +82,10 @@ function RegisterPunchForm() {
   function generatePunchId(
     number: number,
     registerDate: string,
-    productName: string
+    productName: string,
+    punchType: string
   ) {
-    return `${number}-${registerDate}-${productName}`;
+    return `${number}-${registerDate}-${productName}-${punchType}`;
   }
 
   return (
