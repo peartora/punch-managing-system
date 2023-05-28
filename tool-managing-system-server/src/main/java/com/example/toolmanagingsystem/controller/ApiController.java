@@ -257,7 +257,6 @@ public class ApiController
 
         return "제품등록 요청이 정상적으로 처리 되지 않았습니다.";
     }
-
     @PostMapping("updateInspectionResult")
     public void updateInspectionResult(MultipartHttpServletRequest params)
     {
@@ -308,7 +307,9 @@ public class ApiController
     private String saveSpecificationFile(MultipartFile specificationFile)
     {
         String fileName = specificationFile.getOriginalFilename();
-        String strFilePath = "C:\\Users\\lsm1dae\\Desktop\\specifications\\" + fileName;
+        // String strFilePath = "C:\\Users\\lsm1dae\\Desktop\\specifications\\" + fileName;
+        String strFilePath = "C:\\Users\\peart\\Desktop\\files\\" + fileName;
+
         try
         {
             byte[] fileBytes = specificationFile.getBytes();

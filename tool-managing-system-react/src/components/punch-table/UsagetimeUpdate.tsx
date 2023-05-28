@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { request } from "@/common/Service";
 import { type PunchRow as PunchRowType } from "@/common/types";
 
@@ -9,9 +8,11 @@ type Props = {
 };
 
 export default function UsagetimeUpdate(props: Props) {
-  const [usageNumber, setUsageNumber] = useState(0);
+  let usageNumber = 0;
 
-  function handlerSubmitForUsageNumber() {
+  function handlerSubmitForUsageNumber(event) {
+    event.preventDefault();
+
     if (props.selectedIds.length === 0) {
       alert(`선택된 펀치가 없습니다.`);
     } else {
@@ -44,7 +45,6 @@ export default function UsagetimeUpdate(props: Props) {
                 `금일 사용 횟 수 update 중 error가 발생 하였습니다.`
               );
             alert(`결과 반영 되었습니다.`);
-
             props.refetch();
           })
           .catch((error) => console.error(error));
@@ -53,7 +53,7 @@ export default function UsagetimeUpdate(props: Props) {
   }
 
   return (
-    <form onSubmit={handlerSubmitForUsageNumber}>
+    <form onSubmit={(event) => handlerSubmitForUsageNumber(event)}>
       <div className="input-group mb-3">
         <label htmlFor="usageNumber" className="form-label">
           금일 사용 횟수를 입력하세요:
@@ -65,7 +65,9 @@ export default function UsagetimeUpdate(props: Props) {
           className="form-control"
           type="number"
           placeholder="사용 횟 수"
-          onChange={(event) => setUsageNumber(parseInt(event.target.value))}
+          onChange={(event) => {
+            usageNumber = parseInt(event.target.value);
+          }}
         />
       </div>
     </form>
