@@ -11,25 +11,30 @@ export default function InspectionHistoryForm(props: Props) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handlerSubmitForPdfUpload = () => {
-    const formData = new FormData();
-    if (selectedFile) formData.append("inspectionResultPdfFile", selectedFile);
+    if (props.selectedIds.length === 0) {
+      alert(`선택 된 펀치가 없습니다.`);
+    } else {
+      const formData = new FormData();
+      if (selectedFile)
+        formData.append("inspectionResultPdfFile", selectedFile);
 
-    props.selectedIds.forEach((id) => {
-      formData.append("punchId", id);
-    });
+      props.selectedIds.forEach((id) => {
+        formData.append("punchId", id);
+      });
 
-    request
-      .post(`/api/tool-managing-system/updateInspectionResult`, formData)
-      .then((response) => {
-        if (!response.ok)
-          throw new Error(`file 핸들링 중 error 발생 하였습니다.`);
-        return response.json();
-      })
-      .then((result) => {
-        props.refetch();
-        alert(`${result}`);
-      })
-      .catch((error) => console.error(error));
+      request
+        .post(`/api/tool-managing-system/updateInspectionResult`, formData)
+        .then((response) => {
+          if (!response.ok)
+            throw new Error(`file 핸들링 중 error 발생 하였습니다.`);
+          return response.json();
+        })
+        .then((result) => {
+          props.refetch();
+          alert(`${result}`);
+        })
+        .catch((error) => console.error(error));
+    }
   };
 
   return (
