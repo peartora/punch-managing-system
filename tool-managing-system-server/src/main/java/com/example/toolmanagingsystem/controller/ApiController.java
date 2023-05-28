@@ -12,10 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/tool-managing-system")
@@ -66,7 +63,28 @@ public class ApiController
     @PostMapping("/updateStatus")
     public void updateNewStatus(@RequestBody Map<String, Object> params)
     {
-        this.dao.updateNewStatus(params);
+        if (params instanceof List)
+        {
+            System.out.println("params as list");
+            System.out.println(params);
+
+            this.dao.updateNewStatus(params);
+
+        }
+        else
+        {
+            System.out.println("params as Map");
+            System.out.println(params);
+            System.out.println(params.get("rows"));
+
+            List<HashMap<String, Object>> rows = (List<HashMap<String, Object>>) params.get("rows");
+
+
+            for (HashMap<String, Object> mapParams: rows)
+            {
+                this.dao.updateNewStatus(mapParams);
+            }
+        }
     }
 
     @PostMapping("/updateStatus/scrap")

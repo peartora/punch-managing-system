@@ -54,7 +54,6 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox }: Props) {
       </td>
       <PunchIdTd punchId={row.punchId} />
       <SupplierTd supplier={row.supplier} />
-
       <td>
         <OpenFileButton
           text="규격문서 확인"

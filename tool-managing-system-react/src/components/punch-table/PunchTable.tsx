@@ -5,6 +5,8 @@ import { type PunchRow as PunchRowType } from "@/common/types";
 import Button from "@/components/buttonElement/MyButton";
 import PunchRow from "./PunchRow";
 import InspectionHistoryForm from "./InspectionHistoryForm";
+import UsagetimeUpdate from "./UsagetimeUpdate";
+import PunchStatusChangeForm from "./PunchStatusChangeForm";
 
 type PunchTableProps = {
   rows: Array<PunchRowType>;
@@ -21,16 +23,6 @@ function PunchTable(props: PunchTableProps) {
       }, {} as Record<string, PunchRowType>),
     [props.rows]
   );
-
-  const [usageNumber, setUsageNumber] = useState(0);
-
-  /**
-  {
-    1: false,
-    2: true,
-    3: true
-  } normalization
-   */
 
   const [selection, setSelection] = useState<Record<string, boolean>>(() =>
     props.rows.reduce((acc, row) => {
@@ -93,35 +85,6 @@ function PunchTable(props: PunchTableProps) {
       .catch((error) => console.error(error));
   }
 
-  function handlerSubmitForUsageNumber() {
-    const targetRows: Record<string, unknown>[] = selectedIds.map((id) => {
-      const row = punchRowsById[id];
-      const totalUsageNumber = row.totalUsageNumber + usageNumber;
-
-      return {
-        punchId: id,
-        totalUsageNumber: totalUsageNumber,
-      };
-    });
-
-    const requestBody = {
-      rows: targetRows,
-    };
-
-    request
-      .post(`/api/tool-managing-system/updateUsageNumber`, requestBody)
-      .then((response) => {
-        if (!response.ok)
-          throw new Error(`금일 사용 횟 수 update 중 error가 발생 하였습니다.`);
-        return response.json();
-      })
-      .then((result) => {
-        props.refetch();
-        alert(`${result}`);
-      })
-      .catch((error) => console.error(error));
-  }
-
   return (
     <>
       <thead>
@@ -133,27 +96,20 @@ function PunchTable(props: PunchTableProps) {
             />
           </th>
           <th>
-            <form onSubmit={handlerSubmitForUsageNumber}>
-              <div className="input-group mb-3">
-                <label htmlFor="usageNumber" className="form-label">
-                  금일 사용 횟수를 입력하세요:
-                </label>
-              </div>
-              <div className="input-group mb-3">
-                <input
-                  id="usageNumber"
-                  className="form-control"
-                  type="number"
-                  placeholder="사용 횟 수"
-                  onChange={(event) =>
-                    setUsageNumber(parseInt(event.target.value))
-                  }
-                />
-              </div>
-            </form>
+            <UsagetimeUpdate
+              selectedIds={selectedIds}
+              punchRowsById={punchRowsById}
+              refetch={props.refetch}
+            />
           </th>
           <th>
             <InspectionHistoryForm
+              selectedIds={selectedIds}
+              refetch={props.refetch}
+            />
+          </th>
+          <th>
+            <PunchStatusChangeForm
               selectedIds={selectedIds}
               refetch={props.refetch}
             />
