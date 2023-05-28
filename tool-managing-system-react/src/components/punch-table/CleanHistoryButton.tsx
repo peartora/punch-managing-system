@@ -1,8 +1,10 @@
 import { request } from "@/common/Service";
 import Button from "@/components/buttonElement/MyButton";
+import { type PunchRow as PunchRowType } from "@/common/types";
 
 type Props = {
   selectedIds: Array<string>;
+  punchRowsById: Record<string, PunchRowType>;
   refetch: () => void;
 };
 
@@ -12,13 +14,14 @@ export default function CleanHistoryButton(props: Props) {
       alert(`선택 된 펀치가 없습니다.`);
     } else {
       const result = confirm(`선택 된 펀치의 청소이력을 추가 하시겠습니까?`);
-
       if (result) {
-        const targetRows = props.selectedIds.map((id) => ({
-          // checking logic will be added here.
-          // if check result is false, I do not want to proceed future
-          punchId: id,
-        }));
+        const targetRows: Record<string, unknown>[] = props.selectedIds.map(
+          (id) => {
+            return {
+              punchId: id,
+            };
+          }
+        );
 
         const requestBody = {
           rows: targetRows,
