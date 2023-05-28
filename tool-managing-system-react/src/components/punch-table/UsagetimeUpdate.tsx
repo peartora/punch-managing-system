@@ -12,34 +12,44 @@ export default function UsagetimeUpdate(props: Props) {
   const [usageNumber, setUsageNumber] = useState(0);
 
   function handlerSubmitForUsageNumber() {
-    const targetRows: Record<string, unknown>[] = props.selectedIds.map(
-      (id) => {
-        const row = props.punchRowsById[id];
-        const totalUsageNumber = row.totalUsageNumber + usageNumber;
+    if (props.selectedIds.length === 0) {
+      alert(`선택된 펀치가 없습니다.`);
+    } else {
+      const result = confirm(
+        `선택 된 펀치의 금일 사용 횟수를 반영 하시겠습니까?`
+      );
 
-        return {
-          punchId: id,
-          totalUsageNumber: totalUsageNumber,
+      if (result) {
+        const targetRows: Record<string, unknown>[] = props.selectedIds.map(
+          (id) => {
+            const row = props.punchRowsById[id];
+            const totalUsageNumber = row.totalUsageNumber + usageNumber;
+
+            return {
+              punchId: id,
+              totalUsageNumber: totalUsageNumber,
+            };
+          }
+        );
+
+        const requestBody = {
+          rows: targetRows,
         };
+
+        request
+          .post(`/api/tool-managing-system/updateUsageNumber`, requestBody)
+          .then((response) => {
+            if (!response.ok)
+              throw new Error(
+                `금일 사용 횟 수 update 중 error가 발생 하였습니다.`
+              );
+            alert(`결과 반영 되었습니다.`);
+
+            props.refetch();
+          })
+          .catch((error) => console.error(error));
       }
-    );
-
-    const requestBody = {
-      rows: targetRows,
-    };
-
-    request
-      .post(`/api/tool-managing-system/updateUsageNumber`, requestBody)
-      .then((response) => {
-        if (!response.ok)
-          throw new Error(`금일 사용 횟 수 update 중 error가 발생 하였습니다.`);
-        return response.json();
-      })
-      .then((result) => {
-        props.refetch();
-        alert(`${result}`);
-      })
-      .catch((error) => console.error(error));
+    }
   }
 
   return (

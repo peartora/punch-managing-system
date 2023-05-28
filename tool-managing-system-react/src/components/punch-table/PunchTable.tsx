@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import TableHeader from "./TableHeader";
-import { request } from "@/common/Service";
 import { type PunchRow as PunchRowType } from "@/common/types";
-import Button from "@/components/buttonElement/MyButton";
 import PunchRow from "./PunchRow";
 import InspectionHistoryForm from "./InspectionHistoryForm";
 import UsagetimeUpdate from "./UsagetimeUpdate";
 import PunchStatusChangeForm from "./PunchStatusChangeForm";
+import CleanHistoryButton from "@/components/punch-table/CleanHistoryButton";
 
 type PunchTableProps = {
   rows: Array<PunchRowType>;
@@ -62,37 +61,15 @@ function PunchTable(props: PunchTableProps) {
     setSelection(nextSelection);
   };
 
-  function handlerClickForCleanHistory() {
-    // 청소이력 추가를 위한 버튼.
-    const targetRows = selectedIds.map((id) => ({
-      punchId: id,
-    }));
-
-    const requestBody = {
-      rows: targetRows,
-    };
-
-    request
-      .post(`/api/tool-managing-system/addCleanHistory`, requestBody)
-      .then((response) => {
-        if (!response.ok)
-          throw new Error(`청소이력을 추가 하는 중 Error 발생 하였습니다.`);
-      })
-      .then(() => {
-        props.refetch();
-        // alert(`${result}`);
-      })
-      .catch((error) => console.error(error));
-  }
-
   return (
     <>
       <thead>
+        ``
         <tr>
           <th>
-            <Button
-              text="청소이력 추가"
-              handlerClick={handlerClickForCleanHistory}
+            <CleanHistoryButton
+              selectedIds={selectedIds}
+              refetch={props.refetch}
             />
           </th>
           <th>
