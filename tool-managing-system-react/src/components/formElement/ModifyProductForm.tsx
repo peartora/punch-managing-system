@@ -8,7 +8,7 @@ function ModifyProductForm() {
   const [inspectionSize, setInspectionSize] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const productList = useBringProductList();
+  const { productList, isLoading } = useBringProductList();
 
   function handleSubmit() {
     const formData = new FormData();

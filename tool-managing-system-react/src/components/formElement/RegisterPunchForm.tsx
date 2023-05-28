@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useBringProductList } from "../../common/hooks";
+import { useBringProductList } from "@/common/hooks";
 import { request } from "./../../common/Service";
 
 const options = ["상부", "하부", "다이"];
@@ -28,7 +28,7 @@ function RegisterPunchForm() {
   const [productName, setProductName] = useState("");
   const [productType, setProductType] = useState("");
 
-  const productList = useBringProductList();
+  const { productList, isLoading } = useBringProductList();
 
   function handleSubmit() {
     for (let i = Number(startNumber); i <= Number(endNumber); i++) {
