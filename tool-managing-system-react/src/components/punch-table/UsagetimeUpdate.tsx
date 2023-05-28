@@ -21,8 +21,15 @@ export default function UsagetimeUpdate(props: Props) {
       );
 
       if (result) {
-        const targetRows: Record<string, unknown>[] = props.selectedIds.map(
-          (id) => {
+        let targetRows: Record<string, unknown>[];
+
+        try {
+          targetRows = props.selectedIds.map((id) => {
+            if (props.punchRowsById[id].punchStatus != `사용중`) {
+              alert(`사용중 상태가 아닌 펀치가 있습니다.`);
+              throw new Error("Check failed"); // Throw an exception
+            }
+
             const row = props.punchRowsById[id];
             const totalUsageNumber = row.totalUsageNumber + usageNumber;
 
@@ -30,8 +37,10 @@ export default function UsagetimeUpdate(props: Props) {
               punchId: id,
               totalUsageNumber: totalUsageNumber,
             };
-          }
-        );
+          });
+        } catch (error) {
+          return; // Stop the execution of the function
+        }
 
         const requestBody = {
           rows: targetRows,
