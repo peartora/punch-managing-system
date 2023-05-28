@@ -33,8 +33,25 @@ export default function InspectionHistoryForm(props: Props) {
             if (!response.ok)
               throw new Error(`file 핸들링 중 error 발생 하였습니다.`);
 
-            props.refetch();
-            alert(`${result}`);
+            const targetRows = props.selectedIds.map((id) => {
+              return {
+                punchId: id,
+                newStatus: "사용가능",
+              };
+            });
+            const requestBody = {
+              rows: targetRows,
+            };
+
+            request
+              .post(`/api/tool-managing-system/updateStatus`, requestBody)
+              .then((response) => {
+                if (!response.ok)
+                  throw new Error(`상태 변경 중 error 발생 하였습니다.`);
+
+                props.refetch();
+                alert(`사용가능 상태로 변경 되었습니다.`);
+              });
           })
           .catch((error) => console.error(error));
       }

@@ -64,7 +64,6 @@ public class ApiController
             System.out.println(params);
 
             this.dao.updateNewStatus(params);
-
         }
         else
         {
@@ -73,7 +72,6 @@ public class ApiController
             System.out.println(params.get("rows"));
 
             List<HashMap<String, Object>> rows = (List<HashMap<String, Object>>) params.get("rows");
-
 
             for (HashMap<String, Object> mapParams: rows)
             {
