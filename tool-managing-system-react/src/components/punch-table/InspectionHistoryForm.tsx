@@ -1,9 +1,10 @@
 import { useState } from "react";
-
 import { request } from "@/common/Service";
+import { type PunchRow as PunchRowType } from "@/common/types";
 
 type Props = {
   selectedIds: Array<string>;
+  punchRowsById: Record<string, PunchRowType>;
   refetch: () => void;
 };
 
@@ -20,44 +21,53 @@ export default function InspectionHistoryForm(props: Props) {
 
       if (result) {
         const formData = new FormData();
+
         if (selectedFile)
           formData.append("inspectionResultPdfFile", selectedFile);
 
-        props.selectedIds.forEach((id) => {
-          formData.append("punchId", id);
-        });
+        try {
+          props.selectedIds.forEach((id) => {
+            if (props.punchRowsById[id].punchStatus !== "사용불가") {
+              alert(`사용불가 상태가 아닌 펀치가 있습니다.`);
+              throw new Error("Check failed"); // Throw an exception
+            }
 
-        request
-          .post(`/api/tool-managing-system/updateInspectionResult`, formData)
-          .then((response) => {
-            if (!response.ok)
-              throw new Error(`file 핸들링 중 error 발생 하였습니다.`);
+            formData.append("punchId", id);
+          });
 
-            const targetRows = props.selectedIds.map((id) => {
-              return {
-                punchId: id,
-                newStatus: "사용가능",
-              };
-            });
-            const requestBody = {
-              rows: targetRows,
-            };
+          request
+            .post(`/api/tool-managing-system/updateInspectionResult`, formData)
+            .then((response) => {
+              if (!response.ok)
+                throw new Error(`file 핸들링 중 error 발생 하였습니다.`);
 
-            request
-              .post(`/api/tool-managing-system/updateStatus`, requestBody)
-              .then((response) => {
-                if (!response.ok)
-                  throw new Error(`상태 변경 중 error 발생 하였습니다.`);
-
-                props.refetch();
-                alert(`사용가능 상태로 변경 되었습니다.`);
+              const targetRows = props.selectedIds.map((id) => {
+                return {
+                  punchId: id,
+                  newStatus: "사용가능",
+                };
               });
-          })
-          .catch((error) => console.error(error));
+              const requestBody = {
+                rows: targetRows,
+              };
+
+              request
+                .post(`/api/tool-managing-system/updateStatus`, requestBody)
+                .then((response) => {
+                  if (!response.ok)
+                    throw new Error(`상태 변경 중 error 발생 하였습니다.`);
+
+                  props.refetch();
+                  alert(`사용가능 상태로 변경 되었습니다.`);
+                });
+            })
+            .catch((error) => console.error(error));
+        } catch (error) {
+          return;
+        }
       }
     }
   };
-
   return (
     <form onSubmit={(event) => handlerSubmitForPdfUpload(event)}>
       <div className="input-group mb-3">

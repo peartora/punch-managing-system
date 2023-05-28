@@ -64,7 +64,6 @@ function PunchTable(props: PunchTableProps) {
   return (
     <>
       <thead>
-        ``
         <tr>
           <th>
             <CleanHistoryButton
@@ -82,6 +81,7 @@ function PunchTable(props: PunchTableProps) {
           <th>
             <InspectionHistoryForm
               selectedIds={selectedIds}
+              punchRowsById={punchRowsById}
               refetch={props.refetch}
             />
           </th>

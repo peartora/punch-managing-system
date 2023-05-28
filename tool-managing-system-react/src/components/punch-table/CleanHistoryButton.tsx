@@ -15,6 +15,8 @@ export default function CleanHistoryButton(props: Props) {
 
       if (result) {
         const targetRows = props.selectedIds.map((id) => ({
+          // checking logic will be added here.
+          // if check result is false, I do not want to proceed future
           punchId: id,
         }));
 
@@ -28,8 +30,8 @@ export default function CleanHistoryButton(props: Props) {
             if (!response.ok)
               throw new Error(`청소이력을 추가 하는 중 Error 발생 하였습니다.`);
 
-            alert(`청소이력 반영 되었습니다.`);
             props.refetch();
+            alert(`결과 반영 되었습니다.`);
           })
           .catch((error) => console.error(error));
       }
