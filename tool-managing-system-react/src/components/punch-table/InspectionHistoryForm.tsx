@@ -11,7 +11,7 @@ type Props = {
 export default function InspectionHistoryForm(props: Props) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const handlerSubmitForPdfUpload = (event) => {
+  const handlerSubmitForPdfUpload = async (event) => {
     event.preventDefault();
 
     if (props.selectedIds.length === 0) {
@@ -22,52 +22,62 @@ export default function InspectionHistoryForm(props: Props) {
       if (result) {
         const formData = new FormData();
 
-        if (selectedFile)
+        if (selectedFile) {
           formData.append("inspectionResultPdfFile", selectedFile);
+        }
 
         try {
-          props.selectedIds.forEach((id) => {
+          for (const id of props.selectedIds) {
             if (props.punchRowsById[id].punchStatus !== "사용불가") {
               alert(`사용불가 상태가 아닌 펀치가 있습니다.`);
               throw new Error("Check failed"); // Throw an exception
             }
 
             formData.append("punchId", id);
-          });
+          }
 
-          request
-            .post(`/api/tool-managing-system/updateInspectionResult`, formData)
-            .then((response) => {
-              if (!response.ok)
-                throw new Error(`file 핸들링 중 error 발생 하였습니다.`);
+          await request.post(
+            `/api/tool-managing-system/updateInspectionResult`,
+            formData
+          );
 
-              const targetRows = props.selectedIds.map((id) => {
-                return {
-                  punchId: id,
-                  newStatus: "사용가능",
-                };
-              });
-              const requestBody = {
-                rows: targetRows,
-              };
+          const targetRows = props.selectedIds.map((id) => ({
+            punchId: id,
+            newStatus: "사용가능",
+          }));
 
-              request
-                .post(`/api/tool-managing-system/updateStatus`, requestBody)
-                .then((response) => {
-                  if (!response.ok)
-                    throw new Error(`상태 변경 중 error 발생 하였습니다.`);
+          const statusUpdateRequestBody = {
+            rows: targetRows,
+          };
 
-                  props.refetch();
-                  alert(`사용가능 상태로 변경 되었습니다.`);
-                });
-            })
-            .catch((error) => console.error(error));
+          await request.post(
+            `/api/tool-managing-system/updateStatus`,
+            statusUpdateRequestBody
+          );
+
+          const usageNumberResetRows = props.selectedIds.map((id) => ({
+            punchId: id,
+            totalUsageNumber: 0,
+          }));
+
+          const usageNumberResetRequestBody = {
+            rows: usageNumberResetRows,
+          };
+
+          await request.post(
+            `/api/tool-managing-system/updateUsageNumber`,
+            usageNumberResetRequestBody
+          );
+
+          props.refetch();
+          alert(`사용가능 상태로 변경 되었습니다.`);
         } catch (error) {
-          return;
+          console.error(error);
         }
       }
     }
   };
+
   return (
     <form onSubmit={(event) => handlerSubmitForPdfUpload(event)}>
       <div className="input-group mb-3">

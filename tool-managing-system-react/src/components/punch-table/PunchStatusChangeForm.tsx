@@ -46,7 +46,6 @@ export default function PunchStatusChangeForm(props: Props) {
 
             props.refetch();
             alert(`상태 변경 되었습니다.`);
-            return response.json();
           })
           .catch((error) => console.error(error));
       }

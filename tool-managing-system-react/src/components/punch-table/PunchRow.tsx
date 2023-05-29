@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { request } from "@/common/Service";
 import PunchIdTd from "../tdElements/PunchIdTd";
 import SupplierTd from "../tdElements/SupplierTd";
 import InspectionHistoryTd from "../tdElements/InspectionHistoryTd";
@@ -19,10 +21,18 @@ type Props = {
     event: React.ChangeEvent<HTMLInputElement>,
     punchId: string
   ) => void;
+  refetch: () => void;
 };
 
-function PunchRow({ row, chekced, handlerChangeForSingleBox }: Props) {
+type Data = {
+  punchId: string;
+  newStatus: string;
+};
+
+function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
   const punchId = row.punchId;
+
+  console.log(typeof refetch);
 
   let checkResult = "";
   switch (row.canUse) {
@@ -36,6 +46,29 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox }: Props) {
       checkResult = "white";
       break;
   }
+
+  useEffect(() => {
+    alert(`useEffect runs!`);
+
+    if (row.canUse === "초과") {
+      const data: Data = {
+        punchId: punchId,
+        newStatus: `사용불가`,
+      };
+
+      request
+        .post(`/api/tool-managing-system/updateStatus`, data)
+        .then((response) => {
+          alert(`펀치로우 사이드 이팩트 진입`);
+
+          if (!response.ok)
+            throw new Error(`상태 변경 중 error가 발생 하였습니다.`);
+          refetch();
+          alert(`사용불가 상태 변경 되었습니다.`);
+        })
+        .catch((error) => console.error(error));
+    }
+  }, [row.canUse]);
 
   function handlerClick() {
     const filePath = row.specification;

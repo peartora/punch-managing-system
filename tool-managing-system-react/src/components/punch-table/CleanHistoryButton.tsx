@@ -9,6 +9,8 @@ type Props = {
 };
 
 export default function CleanHistoryButton(props: Props) {
+  console.log(typeof props.refetch);
+
   const handlerClickForCleanHistory = () => {
     if (props.selectedIds.length === 0) {
       alert(`선택 된 펀치가 없습니다.`);

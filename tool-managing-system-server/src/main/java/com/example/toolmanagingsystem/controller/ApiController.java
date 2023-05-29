@@ -58,19 +58,16 @@ public class ApiController
     @PostMapping("/updateStatus")
     public void updateNewStatus(@RequestBody Map<String, Object> params)
     {
-        if (params instanceof List)
-        {
-            System.out.println("params as list");
-            System.out.println(params);
+        System.out.println("params as Map");
+        System.out.println(params);
+        System.out.println(params.get("rows"));
 
+        if (params.get("rows") == null)
+        {
             this.dao.updateNewStatus(params);
         }
         else
         {
-            System.out.println("params as Map");
-            System.out.println(params);
-            System.out.println(params.get("rows"));
-
             List<HashMap<String, Object>> rows = (List<HashMap<String, Object>>) params.get("rows");
 
             for (HashMap<String, Object> mapParams: rows)
@@ -79,6 +76,7 @@ public class ApiController
             }
         }
     }
+
     @PostMapping("/updateStatus/scrap")
     public void scrapPunch(@RequestBody PunchScrapDao punchScrapDao)
     {

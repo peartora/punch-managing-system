@@ -13,6 +13,10 @@ type PunchTableProps = {
 };
 
 function PunchTable(props: PunchTableProps) {
+  console.log(`펀치 table`);
+
+  console.log(typeof props.refetch);
+
   // normalization
   const punchRowsById = useMemo<Record<string, PunchRowType>>(
     () =>
@@ -104,6 +108,7 @@ function PunchTable(props: PunchTableProps) {
           <PunchRow
             key={row.punchId}
             row={row}
+            refetch={props.refetch}
             chekced={selection[row.punchId]}
             handlerChangeForSingleBox={() => toggleId(row.punchId)}
           />
