@@ -28,8 +28,13 @@ export default function InspectionHistoryForm(props: Props) {
 
         try {
           for (const id of props.selectedIds) {
-            if (props.punchRowsById[id].punchStatus !== "사용불가") {
-              alert(`사용불가 상태가 아닌 펀치가 있습니다.`);
+            if (
+              props.punchRowsById[id].punchStatus !== "사용대기" &&
+              props.punchRowsById[id].punchStatus !== "사용불가"
+            ) {
+              alert(
+                `검수이력은 사용대기 혹은 사용불가 상태의 펀치만 가능 합니다.`
+              );
               throw new Error("Check failed"); // Throw an exception
             }
 
