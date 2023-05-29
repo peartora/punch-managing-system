@@ -63,9 +63,6 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
         })
         .catch((error) => console.error(error));
     }
-    alert(
-      `펀치 사용 횟 수가 batch size를 초과 하여 사용불가 상태로 변경 되었습니다.`
-    );
   }, [row.canUse]);
 
   function handlerClick() {

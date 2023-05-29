@@ -42,6 +42,7 @@ function ModifyProductForm() {
           className="form-control"
           value={productName}
           onChange={(event) => setProductName(event.target.value)}
+          required
         >
           <option value="" disabled>
             아래 list 에서 선택 하세요.
