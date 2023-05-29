@@ -68,6 +68,7 @@ function PunchTable(props: PunchTableProps) {
           <th>
             <CleanHistoryButton
               selectedIds={selectedIds}
+              punchRowsById={punchRowsById}
               refetch={props.refetch}
             />
           </th>
