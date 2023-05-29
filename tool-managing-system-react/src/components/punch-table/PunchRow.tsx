@@ -48,8 +48,6 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
   }
 
   useEffect(() => {
-    alert(`useEffect runs!`);
-
     if (row.canUse === "초과") {
       const data: Data = {
         punchId: punchId,
@@ -59,15 +57,15 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
       request
         .post(`/api/tool-managing-system/updateStatus`, data)
         .then((response) => {
-          alert(`펀치로우 사이드 이팩트 진입`);
-
           if (!response.ok)
             throw new Error(`상태 변경 중 error가 발생 하였습니다.`);
           refetch();
-          alert(`사용불가 상태 변경 되었습니다.`);
         })
         .catch((error) => console.error(error));
     }
+    alert(
+      `펀치 사용 횟 수가 batch size를 초과 하여 사용불가 상태로 변경 되었습니다.`
+    );
   }, [row.canUse]);
 
   function handlerClick() {
