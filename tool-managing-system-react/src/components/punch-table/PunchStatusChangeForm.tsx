@@ -55,7 +55,7 @@ export default function PunchStatusChangeForm(props: Props) {
   return (
     <select onChange={(e) => handleChange(e)}>
       <option value="" disabled selected>
-        아래 list 에서 선택 하세요.
+        선택 하세요.
       </option>
       {options.map((o) => {
         return (
