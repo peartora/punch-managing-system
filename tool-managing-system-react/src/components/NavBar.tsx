@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 
 export default function NavBar() {
-
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
@@ -24,6 +23,9 @@ export default function NavBar() {
         </li>
         <li className="nav-item">
           <Link to="/modify-product">제품정보 변경</Link>
+        </li>
+        <li className="nav-item">
+          <Link to="/add-supplier">업체 등록</Link>
         </li>
       </ul>
     </nav>

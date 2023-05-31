@@ -238,6 +238,21 @@ public class ApiController
         }
     }
 
+    @PostMapping("/addSupplier")
+    public String addSupplier(@RequestBody HashMap<String, Object> params)
+    {
+
+        int numberOfAffectedRows = this.dao.addSupplier(params);
+
+        if (numberOfAffectedRows == 1)
+        {
+            return params.get("supplier") + " 이 등록 되었습니다.";
+        }
+
+        return params.get("supplier") + " 등록 중 error가 발생 하였습니다.";
+    }
+
+
     private String saveSpecificationFile(MultipartFile specificationFile)
     {
         String fileName = specificationFile.getOriginalFilename();

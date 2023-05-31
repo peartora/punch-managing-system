@@ -347,5 +347,10 @@ public class PunchDao
         return this.template.update("insert into `inspection-history` (`punch-number`, `when-inspected`, `file-path`) values (:punchId, now(), :filePath)", mapParamsWithPdfFile);
     }
 
+    public int addSupplier(HashMap<String, Object> params)
+    {
+        return this.template.update("insert into `manufacturer` (`supplier`) values (:supplier)", params);
+    }
+
 //    "insert into `inspection-history` (`punch-number`, `when-inspected`, `file-path`) values (:number, now(), :filePath)"
 }
