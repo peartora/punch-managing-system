@@ -360,5 +360,12 @@ public class PunchDao
         return this.template.queryForObject("select count(*) from `manufacturer` where `supplier` = :supplier", supplierMap, Integer.class);
     }
 
+    public List<String> returnSuppliers()
+    {
+        Map<String, Object> paramMap = Collections.emptyMap();
+
+        return this.template.queryForList( "select `supplier` from `manufacturer`", paramMap, String.class);
+    }
+
 //    "insert into `inspection-history` (`punch-number`, `when-inspected`, `file-path`) values (:number, now(), :filePath)"
 }

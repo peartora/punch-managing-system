@@ -258,6 +258,12 @@ public class ApiController
         return this.dao.checkDuplicateSupplier(supplier);
     }
 
+    @GetMapping("/getSuppliers")
+    public List<String> returnSuppliers()
+    {
+        return this.dao.returnSuppliers();
+    }
+
 
     private String saveSpecificationFile(MultipartFile specificationFile)
     {

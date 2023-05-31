@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useBringProductList } from "@/common/hooks";
+import { useBringSupplierList } from "@/common/hooks";
+
 import { request } from "./../../common/Service";
 
 const options = ["상부", "하부", "다이"];
@@ -29,6 +31,7 @@ function RegisterPunchForm() {
   const [productType, setProductType] = useState("");
 
   const { productList, isLoading } = useBringProductList();
+  const { supplierList } = useBringSupplierList();
 
   function handleSubmit() {
     for (let i = Number(startNumber); i <= Number(endNumber); i++) {
@@ -153,7 +156,7 @@ function RegisterPunchForm() {
         </select>
       </div>
 
-      <div className="input-group mb-3">
+      {/* <div className="input-group mb-3">
         <label htmlFor="supplier" className="form-label">
           제조사:
         </label>
@@ -165,6 +168,29 @@ function RegisterPunchForm() {
           value={supplier}
           onChange={(event) => setSupplier(event.target.value)}
         />
+      </div> */}
+
+      <div className="input-group mb-3">
+        <label htmlFor="supplier" className="form-label">
+          업체:
+        </label>
+        <select
+          id="supplier"
+          className="form-control"
+          value={supplier}
+          onChange={(event) => setSupplier(event.target.value)}
+        >
+          <option value="" disabled>
+            아래 list 에서 선택 하세요.
+          </option>
+          {supplierList.map((supplier) => {
+            return (
+              <option key={supplier} value={supplier}>
+                {supplier}
+              </option>
+            );
+          })}
+        </select>
       </div>
 
       <div className="input-group mb-3">

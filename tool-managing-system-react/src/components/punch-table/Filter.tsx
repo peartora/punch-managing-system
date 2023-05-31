@@ -4,13 +4,14 @@ import { formatDate } from "@/common/Service";
 type Props = {
   setParams: (params: URLSearchParams) => void;
   productList: Array<string>;
+  supplierList: Array<string>;
 };
 
 type FormData = {
   startDate: Date;
   endDate: Date;
   type: string;
-  supplier: string;
+  manufacturer: string;
   status: string;
   storageLocation: string;
   "p.product": string;
@@ -22,7 +23,7 @@ export default function Filter(props: Props) {
     startDate: new Date(),
     endDate: new Date(),
     type: "",
-    supplier: "",
+    manufacturer: "",
     status: "",
     storageLocation: "",
     "p.product": "",
@@ -39,6 +40,7 @@ export default function Filter(props: Props) {
 
       if (
         key == "type" ||
+        key == "manufacturer" ||
         key == "status" ||
         key == "p.product" ||
         key == "ptype"
@@ -135,7 +137,7 @@ export default function Filter(props: Props) {
           </select>
         </div>
 
-        <div className="col">
+        {/* <div className="col">
           <label className="form-label">제조사: </label>
           <input
             className="form-control"
@@ -148,6 +150,36 @@ export default function Filter(props: Props) {
               }));
             }}
           />
+        </div> */}
+
+        <div className="col">
+          <label htmlFor="supplier" className="form-label">
+            업체:
+          </label>
+          <select
+            required
+            id="supplier"
+            className="form-control"
+            value={formData["manufacturer"]}
+            onChange={(event) => {
+              setFormData((prevState) => ({
+                ...prevState,
+                manufacturer: event.target.value,
+              }));
+            }}
+          >
+            <option value="" disabled>
+              아래 list 에서 선택 하세요.
+            </option>
+            {props.supplierList.map((supplierName) => {
+              return (
+                <option key={supplierName} value={supplierName}>
+                  {supplierName}
+                </option>
+              );
+            })}
+            <option value="All">All</option>
+          </select>
         </div>
 
         <div className="col">
