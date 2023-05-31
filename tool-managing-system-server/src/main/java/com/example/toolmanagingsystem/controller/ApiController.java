@@ -252,6 +252,12 @@ public class ApiController
         return params.get("supplier") + " 등록 중 error가 발생 하였습니다.";
     }
 
+    @GetMapping("/duplicateSupplier")
+    public int returnCheckResultForSupplier(@RequestParam String supplier)
+    {
+        return this.dao.checkDuplicateSupplier(supplier);
+    }
+
 
     private String saveSpecificationFile(MultipartFile specificationFile)
     {

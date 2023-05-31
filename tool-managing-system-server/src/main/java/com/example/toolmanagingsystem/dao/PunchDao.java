@@ -352,5 +352,13 @@ public class PunchDao
         return this.template.update("insert into `manufacturer` (`supplier`) values (:supplier)", params);
     }
 
+    public int checkDuplicateSupplier(String supplier)
+    {
+        Map<String, String> supplierMap = new HashMap<>();
+        supplierMap.put("supplier", supplier);
+
+        return this.template.queryForObject("select count(*) from `manufacturer` where `supplier` = :supplier", supplierMap, Integer.class);
+    }
+
 //    "insert into `inspection-history` (`punch-number`, `when-inspected`, `file-path`) values (:number, now(), :filePath)"
 }

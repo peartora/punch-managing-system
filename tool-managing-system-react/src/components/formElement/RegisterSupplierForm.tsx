@@ -5,23 +5,42 @@ function RegisterSupplierForm() {
   const [supplier, setSupplier] = useState(``);
 
   function handleSubmit() {
-    const body = {
-      supplier: supplier,
-    };
+    const query = new URLSearchParams();
+    query.append("supplier", supplier);
 
     request
-      .post(`/api/tool-managing-system/addSupplier`, body)
+      .get(`/api/tool-managing-system/duplicateSupplier?${query}`)
       .then((response) => {
         if (!response.ok)
-          throw new Error(`업체명 등록 중 error가 발생 하였습니다.`);
+          throw new Error(
+            `${supplier} 업체명 중복 확인 중 error가 발생 하였습니다.`
+          );
         return response.text();
       })
-      .then((result) => {
-        alert(`${result}`);
+      .then((returnValue) => {
+        if (returnValue === "0") {
+          const body = {
+            supplier: supplier,
+          };
+
+          request
+            .post(`/api/tool-managing-system/addSupplier`, body)
+            .then((response) => {
+              if (!response.ok)
+                throw new Error(`업체명 등록 중 error가 발생 하였습니다.`);
+              return response.text();
+            })
+            .then((result) => {
+              alert(`${result}`);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        } else {
+          alert(`해당 업체명은 중복 되어 등록 될 수 없습니다.`);
+        }
       })
-      .catch((error) => {
-        console.error(error);
-      });
+      .catch((error) => console.error(error));
   }
 
   return (
