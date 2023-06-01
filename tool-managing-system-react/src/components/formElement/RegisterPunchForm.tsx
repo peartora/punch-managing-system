@@ -82,13 +82,18 @@ function RegisterPunchForm() {
     }
   }
 
+  function modifyDate(registerDate: string) {
+    return registerDate.replace(/-/g, "/");
+  }
+
   function generatePunchId(
     number: number,
     registerDate: string,
     productName: string,
     punchType: string
   ) {
-    return `${number}-${registerDate}-${productName}-${punchType}`;
+    // return `${number}-${registerDate}-${productName}-${punchType}`;
+    return `${number}-${modifyDate(registerDate)}-${productName}-${punchType}`;
   }
 
   return (
