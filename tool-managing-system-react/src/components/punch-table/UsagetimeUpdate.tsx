@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { request } from "@/common/Service";
 import { type PunchRow as PunchRowType } from "@/common/types";
 
@@ -8,7 +9,7 @@ type Props = {
 };
 
 export default function UsagetimeUpdate(props: Props) {
-  let usageNumber = 0;
+  const [usageNumber, setUsageNumber] = useState(0);
 
   function handlerSubmitForUsageNumber(event) {
     event.preventDefault();
@@ -53,6 +54,7 @@ export default function UsagetimeUpdate(props: Props) {
               throw new Error(
                 `금일 사용 횟 수 update 중 error가 발생 하였습니다.`
               );
+            setUsageNumber(0);
             alert(`결과 반영 되었습니다.`);
             props.refetch();
           })
@@ -74,11 +76,14 @@ export default function UsagetimeUpdate(props: Props) {
           className="form-control"
           type="number"
           placeholder="사용 횟 수"
+          value={usageNumber}
           onChange={(event) => {
-            usageNumber = parseInt(event.target.value);
+            setUsageNumber(parseInt(event.target.value));
           }}
         />
       </div>
+
+      <input type="submit" value="전송" />
     </form>
   );
 }
