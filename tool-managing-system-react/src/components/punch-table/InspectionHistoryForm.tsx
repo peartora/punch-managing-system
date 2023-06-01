@@ -74,6 +74,7 @@ export default function InspectionHistoryForm(props: Props) {
             usageNumberResetRequestBody
           );
 
+          setSelectedFile(null);
           props.refetch();
           alert(`사용가능 상태로 변경 되었습니다.`);
         } catch (error) {
