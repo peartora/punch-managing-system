@@ -83,9 +83,12 @@ public class ApiController
         this.dao.deletePunch(punchScrapDao);
     }
     @PostMapping("/addCleanHistory")
-    public void addCleanHistory(@RequestBody HashMap<String, Object> number)
+    public void addCleanHistory(@RequestBody HashMap<String, Object> params)
     {
-        this.dao.addCleanHistory(number);
+        System.out.println(params);
+        System.out.println("params");
+
+        this.dao.addCleanHistory(params);
     }
     @PostMapping("/resetCount")
     public int resetCount(@RequestBody String number)

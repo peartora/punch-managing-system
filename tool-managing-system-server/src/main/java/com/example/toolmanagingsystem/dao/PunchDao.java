@@ -215,22 +215,18 @@ public class PunchDao
 
     public void addCleanHistory(HashMap<String, Object> number)
     {
-        LocalDateTime now = LocalDateTime.now();
 
-        List<HashMap<String, Object>> punchIds = (List<HashMap<String, Object>>)  number.get("rows");
+        List<HashMap<String, Object>> punchIdsAndDateTime = (List<HashMap<String, Object>>)  number.get("rows");
 
-        for (HashMap<String, Object> map: punchIds)
+        for (HashMap<String, Object> map: punchIdsAndDateTime)
         {
-            for (String punchId: map.keySet())
+            Map<String, Object> information = new HashMap<>();
+
+            for (String key: map.keySet())
             {
-                Map<String, Object> information = new HashMap<>();
-                information.put("punchId", map.get(punchId));
-                information.put("now", now);
-
-                System.out.println(information);
-
-                this.template.update("insert into `clean-history` (`punch-number`, `when-cleaned`) values (:punchId, :now)", information);
+                information.put(key, map.get(key));
             }
+            this.template.update("insert into `clean-history` (`punch-number`, `when-cleaned`) values (:punchId, :cleanTimeDate)", information);
         }
     }
 

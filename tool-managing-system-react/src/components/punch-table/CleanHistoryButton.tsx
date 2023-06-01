@@ -1,5 +1,5 @@
+import { useState } from "react";
 import { request } from "@/common/Service";
-import Button from "@/components/buttonElement/MyButton";
 import { type PunchRow as PunchRowType } from "@/common/types";
 
 type Props = {
@@ -9,9 +9,11 @@ type Props = {
 };
 
 export default function CleanHistoryButton(props: Props) {
-  console.log(typeof props.refetch);
+  const [timeAndDate, setTimeAndDate] = useState("");
 
-  const handlerClickForCleanHistory = () => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
     if (props.selectedIds.length === 0) {
       alert(`선택 된 펀치가 없습니다.`);
     } else {
@@ -21,6 +23,7 @@ export default function CleanHistoryButton(props: Props) {
           (id) => {
             return {
               punchId: id,
+              cleanTimeDate: timeAndDate,
             };
           }
         );
@@ -36,6 +39,7 @@ export default function CleanHistoryButton(props: Props) {
               throw new Error(`청소이력을 추가 하는 중 Error 발생 하였습니다.`);
 
             props.refetch();
+            setTimeAndDate("");
             alert(`결과 반영 되었습니다.`);
           })
           .catch((error) => console.error(error));
@@ -44,6 +48,26 @@ export default function CleanHistoryButton(props: Props) {
   };
 
   return (
-    <Button text="청소이력 추가" handlerClick={handlerClickForCleanHistory} />
+    <form onSubmit={handleSubmit}>
+      <div className="input-group mb-3">
+        <div>
+          <label htmlFor="cleanDateTime" className="form-label">
+            청소이력 추가:
+          </label>
+        </div>
+        <div>
+          <input
+            id="cleanDateTime"
+            className="form-control"
+            type="datetime-local"
+            placeholder="청소이력"
+            value={timeAndDate}
+            onChange={(event) => setTimeAndDate(event.target.value)}
+          />
+        </div>
+      </div>
+
+      <input type="submit" value="전송" />
+    </form>
   );
 }
