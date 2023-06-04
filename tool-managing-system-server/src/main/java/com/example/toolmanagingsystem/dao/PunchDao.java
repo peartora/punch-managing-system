@@ -136,7 +136,7 @@ public class PunchDao
             int batchSize = rs.getInt("batchSize");
 
 
-            if (count > inspectionSize)
+            if ((count > inspectionSize) || (Objects.equals(rs.getString("status"), "사용불가")))
             {
                 singleRow.put("canUse", "초과");
             }
