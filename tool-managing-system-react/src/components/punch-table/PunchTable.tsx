@@ -27,6 +27,10 @@ function PunchTable(props: PunchTableProps) {
     [props.rows]
   );
 
+  console.log("punchRowsById");
+
+  console.log(punchRowsById);
+
   const [selection, setSelection] = useState<Record<string, boolean>>(() =>
     props.rows.reduce((acc, row) => {
       acc[row.punchId] = false;
@@ -93,6 +97,7 @@ function PunchTable(props: PunchTableProps) {
           <th>
             <PunchStatusChangeForm
               selectedIds={selectedIds}
+              punchRowsById={punchRowsById}
               refetch={props.refetch}
             />
           </th>
