@@ -19,14 +19,29 @@ export default function CleanHistoryButton(props: Props) {
     } else {
       const result = confirm(`선택 된 펀치의 청소이력을 추가 하시겠습니까?`);
       if (result) {
-        const targetRows: Record<string, unknown>[] = props.selectedIds.map(
-          (id) => {
+        let targetRows: Record<string, unknown>[] = [];
+
+        try {
+          targetRows = props.selectedIds.map((id) => {
+            if (props.punchRowsById[id].punchStatus === `폐기`) {
+              alert(
+                `폐기 상태의 펀치가 포함 되어 있습니다.
+                (폐기 상태는 청소 이력을 추가 할 수 없습니다.)`
+              );
+              throw new Error("폐기 상태 펀치는 청소 이력 추가 불가"); // Throw an exception
+            }
+
             return {
               punchId: id,
+              punchStatus: props.punchRowsById[id].punchStatus,
               cleanTimeDate: timeAndDate,
             };
-          }
-        );
+          });
+        } catch (error) {
+          return; // Stop the execution of the function
+        }
+
+        console.log(targetRows);
 
         const requestBody = {
           rows: targetRows,

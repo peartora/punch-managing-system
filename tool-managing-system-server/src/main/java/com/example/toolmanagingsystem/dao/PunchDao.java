@@ -226,7 +226,13 @@ public class PunchDao
             {
                 information.put(key, map.get(key));
             }
-            this.template.update("insert into `clean-history` (`punch-number`, `when-cleaned`) values (:punchId, :cleanTimeDate)", information);
+
+            System.out.println("information");
+            System.out.println(information);
+
+
+
+            this.template.update("insert into `clean-history` (`punch-number`, `punch-status`, `when-cleaned`) values (:punchId, :punchStatus, :cleanTimeDate)", information);
         }
     }
 
