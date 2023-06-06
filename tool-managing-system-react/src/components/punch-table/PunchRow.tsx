@@ -32,8 +32,6 @@ type Data = {
 function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
   const punchId = row.punchId;
 
-  console.log(typeof refetch);
-
   let checkResult = "";
   switch (row.canUse) {
     case "초과":
@@ -94,6 +92,7 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
         <PunchStatusSelect
           punchStatus={row.punchStatus}
           punchId={row.punchId}
+          refetch={refetch}
         />
       </td>
       <PunchStorageLocationTd punchStorageLocation={row.punchStorageLocation} />

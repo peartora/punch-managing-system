@@ -13,7 +13,9 @@ type Data = {
 };
 
 function PunchStatusSelect({ punchStatus, punchId, refetch }: Props) {
-  // console.log(punchId);
+  console.log("typeof refetch");
+
+  console.log(typeof refetch);
 
   const options = ["사용대기", "사용가능", "사용중", "사용불가", "폐기"];
 
