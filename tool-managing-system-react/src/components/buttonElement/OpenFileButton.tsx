@@ -1,12 +1,15 @@
-type Props = {
-  text: string,
-  onClick: (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => void;
-};
+type Props = React.HTMLAttributes<HTMLButtonElement>;
 
-function OpenFileButton({ text, onClick }: Props) {
-  return <button className="btn btn-primary" onClick={onClick}>{text}</button>
+function OpenFileButton(props: Props) {
+  const { className, children, ...rest } = props;
+
+  const classes = ["btn btn-primary", className].join(" ");
+
+  return (
+    <button className={classes} {...rest}>
+      {children}
+    </button>
+  );
 }
 
 export default OpenFileButton;
