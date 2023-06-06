@@ -4,6 +4,7 @@ import { request } from "./../../common/Service";
 type Props = {
   punchStatus: PunchStatus;
   punchId: string;
+  refetch: () => void;
 };
 
 type Data = {
@@ -11,7 +12,7 @@ type Data = {
   newStatus: string;
 };
 
-function PunchStatusSelect({ punchStatus, punchId }: Props) {
+function PunchStatusSelect({ punchStatus, punchId, refetch }: Props) {
   // console.log(punchId);
 
   const options = ["사용대기", "사용가능", "사용중", "사용불가", "폐기"];
@@ -66,16 +67,15 @@ function PunchStatusSelect({ punchStatus, punchId }: Props) {
       newStatus: newStatus,
     };
 
+    console.log("data");
+    console.log(data);
+
     request
       .post(`/api/tool-managing-system/updateStatus`, data)
       .then((response) => {
         if (!response.ok)
           new Error(`새로운 펀치 상태 변경 중 error가 발생 하였습니다.`);
-        return response.text();
-      })
-      .then((result) => {
-        alert(result);
-        e.target.value = newStatus;
+        refetch();
       })
       .catch((error) => console.error(error));
   }

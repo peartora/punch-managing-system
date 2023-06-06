@@ -64,6 +64,7 @@ public class ApiController
 
         if (params.get("rows") == null)
         {
+            System.out.println("rows is null");
             this.dao.updateNewStatus(params);
         }
         else
