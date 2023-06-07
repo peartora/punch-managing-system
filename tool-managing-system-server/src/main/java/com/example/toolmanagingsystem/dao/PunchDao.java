@@ -264,12 +264,12 @@ public class PunchDao
         return this.template.queryForList( "select * from `clean-history` where `punch-number` = :number", numberMap);
     }
 
-    public List<Map<String, Object>> retrievInspectionHistory(String number)
+    public List<Map<String, Object>> retrievInspectionHistory(String punchId)
     {
         Map<String, String> numberMap = new HashMap<>();
-        numberMap.put("number", number);
+        numberMap.put("punchId", punchId);
 
-        return this.template.queryForList( "select * from `inspection-history` where `punch-number` = :number", numberMap);
+        return this.template.queryForList( "select * from `inspection-history` where `punch-number` = :punchId", numberMap);
     }
 
     public List<String> returnProducts()

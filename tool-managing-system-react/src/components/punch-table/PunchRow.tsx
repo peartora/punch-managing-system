@@ -87,7 +87,10 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
         ></OpenFileButton>
       </td>
 
-      <InspectionHistoryTd latestInspectionDate={row.latestInspectionDate} />
+      <InspectionHistoryTd
+        latestInspectionDate={row.latestInspectionDate}
+        punchId={punchId}
+      />
       <td>
         <PunchStatusSelect
           punchStatus={row.punchStatus}

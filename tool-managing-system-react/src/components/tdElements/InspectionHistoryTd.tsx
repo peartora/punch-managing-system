@@ -1,27 +1,54 @@
 import { useState } from "react";
+import { request } from "@/common/Service";
 import OpenFileButton from "../buttonElement/OpenFileButton";
-
-let uniqueId = 1;
 
 type Props = {
   latestInspectionDate: string;
+  punchId: string;
 };
 
-function InspectionHistoryTd({ latestInspectionDate }: Props) {
-  const [id] = useState(() => uniqueId++);
-
+function InspectionHistoryTd({ latestInspectionDate, punchId }: Props) {
   if (latestInspectionDate === null) {
     latestInspectionDate = `검수 이력이 없습니다.`;
   }
 
+  console.log(punchId);
+
+  let inspectionHistory: any = [];
+
+  const clickHandler = function () {
+    const query = new URLSearchParams();
+    query.append("punchId", punchId);
+
+    request
+      .get(`/api/tool-managing-system/getInspectionHistory?${query}`)
+      .then((response) => {
+        if (!response.ok)
+          throw new Error(
+            `${punchId}의 검수이력을 로딩하는 중 error 발생 하였습니다.`
+          );
+        return response.json();
+      })
+      .then((response) => {
+        inspectionHistory = response;
+        console.log("response");
+        console.log(response);
+      })
+      .catch((error) => console.error(error));
+  };
+
   return (
     <td>
       {latestInspectionDate}
-      <OpenFileButton data-bs-toggle="modal" data-bs-target={`#myModal${id}`}>
+      <OpenFileButton
+        data-bs-toggle="modal"
+        data-bs-target={`#myModal`}
+        onClick={clickHandler}
+      >
         이력 확인
       </OpenFileButton>
 
-      <div id={`myModal${id}`} className="modal" tabIndex={-1}>
+      <div id={`myModal`} className="modal" tabIndex={-1}>
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
@@ -34,7 +61,15 @@ function InspectionHistoryTd({ latestInspectionDate }: Props) {
               ></button>
             </div>
             <div className="modal-body">
-              <p>Modal body text goes here.</p>
+              <ul>
+                {inspectionHistory.map((iObject: any) => {
+                  return (
+                    <li key={iObject["punch-number"]}>
+                      {iObject["punch-number"]}
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
             <div className="modal-footer">
               <button

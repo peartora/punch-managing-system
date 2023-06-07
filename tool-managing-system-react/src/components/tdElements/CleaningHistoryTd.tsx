@@ -1,5 +1,3 @@
-import MyButton from "../buttonElement/Button";
-
 type Props = {
   latestCleaningHistory: string;
 };

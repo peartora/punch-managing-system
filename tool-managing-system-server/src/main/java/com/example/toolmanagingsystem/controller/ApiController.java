@@ -104,9 +104,13 @@ public class ApiController
     }
 
     @GetMapping("/getInspectionHistory")
-    public List<Map<String, Object>> retrieveInspectionHistory(@RequestParam String number)
+    public List<Map<String, Object>> retrieveInspectionHistory(@RequestParam String punchId)
     {
-        return this.dao.retrievInspectionHistory(number);
+        System.out.println("getInspectionHistory");
+        System.out.println("punchId");
+        System.out.println(punchId);
+
+        return this.dao.retrievInspectionHistory(punchId);
     }
 
     @GetMapping("/getProducts")
@@ -214,7 +218,8 @@ public class ApiController
 
         if (numberOfAffectedRows == 1)
         {
-            return mapParams.get("product") + " 정보가 정상적으로 등록 되었습니다.";
+            // return mapParams.get("product") + " 정보가 정상적으로 등록 되었습니다.";
+            return "정보가 정상적으로 등록 되었습니다.";
         }
 
         return "제품등록 요청이 정상적으로 처리 되지 않았습니다.";

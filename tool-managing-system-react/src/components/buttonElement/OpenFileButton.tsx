@@ -1,4 +1,7 @@
-type Props = React.HTMLAttributes<HTMLButtonElement>;
+type Props = {
+  text?: string;
+  onClick: () => void;
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 function OpenFileButton(props: Props) {
   const { className, children, ...rest } = props;
