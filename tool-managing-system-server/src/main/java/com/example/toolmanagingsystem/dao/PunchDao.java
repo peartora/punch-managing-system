@@ -269,7 +269,7 @@ public class PunchDao
         Map<String, String> numberMap = new HashMap<>();
         numberMap.put("punchId", punchId);
 
-        return this.template.queryForList( "select * from `inspection-history` where `punch-number` = :punchId", numberMap);
+        return this.template.queryForList( "select `when-inspected`, `file-path` from `inspection-history` where `punch-number` = :punchId", numberMap);
     }
 
     public List<String> returnProducts()

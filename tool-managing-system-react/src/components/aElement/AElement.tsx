@@ -4,5 +4,9 @@ type Props = {
 };
 
 export default function AElement(props: Props) {
-  return <a href={props.path}>{props.date}</a>;
+  const { path } = props;
+  const pdfName = path.substring(path.lastIndexOf("\\") + 1);
+  const fullPath = `http://localhost:8080/resources/pdf/${pdfName}`;
+
+  return <a href={fullPath}>{props.date}</a>;
 }

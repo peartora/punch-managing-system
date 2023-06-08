@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { request } from "@/common/Service";
 import OpenFileButton from "../buttonElement/OpenFileButton";
+import AElement from "../aElement/AElement";
 
 type Props = {
   latestInspectionDate: string;
@@ -12,9 +13,7 @@ function InspectionHistoryTd({ latestInspectionDate, punchId }: Props) {
     latestInspectionDate = `검수 이력이 없습니다.`;
   }
 
-  console.log(punchId);
-
-  let inspectionHistory: any = [];
+  const [inspectionHistory, setInspectionHistory] = useState<object[]>([]);
 
   const clickHandler = function () {
     const query = new URLSearchParams();
@@ -29,11 +28,23 @@ function InspectionHistoryTd({ latestInspectionDate, punchId }: Props) {
           );
         return response.json();
       })
-      .then((response) => {
-        inspectionHistory = response;
-        console.log("response");
-        console.log(response);
-      })
+      .then(
+        (
+          response: Array<{ "when-inspected": string[]; "file-path": string[] }>
+        ) => {
+          console.log("response");
+          console.log(response);
+
+          const dateArray: object[] = response.map((r) => {
+            return {
+              date: `${r["when-inspected"][0]}년 ${r["when-inspected"][1]}월 ${r["when-inspected"][2]}일 ${r["when-inspected"][3]}시 ${r["when-inspected"][4]}분`,
+              path: r["file-path"],
+            };
+          });
+
+          setInspectionHistory([...dateArray]);
+        }
+      )
       .catch((error) => console.error(error));
   };
 
@@ -62,13 +73,11 @@ function InspectionHistoryTd({ latestInspectionDate, punchId }: Props) {
             </div>
             <div className="modal-body">
               <ul>
-                {inspectionHistory.map((iObject: any) => {
-                  return (
-                    <li key={iObject["punch-number"]}>
-                      {iObject["punch-number"]}
-                    </li>
-                  );
-                })}
+                {inspectionHistory.map((history: any, i) => (
+                  <li key={i}>
+                    <AElement path={history.path} date={history.date} />
+                  </li>
+                ))}
               </ul>
             </div>
             <div className="modal-footer">
