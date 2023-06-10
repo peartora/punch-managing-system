@@ -11,7 +11,7 @@ type Props = {
 export default function CleanHistoryButton(props: Props) {
   const [timeAndDate, setTimeAndDate] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (props.selectedIds.length === 0) {
@@ -64,25 +64,23 @@ export default function CleanHistoryButton(props: Props) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="input-group mb-3">
-        <div>
-          <label htmlFor="cleanDateTime" className="form-label">
-            청소이력 추가:
-          </label>
-        </div>
-        <div>
-          <input
-            id="cleanDateTime"
-            className="form-control"
-            type="datetime-local"
-            placeholder="청소이력"
-            value={timeAndDate}
-            onChange={(event) => setTimeAndDate(event.target.value)}
-          />
-        </div>
-      </div>
+      <label htmlFor="cleanDateTime" className="form-label">
+        청소이력 추가:
+      </label>
+      <div className="input-group">
+        <input
+          id="cleanDateTime"
+          className="form-control"
+          type="datetime-local"
+          placeholder="청소이력"
+          value={timeAndDate}
+          onChange={(event) => setTimeAndDate(event.target.value)}
+        />
 
-      <input type="submit" value="전송" />
+        <button className="btn btn-outline-secondary" type="submit">
+          전송
+        </button>
+      </div>
     </form>
   );
 }

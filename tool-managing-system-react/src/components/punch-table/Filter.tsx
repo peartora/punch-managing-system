@@ -118,7 +118,7 @@ export default function Filter(props: Props) {
           <select
             required
             id="productType"
-            className="form-control"
+            className="form-select"
             value={formData.type}
             onChange={(event) => {
               setFormData((prevState) => ({
@@ -159,7 +159,7 @@ export default function Filter(props: Props) {
           <select
             required
             id="supplier"
-            className="form-control"
+            className="form-select"
             value={formData["manufacturer"]}
             onChange={(event) => {
               setFormData((prevState) => ({
@@ -189,7 +189,7 @@ export default function Filter(props: Props) {
           <select
             required
             id="punchStatus"
-            className="form-control"
+            className="form-select"
             value={formData.status}
             onChange={(event) => {
               setFormData((prevState) => ({
@@ -232,7 +232,7 @@ export default function Filter(props: Props) {
           <select
             required
             id="productName"
-            className="form-control"
+            className="form-select"
             value={formData["p.product"]}
             onChange={(event) => {
               setFormData((prevState) => ({
@@ -262,7 +262,7 @@ export default function Filter(props: Props) {
           <select
             required
             id="productType"
-            className="form-control"
+            className="form-select"
             value={formData.ptype}
             onChange={(event) => {
               setFormData((prevState) => ({

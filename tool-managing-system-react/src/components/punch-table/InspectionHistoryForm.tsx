@@ -11,7 +11,9 @@ type Props = {
 export default function InspectionHistoryForm(props: Props) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const handlerSubmitForPdfUpload = async (event) => {
+  const handlerSubmitForPdfUpload = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
 
     if (props.selectedIds.length === 0) {
@@ -85,13 +87,11 @@ export default function InspectionHistoryForm(props: Props) {
   };
 
   return (
-    <form onSubmit={(event) => handlerSubmitForPdfUpload(event)}>
-      <div className="input-group mb-3">
-        <label htmlFor="uploadInspectionHistory" className="form-label">
-          검수이력 pdf 파일을 업로드 하세요:
-        </label>
-      </div>
-      <div className="input-group mb-3">
+    <form onSubmit={handlerSubmitForPdfUpload}>
+      <label htmlFor="uploadInspectionHistory" className="form-label">
+        검수이력 pdf 파일을 업로드 하세요:
+      </label>
+      <div className="input-group">
         <input
           id="inspectionHistory"
           className="form-control"
@@ -105,7 +105,9 @@ export default function InspectionHistoryForm(props: Props) {
             }
           }}
         />
-        <input type="submit" value="전송" />
+        <button className="btn btn-outline-secondary" type="submit">
+          정송
+        </button>
       </div>
     </form>
   );

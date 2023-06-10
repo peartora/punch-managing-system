@@ -141,7 +141,7 @@ function RegisterPunchForm() {
         </label>
         <select
           id="punchType"
-          className="form-control"
+          className="form-select"
           value={punchType}
           onChange={(event) => setPunchType(event.target.value)}
         >
@@ -176,7 +176,7 @@ function RegisterPunchForm() {
         </label>
         <select
           id="supplier"
-          className="form-control"
+          className="form-select"
           value={supplier}
           onChange={(event) => setSupplier(event.target.value)}
         >
@@ -213,7 +213,7 @@ function RegisterPunchForm() {
         </label>
         <select
           id="productName"
-          className="form-control"
+          className="form-select"
           value={productName}
           onChange={(event) => setProductName(event.target.value)}
         >
@@ -236,7 +236,7 @@ function RegisterPunchForm() {
         </label>
         <select
           id="productType"
-          className="form-control"
+          className="form-select"
           value={productType}
           onChange={(event) => setProductType(event.target.value)}
         >

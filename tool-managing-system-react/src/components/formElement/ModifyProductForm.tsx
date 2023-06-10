@@ -39,7 +39,7 @@ function ModifyProductForm() {
         </label>
         <select
           id="productName"
-          className="form-control"
+          className="form-select"
           value={productName}
           onChange={(event) => setProductName(event.target.value)}
           required

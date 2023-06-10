@@ -83,7 +83,11 @@ function PunchStatusSelect({ punchStatus, punchId, refetch }: Props) {
   }
 
   return (
-    <select value={punchStatus} onChange={(e) => handleChange(e)}>
+    <select
+      className="form-select"
+      value={punchStatus}
+      onChange={(e) => handleChange(e)}
+    >
       {results}
     </select>
   );

@@ -16,7 +16,7 @@ export default function PunchStatusChangeForm(props: Props) {
     "폐기",
   ];
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (props.selectedIds.length === 0) {
       alert(`선택 된 펀치가 없습니다.`);
     } else {
@@ -85,7 +85,7 @@ export default function PunchStatusChangeForm(props: Props) {
   };
 
   return (
-    <select onChange={(e) => handleChange(e)}>
+    <select className="form-select" onChange={handleChange}>
       <option value="" disabled selected>
         선택 하세요.
       </option>

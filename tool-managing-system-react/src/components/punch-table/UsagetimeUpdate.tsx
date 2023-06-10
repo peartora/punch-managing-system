@@ -11,7 +11,9 @@ type Props = {
 export default function UsagetimeUpdate(props: Props) {
   const [usageNumber, setUsageNumber] = useState(0);
 
-  function handlerSubmitForUsageNumber(event) {
+  function handlerSubmitForUsageNumber(
+    event: React.FormEvent<HTMLFormElement>
+  ) {
     event.preventDefault();
 
     if (props.selectedIds.length === 0) {
@@ -65,12 +67,10 @@ export default function UsagetimeUpdate(props: Props) {
 
   return (
     <form onSubmit={(event) => handlerSubmitForUsageNumber(event)}>
-      <div className="input-group mb-3">
-        <label htmlFor="usageNumber" className="form-label">
-          금일 사용 횟수를 입력하세요:
-        </label>
-      </div>
-      <div className="input-group mb-3">
+      <label htmlFor="usageNumber" className="form-label">
+        금일 사용 횟수를 입력하세요:
+      </label>
+      <div className="input-group">
         <input
           id="usageNumber"
           className="form-control"
@@ -81,9 +81,10 @@ export default function UsagetimeUpdate(props: Props) {
             setUsageNumber(parseInt(event.target.value));
           }}
         />
+        <button className="btn btn-outline-secondary" type="submit">
+          정송
+        </button>
       </div>
-
-      <input type="submit" value="전송" />
     </form>
   );
 }
