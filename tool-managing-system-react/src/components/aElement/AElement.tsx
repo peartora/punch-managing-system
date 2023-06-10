@@ -8,5 +8,9 @@ export default function AElement(props: Props) {
   const pdfName = path.substring(path.lastIndexOf("\\") + 1);
   const fullPath = `http://localhost:8080/resources/pdf/${pdfName}`;
 
-  return <a href={fullPath}>{props.date}</a>;
+  return (
+    <a href={fullPath} target="_blank">
+      {props.date}
+    </a>
+  );
 }

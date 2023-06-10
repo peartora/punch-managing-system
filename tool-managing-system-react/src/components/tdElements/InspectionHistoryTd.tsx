@@ -3,12 +3,16 @@ import { request } from "@/common/Service";
 import OpenFileButton from "../buttonElement/OpenFileButton";
 import AElement from "../aElement/AElement";
 
+let _uniqueId = 1;
+
 type Props = {
   latestInspectionDate: string;
   punchId: string;
 };
 
 function InspectionHistoryTd({ latestInspectionDate, punchId }: Props) {
+  const [uniqueId] = useState(() => _uniqueId++);
+
   if (latestInspectionDate === null) {
     latestInspectionDate = `검수 이력이 없습니다.`;
   }
@@ -32,9 +36,6 @@ function InspectionHistoryTd({ latestInspectionDate, punchId }: Props) {
         (
           response: Array<{ "when-inspected": string[]; "file-path": string[] }>
         ) => {
-          console.log("response");
-          console.log(response);
-
           const dateArray: object[] = response.map((r) => {
             return {
               date: `${r["when-inspected"][0]}년 ${r["when-inspected"][1]}월 ${r["when-inspected"][2]}일 ${r["when-inspected"][3]}시 ${r["when-inspected"][4]}분`,
@@ -53,13 +54,13 @@ function InspectionHistoryTd({ latestInspectionDate, punchId }: Props) {
       {latestInspectionDate}
       <OpenFileButton
         data-bs-toggle="modal"
-        data-bs-target={`#myModal`}
+        data-bs-target={`#myModal-${uniqueId}`}
         onClick={clickHandler}
       >
         이력 확인
       </OpenFileButton>
 
-      <div id={`myModal`} className="modal" tabIndex={-1}>
+      <div id={`myModal-${uniqueId}`} className="modal" tabIndex={-1}>
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
@@ -73,11 +74,15 @@ function InspectionHistoryTd({ latestInspectionDate, punchId }: Props) {
             </div>
             <div className="modal-body">
               <ul>
-                {inspectionHistory.map((history: any, i) => (
-                  <li key={i}>
-                    <AElement path={history.path} date={history.date} />
-                  </li>
-                ))}
+                {inspectionHistory
+                  .slice()
+                  .reverse()
+                  .map((history: any, i) => (
+                    <li key={i}>
+                      <AElement path={history.path} date={history.date} /> //
+                      새탭에서 여는방법
+                    </li>
+                  ))}
               </ul>
             </div>
             <div className="modal-footer">
