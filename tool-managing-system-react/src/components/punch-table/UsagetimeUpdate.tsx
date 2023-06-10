@@ -1,14 +1,10 @@
 import { useState } from "react";
 import { request } from "@/common/Service";
-import { type PunchRow as PunchRowType } from "@/common/types";
+import { usePunchRows } from "@/context/punch-rows-context";
 
-type Props = {
-  selectedIds: Array<string>;
-  punchRowsById: Record<string, PunchRowType>;
-  refetch: () => void;
-};
+export default function UsagetimeUpdate() {
+  const { selectedIds, punchRowsById, refetch } = usePunchRows();
 
-export default function UsagetimeUpdate(props: Props) {
   const [usageNumber, setUsageNumber] = useState(0);
 
   function handlerSubmitForUsageNumber(
@@ -16,7 +12,7 @@ export default function UsagetimeUpdate(props: Props) {
   ) {
     event.preventDefault();
 
-    if (props.selectedIds.length === 0) {
+    if (selectedIds.length === 0) {
       alert(`선택된 펀치가 없습니다.`);
     } else {
       const result = confirm(
@@ -27,13 +23,13 @@ export default function UsagetimeUpdate(props: Props) {
         let targetRows: Record<string, unknown>[];
 
         try {
-          targetRows = props.selectedIds.map((id) => {
-            if (props.punchRowsById[id].punchStatus != `사용중`) {
+          targetRows = selectedIds.map((id) => {
+            if (punchRowsById[id].punchStatus != `사용중`) {
               alert(`사용중 상태가 아닌 펀치가 있습니다.`);
               throw new Error("Check failed"); // Throw an exception
             }
 
-            const row = props.punchRowsById[id];
+            const row = punchRowsById[id];
             const totalUsageNumber = row.totalUsageNumber + usageNumber;
 
             return {
@@ -58,7 +54,7 @@ export default function UsagetimeUpdate(props: Props) {
               );
             setUsageNumber(0);
             alert(`결과 반영 되었습니다.`);
-            props.refetch();
+            refetch();
           })
           .catch((error) => console.error(error));
       }

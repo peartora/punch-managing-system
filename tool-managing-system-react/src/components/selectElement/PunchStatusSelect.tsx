@@ -12,13 +12,9 @@ type Data = {
   newStatus: string;
 };
 
+const options = ["사용대기", "사용가능", "사용중", "사용불가", "폐기"] as const;
+
 function PunchStatusSelect({ punchStatus, punchId, refetch }: Props) {
-  console.log("typeof refetch");
-
-  console.log(typeof refetch);
-
-  const options = ["사용대기", "사용가능", "사용중", "사용불가", "폐기"];
-
   const results = options.map((option) => {
     const disabledOption = (
       <option key={option} value={option} disabled>
@@ -68,9 +64,6 @@ function PunchStatusSelect({ punchStatus, punchId, refetch }: Props) {
       punchId: punchId,
       newStatus: newStatus,
     };
-
-    console.log("data");
-    console.log(data);
 
     request
       .post(`/api/tool-managing-system/updateStatus`, data)

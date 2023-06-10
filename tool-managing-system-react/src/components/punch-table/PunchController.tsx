@@ -1,23 +1,20 @@
-import { useDisplay } from "@/common/hooks";
+import { usePunchRows } from "@/context/punch-rows-context";
+
 import PunchTable from "./PunchTable";
 import TableHeader from "./TableHeader";
 
-type Props = {
-  params: URLSearchParams;
-};
-
-export default function PunchController(props: Props) {
-  const { rows, refetch, isLoading } = useDisplay(props.params);
+export default function PunchController() {
+  const { isLoading } = usePunchRows();
 
   if (isLoading) {
     <table className="table table-striped table-bordered table-hover">
-      <TableHeader totalCount={0} selectedCount={0} />
+      <TableHeader />
     </table>;
   }
 
   return (
     <table className="table table-striped table-bordered table-hover">
-      <PunchTable rows={rows} refetch={refetch} />
+      <PunchTable />
     </table>
   );
 }

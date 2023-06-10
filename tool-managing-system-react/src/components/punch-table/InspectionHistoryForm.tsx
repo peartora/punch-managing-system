@@ -1,14 +1,10 @@
 import { useState } from "react";
 import { request } from "@/common/Service";
-import { type PunchRow as PunchRowType } from "@/common/types";
+import { usePunchRows } from "@/context/punch-rows-context";
 
-type Props = {
-  selectedIds: Array<string>;
-  punchRowsById: Record<string, PunchRowType>;
-  refetch: () => void;
-};
+export default function InspectionHistoryForm() {
+  const { selectedIds, punchRowsById, refetch } = usePunchRows();
 
-export default function InspectionHistoryForm(props: Props) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handlerSubmitForPdfUpload = async (
@@ -16,7 +12,7 @@ export default function InspectionHistoryForm(props: Props) {
   ) => {
     event.preventDefault();
 
-    if (props.selectedIds.length === 0) {
+    if (selectedIds.length === 0) {
       alert(`선택 된 펀치가 없습니다.`);
     } else {
       const result = confirm(`선택 된 펀치의 검수이력을 추가 하시겠습니까?`);
@@ -29,10 +25,10 @@ export default function InspectionHistoryForm(props: Props) {
         }
 
         try {
-          for (const id of props.selectedIds) {
+          for (const id of selectedIds) {
             if (
-              props.punchRowsById[id].punchStatus !== "사용대기" &&
-              props.punchRowsById[id].punchStatus !== "사용불가"
+              punchRowsById[id].punchStatus !== "사용대기" &&
+              punchRowsById[id].punchStatus !== "사용불가"
             ) {
               alert(
                 `검수이력은 사용대기 혹은 사용불가 상태의 펀치만 가능 합니다.`
@@ -48,7 +44,7 @@ export default function InspectionHistoryForm(props: Props) {
             formData
           );
 
-          const targetRows = props.selectedIds.map((id) => ({
+          const targetRows = selectedIds.map((id) => ({
             punchId: id,
             newStatus: "사용가능",
           }));
@@ -62,7 +58,7 @@ export default function InspectionHistoryForm(props: Props) {
             statusUpdateRequestBody
           );
 
-          const usageNumberResetRows = props.selectedIds.map((id) => ({
+          const usageNumberResetRows = selectedIds.map((id) => ({
             punchId: id,
             totalUsageNumber: 0,
           }));
@@ -77,7 +73,7 @@ export default function InspectionHistoryForm(props: Props) {
           );
 
           setSelectedFile(null);
-          props.refetch();
+          refetch();
           alert(`사용가능 상태로 변경 되었습니다.`);
         } catch (error) {
           console.error(error);

@@ -63,8 +63,6 @@ export default function Filter(props: Props) {
     }
 
     props.setParams(newParams);
-
-    console.log(`searchForm`);
   }
 
   return (

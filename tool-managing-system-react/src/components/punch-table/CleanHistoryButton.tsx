@@ -1,20 +1,16 @@
 import { useState } from "react";
 import { request } from "@/common/Service";
-import { type PunchRow as PunchRowType } from "@/common/types";
+import { usePunchRows } from "@/context/punch-rows-context";
 
-type Props = {
-  selectedIds: Array<string>;
-  punchRowsById: Record<string, PunchRowType>;
-  refetch: () => void;
-};
+export default function CleanHistoryButton() {
+  const { punchRowsById, selectedIds, refetch } = usePunchRows();
 
-export default function CleanHistoryButton(props: Props) {
   const [timeAndDate, setTimeAndDate] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (props.selectedIds.length === 0) {
+    if (selectedIds.length === 0) {
       alert(`선택 된 펀치가 없습니다.`);
     } else {
       const result = confirm(`선택 된 펀치의 청소이력을 추가 하시겠습니까?`);
@@ -22,8 +18,8 @@ export default function CleanHistoryButton(props: Props) {
         let targetRows: Record<string, unknown>[] = [];
 
         try {
-          targetRows = props.selectedIds.map((id) => {
-            if (props.punchRowsById[id].punchStatus === `폐기`) {
+          targetRows = selectedIds.map((id) => {
+            if (punchRowsById[id].punchStatus === `폐기`) {
               alert(
                 `폐기 상태의 펀치가 포함 되어 있습니다.
                 (폐기 상태는 청소 이력을 추가 할 수 없습니다.)`
@@ -33,15 +29,13 @@ export default function CleanHistoryButton(props: Props) {
 
             return {
               punchId: id,
-              punchStatus: props.punchRowsById[id].punchStatus,
+              punchStatus: punchRowsById[id].punchStatus,
               cleanTimeDate: timeAndDate,
             };
           });
         } catch (error) {
           return; // Stop the execution of the function
         }
-
-        console.log(targetRows);
 
         const requestBody = {
           rows: targetRows,
@@ -53,7 +47,7 @@ export default function CleanHistoryButton(props: Props) {
             if (!response.ok)
               throw new Error(`청소이력을 추가 하는 중 Error 발생 하였습니다.`);
 
-            props.refetch();
+            refetch();
             setTimeAndDate("");
             alert(`결과 반영 되었습니다.`);
           })

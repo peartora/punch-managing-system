@@ -17,9 +17,6 @@ function ModifyProductForm() {
     formData.append("inspectionSize", inspectionSize);
     if (selectedFile) formData.append("specificationFile", selectedFile);
 
-    console.log("formData");
-    console.log(formData);
-
     request
       .post(`/api/tool-managing-system/updateBatchInfor`, formData)
       .then((response) => {

@@ -11,8 +11,6 @@ export default function FilterController(props: Props) {
   const { productList, isLoading } = useBringProductList();
   const { supplierList } = useBringSupplierList();
 
-  console.log(supplierList);
-
   if (isLoading) {
     <div>로딩</div>;
   }

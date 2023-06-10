@@ -1,26 +1,17 @@
 import CheckBox from "@/components/checkBox/CheckBox";
+import { usePunchRows } from "@/context/punch-rows-context";
 
-type Props = {
-  handlerChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  totalCount: number;
-  selectedCount: number;
-};
-
-function TableHeader(props: Props) {
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    props.handlerChange?.(event);
-  };
+function TableHeader() {
+  const { selectedIds, isAllSelected, toggleAll } = usePunchRows();
 
   return (
     <tr>
       <th>
         <CheckBox
-          onChange={handleChange}
+          onChange={toggleAll}
           punchId="none"
-          checked={props.totalCount === props.selectedCount}
-          indeterminate={
-            props.totalCount !== props.selectedCount && props.selectedCount > 0
-          }
+          checked={isAllSelected}
+          indeterminate={!isAllSelected && selectedIds.length > 0}
         />
       </th>
       <th>Id</th>

@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import FilterController from "@/components/punch-table/FilterController";
 import PunchController from "@/components/punch-table/PunchController";
+import { PunchRowsProvider } from "@/context/punch-rows-context";
 
 function SearchForm() {
   const [params, setParams] = useState<URLSearchParams>(
@@ -19,7 +20,9 @@ function SearchForm() {
       <br />
       <br />
 
-      <PunchController params={params} />
+      <PunchRowsProvider params={params}>
+        <PunchController />
+      </PunchRowsProvider>
     </>
   );
 }

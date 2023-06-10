@@ -40,8 +40,6 @@ function RegisterPunchForm() {
       const query = new URLSearchParams();
       query.append("punchId", punchId);
 
-      console.log(punchId);
-
       request
         .get(`/api/tool-managing-system/duplicate?${query}`)
         .then((response) => {
@@ -50,8 +48,6 @@ function RegisterPunchForm() {
           return response.text();
         })
         .then((result) => {
-          console.log(result);
-
           if (result === "0") {
             const data: Data = {
               number: punchId,

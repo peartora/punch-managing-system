@@ -13,9 +13,7 @@ function CheckBox({ onChange, punchId, checked, indeterminate }: Prop) {
   );
 
   useLayoutEffect(() => {
-    if (indeterminate) {
-      ref.current.indeterminate = indeterminate;
-    }
+    ref.current.indeterminate = indeterminate ?? false;
   }, [indeterminate]);
 
   return (
