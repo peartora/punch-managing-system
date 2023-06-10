@@ -73,17 +73,19 @@ export default function PunchStatusChangeForm() {
   };
 
   return (
-    <select className="form-select" defaultValue="" onChange={handleChange}>
-      <option value="" disabled selected>
-        선택 하세요.
-      </option>
-      {options.map((o) => {
-        return (
-          <option key={o} value={o}>
-            {o}
-          </option>
-        );
-      })}
-    </select>
+    <div className="col-3">
+      <select className="form-select" defaultValue="" onChange={handleChange}>
+        <option value="" disabled selected>
+          선택 하세요.
+        </option>
+        {options.map((o) => {
+          return (
+            <option key={o} value={o}>
+              {o}
+            </option>
+          );
+        })}
+      </select>
+    </div>
   );
 }

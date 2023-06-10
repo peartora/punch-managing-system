@@ -83,7 +83,7 @@ export default function InspectionHistoryForm() {
   };
 
   return (
-    <form onSubmit={handlerSubmitForPdfUpload}>
+    <form className="col-3" onSubmit={handlerSubmitForPdfUpload}>
       <label htmlFor="uploadInspectionHistory" className="form-label">
         검수이력 pdf 파일을 업로드 하세요:
       </label>

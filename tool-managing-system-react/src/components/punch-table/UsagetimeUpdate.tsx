@@ -62,7 +62,7 @@ export default function UsagetimeUpdate() {
   }
 
   return (
-    <form onSubmit={(event) => handlerSubmitForUsageNumber(event)}>
+    <form className="col-3" onSubmit={handlerSubmitForUsageNumber}>
       <label htmlFor="usageNumber" className="form-label">
         금일 사용 횟수를 입력하세요:
       </label>

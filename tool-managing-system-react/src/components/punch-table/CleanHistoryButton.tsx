@@ -57,7 +57,7 @@ export default function CleanHistoryButton() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="col-3" onSubmit={handleSubmit}>
       <label htmlFor="cleanDateTime" className="form-label">
         청소이력 추가:
       </label>
