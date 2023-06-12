@@ -73,19 +73,29 @@ export default function PunchStatusChangeForm() {
   };
 
   return (
-    <div className="col-3">
-      <select className="form-select" defaultValue="" onChange={handleChange}>
-        <option value="" disabled selected>
-          선택 하세요.
-        </option>
-        {options.map((o) => {
-          return (
-            <option key={o} value={o}>
-              {o}
-            </option>
-          );
-        })}
-      </select>
-    </div>
+    <>
+      <div className="col-2">
+        <label htmlFor="punchStatusSelect" className="form-label">
+          펀치상태 변경:
+        </label>
+        <select
+          id="punchStatusSelect"
+          className="form-select"
+          defaultValue=""
+          onChange={handleChange}
+        >
+          <option value="" disabled selected>
+            선택 하세요.
+          </option>
+          {options.map((o) => {
+            return (
+              <option key={o} value={o}>
+                {o}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+    </>
   );
 }

@@ -25,6 +25,10 @@ export default function PunchController() {
         <PunchStatusChangeForm />
       </div>
 
+      <br />
+      <br />
+      <br />
+
       <table className="table table-striped table-bordered table-hover">
         <PunchTable />
       </table>
