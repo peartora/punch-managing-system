@@ -113,6 +113,19 @@ public class ApiController
         return this.dao.retrievInspectionHistory(punchId);
     }
 
+    @GetMapping("/getSpecification")
+    public String retrieveSpecification(@RequestParam String punchId)
+    {
+        System.out.println("getSpecification");
+        System.out.println("punchId");
+        System.out.println(punchId);
+
+        String result = this.dao.retrievSpecification(punchId);
+
+        System.out.println(result);
+        return this.dao.retrievSpecification(punchId);
+    }
+
     @GetMapping("/getProducts")
     public List<String> returnProducts()
     {

@@ -17,6 +17,6 @@ public class MvcConfig implements WebMvcConfigurer
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/pdf/**")
-                .addResourceLocations("file:C:\\Users\\peart\\Desktop\\specifications\\");
+                .addResourceLocations("file:C:\\Users\\peart\\Desktop\\inspection\\");
     }
 }

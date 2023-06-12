@@ -13,6 +13,7 @@ import { type PunchRow } from "@/common/types";
 import PunchStatusSelect from "../selectElement/PunchStatusSelect";
 import CheckBox from "../checkBox/CheckBox";
 import "@/css/punchRow.css";
+import SpecificationTd from "../tdElements/SpecificationTd";
 
 type Props = {
   row: PunchRow;
@@ -63,12 +64,6 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
     }
   }, [row.canUse]);
 
-  function handlerClick() {
-    const filePath = row.specification;
-    const fileUrl = `file://${filePath}`;
-    window.open(fileUrl);
-  }
-
   return (
     <tr className={checkResult}>
       <td>
@@ -80,12 +75,7 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
       </td>
       <PunchIdTd punchId={row.punchId} />
       <SupplierTd supplier={row.supplier} />
-      <td>
-        <OpenFileButton
-          text="규격문서 확인"
-          onClick={handlerClick}
-        ></OpenFileButton>
-      </td>
+      <SpecificationTd punchId={row.punchId} />
 
       <InspectionHistoryTd
         latestInspectionDate={row.latestInspectionDate}

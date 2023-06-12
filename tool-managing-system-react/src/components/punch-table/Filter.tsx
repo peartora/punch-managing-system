@@ -126,7 +126,7 @@ export default function Filter(props: Props) {
             }}
           >
             <option value="" disabled>
-              아래 list 에서 선택 하세요.
+              선택 하세요.
             </option>
             <option value="상부">상부</option>
             <option value="하부">하부</option>
@@ -134,21 +134,6 @@ export default function Filter(props: Props) {
             <option value="All">All</option>
           </select>
         </div>
-
-        {/* <div className="col">
-          <label className="form-label">제조사: </label>
-          <input
-            className="form-control"
-            type="text"
-            placeholder="제조사"
-            onChange={(event) => {
-              setFormData((prevState) => ({
-                ...prevState,
-                supplier: event.target.value,
-              }));
-            }}
-          />
-        </div> */}
 
         <div className="col">
           <label htmlFor="supplier" className="form-label">
@@ -167,7 +152,7 @@ export default function Filter(props: Props) {
             }}
           >
             <option value="" disabled>
-              아래 list 에서 선택 하세요.
+              선택 하세요.
             </option>
             {props.supplierList.map((supplierName) => {
               return (
@@ -197,7 +182,7 @@ export default function Filter(props: Props) {
             }}
           >
             <option value="" disabled>
-              아래 list 에서 선택 하세요.
+              선택 하세요.
             </option>
             <option value="사용대기">사용대기</option>
             <option value="사용가능">사용가능</option>
@@ -240,7 +225,7 @@ export default function Filter(props: Props) {
             }}
           >
             <option value="" disabled>
-              아래 list 에서 선택 하세요.
+              선택 하세요.
             </option>
             {props.productList.map((productName) => {
               return (
@@ -270,7 +255,7 @@ export default function Filter(props: Props) {
             }}
           >
             <option value="" disabled>
-              아래 list 에서 선택 하세요.
+              선택 하세요.
             </option>
             <option value="AA">AA</option>
             <option value="BB">BB</option>

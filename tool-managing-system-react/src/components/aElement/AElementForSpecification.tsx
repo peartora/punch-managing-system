@@ -1,6 +1,6 @@
 type Props = {
   path: string;
-  date?: string;
+  onClick: () => void;
 };
 
 export default function AElement(props: Props) {
@@ -8,9 +8,15 @@ export default function AElement(props: Props) {
   const pdfName = path.substring(path.lastIndexOf("\\") + 1);
   const fullPath = `http://localhost:8080/resources/pdf/${pdfName}`;
 
+  console.log("pdfName");
+  console.log(pdfName);
+
+  console.log("path");
+  console.log(path);
+
   return (
-    <a href={fullPath} target="_blank">
-      {props.date}
+    <a href={fullPath} onClick={props.onClick} target="_blank">
+      {pdfName}
     </a>
   );
 }

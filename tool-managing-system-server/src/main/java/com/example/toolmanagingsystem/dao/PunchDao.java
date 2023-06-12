@@ -272,6 +272,14 @@ public class PunchDao
         return this.template.queryForList( "select `when-inspected`, `file-path` from `inspection-history` where `punch-number` = :punchId", numberMap);
     }
 
+    public String retrievSpecification(String punchId)
+    {
+        Map<String, String> numberMap = new HashMap<>();
+        numberMap.put("punchId", punchId);
+
+        return this.template.queryForObject( "select `specification` from `punch-list` where `number` = :punchId", numberMap, String.class);
+    }
+
     public List<String> returnProducts()
     {
         Map<String, Object> paramMap = Collections.emptyMap();

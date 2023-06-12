@@ -1,11 +1,19 @@
-import { ReactNode } from "react";
-
 type Props = {
-  children: ReactNode;
+  specification: string;
 };
 
-function SpecificationTd({ children }: Props) {
-  return <td>{children}</td>;
+function SpecificationTd({ specification }: Props) {
+  console.log("specification");
+  console.log(specification);
+
+  // const pdfName = specification.substring(specification.lastIndexOf("\\") + 1);
+  // const fullPath = `http://localhost:8080/resources/pdf/${pdfName}`;
+
+  return (
+    <td>
+      <a href={specification}>{specification}</a>
+    </td>
+  );
 }
 
 export default SpecificationTd;
