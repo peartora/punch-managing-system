@@ -74,7 +74,7 @@ export default function PunchStatusChangeForm() {
 
   return (
     <>
-      <div className="col-2">
+      <div className="col-3">
         <label htmlFor="punchStatusSelect" className="form-label">
           펀치상태 변경:
         </label>
