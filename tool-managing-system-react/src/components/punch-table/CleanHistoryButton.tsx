@@ -10,49 +10,55 @@ export default function CleanHistoryButton() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (selectedIds.length === 0) {
-      alert(`선택 된 펀치가 없습니다.`);
-    } else {
-      const result = confirm(`선택 된 펀치의 청소이력을 추가 하시겠습니까?`);
-      if (result) {
-        let targetRows: Record<string, unknown>[] = [];
+    if (selectedIds.length !== 0) {
+      if (timeAndDate !== "" && timeAndDate !== null) {
+        const result = confirm(`선택 된 펀치의 청소이력을 추가 하시겠습니까?`);
+        if (result) {
+          let targetRows: Record<string, unknown>[] = [];
 
-        try {
-          targetRows = selectedIds.map((id) => {
-            if (punchRowsById[id].punchStatus === `폐기`) {
-              alert(
-                `폐기 상태의 펀치가 포함 되어 있습니다.
+          try {
+            targetRows = selectedIds.map((id) => {
+              if (punchRowsById[id].punchStatus === `폐기`) {
+                alert(
+                  `폐기 상태의 펀치가 포함 되어 있습니다.
                 (폐기 상태는 청소 이력을 추가 할 수 없습니다.)`
-              );
-              throw new Error("폐기 상태 펀치는 청소 이력 추가 불가"); // Throw an exception
-            }
+                );
+                throw new Error("폐기 상태 펀치는 청소 이력 추가 불가"); // Throw an exception
+              }
 
-            return {
-              punchId: id,
-              punchStatus: punchRowsById[id].punchStatus,
-              cleanTimeDate: timeAndDate,
-            };
-          });
-        } catch (error) {
-          return; // Stop the execution of the function
+              return {
+                punchId: id,
+                punchStatus: punchRowsById[id].punchStatus,
+                cleanTimeDate: timeAndDate,
+              };
+            });
+          } catch (error) {
+            return; // Stop the execution of the function
+          }
+
+          const requestBody = {
+            rows: targetRows,
+          };
+
+          request
+            .post(`/api/tool-managing-system/addCleanHistory`, requestBody)
+            .then((response) => {
+              if (!response.ok)
+                throw new Error(
+                  `청소이력을 추가 하는 중 Error 발생 하였습니다.`
+                );
+
+              refetch();
+              setTimeAndDate("");
+              alert(`결과 반영 되었습니다.`);
+            })
+            .catch((error) => console.error(error));
         }
-
-        const requestBody = {
-          rows: targetRows,
-        };
-
-        request
-          .post(`/api/tool-managing-system/addCleanHistory`, requestBody)
-          .then((response) => {
-            if (!response.ok)
-              throw new Error(`청소이력을 추가 하는 중 Error 발생 하였습니다.`);
-
-            refetch();
-            setTimeAndDate("");
-            alert(`결과 반영 되었습니다.`);
-          })
-          .catch((error) => console.error(error));
+      } else {
+        alert(`시간 정보가 입력 되지 않았습니다.`);
       }
+    } else {
+      alert(`선택 된 펀치가 없습니다.`);
     }
   };
 
