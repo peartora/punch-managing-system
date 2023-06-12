@@ -5,7 +5,7 @@ export default function NavBar() {
     <nav className="navbar">
       <div className="container">
         <a className="navbar-brand" href="#">
-          Tool Managing System
+          <h4>Punch Managing System</h4>
         </a>
 
         <ul className="nav">

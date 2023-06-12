@@ -67,7 +67,6 @@ export default function Filter(props: Props) {
 
   return (
     <form onSubmit={handlerSubmit}>
-      <h5>조회할 data를 입력 하세요</h5>
       <div className="row">
         <div className="col">
           <label htmlFor="startDate" className="form-label">
@@ -264,6 +263,7 @@ export default function Filter(props: Props) {
           </select>
         </div>
       </div>
+
       <input type="submit" value="조회" />
     </form>
   );

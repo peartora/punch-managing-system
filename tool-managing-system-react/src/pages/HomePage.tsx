@@ -5,6 +5,10 @@ export default function HomePage() {
   return (
     <main>
       <NavBar />
+
+      <br />
+      <br />
+
       <SearchForm />
     </main>
   );

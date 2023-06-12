@@ -75,7 +75,7 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
       </td>
       <PunchIdTd punchId={row.punchId} />
       <SupplierTd supplier={row.supplier} />
-      <SpecificationTd punchId={row.punchId} />
+      <SpecificationTd specification={row.specification} />
 
       <InspectionHistoryTd
         latestInspectionDate={row.latestInspectionDate}

@@ -79,8 +79,7 @@ function InspectionHistoryTd({ latestInspectionDate, punchId }: Props) {
                   .reverse()
                   .map((history: any, i) => (
                     <li key={i}>
-                      <AElement path={history.path} date={history.date} /> //
-                      새탭에서 여는방법
+                      <AElement path={history.path} date={history.date} />
                     </li>
                   ))}
               </ul>

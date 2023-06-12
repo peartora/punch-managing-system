@@ -16,9 +16,6 @@ function SearchForm() {
       <br />
       <br />
       <br />
-      <br />
-      <br />
-      <br />
 
       <PunchRowsProvider params={params}>
         <PunchController />
