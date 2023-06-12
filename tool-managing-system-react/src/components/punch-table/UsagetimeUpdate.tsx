@@ -82,7 +82,7 @@ export default function UsagetimeUpdate() {
           }}
         />
         <button className="btn btn-outline-secondary" type="submit">
-          정송
+          전송
         </button>
       </div>
     </form>

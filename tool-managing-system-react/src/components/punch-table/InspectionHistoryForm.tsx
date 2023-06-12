@@ -12,73 +12,77 @@ export default function InspectionHistoryForm() {
   ) => {
     event.preventDefault();
 
-    if (selectedIds.length === 0) {
-      alert(`선택 된 펀치가 없습니다.`);
-    } else {
-      const result = confirm(`선택 된 펀치의 검수이력을 추가 하시겠습니까?`);
+    if (selectedIds.length !== 0) {
+      if (selectedFile !== null) {
+        const result = confirm(`선택 된 펀치의 검수이력을 추가 하시겠습니까?`);
 
-      if (result) {
-        const formData = new FormData();
+        if (result) {
+          const formData = new FormData();
 
-        if (selectedFile) {
-          formData.append("inspectionResultPdfFile", selectedFile);
-        }
-
-        try {
-          for (const id of selectedIds) {
-            if (
-              punchRowsById[id].punchStatus !== "사용대기" &&
-              punchRowsById[id].punchStatus !== "사용불가"
-            ) {
-              alert(
-                `검수이력은 사용대기 혹은 사용불가 상태의 펀치만 가능 합니다.`
-              );
-              throw new Error("Check failed"); // Throw an exception
-            }
-
-            formData.append("punchId", id);
+          if (selectedFile) {
+            formData.append("inspectionResultPdfFile", selectedFile);
           }
 
-          await request.post(
-            `/api/tool-managing-system/updateInspectionResult`,
-            formData
-          );
+          try {
+            for (const id of selectedIds) {
+              if (
+                punchRowsById[id].punchStatus !== "사용대기" &&
+                punchRowsById[id].punchStatus !== "사용불가"
+              ) {
+                alert(
+                  `검수이력은 사용대기 혹은 사용불가 상태의 펀치만 가능 합니다.`
+                );
+                throw new Error("Check failed"); // Throw an exception
+              }
 
-          const targetRows = selectedIds.map((id) => ({
-            punchId: id,
-            newStatus: "사용가능",
-          }));
+              formData.append("punchId", id);
+            }
 
-          const statusUpdateRequestBody = {
-            rows: targetRows,
-          };
+            await request.post(
+              `/api/tool-managing-system/updateInspectionResult`,
+              formData
+            );
 
-          await request.post(
-            `/api/tool-managing-system/updateStatus`,
-            statusUpdateRequestBody
-          );
+            const targetRows = selectedIds.map((id) => ({
+              punchId: id,
+              newStatus: "사용가능",
+            }));
 
-          const usageNumberResetRows = selectedIds.map((id) => ({
-            punchId: id,
-            totalUsageNumber: 0,
-          }));
+            const statusUpdateRequestBody = {
+              rows: targetRows,
+            };
 
-          const usageNumberResetRequestBody = {
-            rows: usageNumberResetRows,
-          };
+            await request.post(
+              `/api/tool-managing-system/updateStatus`,
+              statusUpdateRequestBody
+            );
 
-          await request.post(
-            `/api/tool-managing-system/updateUsageNumber`,
-            usageNumberResetRequestBody
-          );
+            const usageNumberResetRows = selectedIds.map((id) => ({
+              punchId: id,
+              totalUsageNumber: 0,
+            }));
 
-          setSelectedFile(null);
-          refetch();
-          alert(`사용가능 상태로 변경 되었습니다.`);
-        } catch (error) {
-          console.error(error);
+            const usageNumberResetRequestBody = {
+              rows: usageNumberResetRows,
+            };
+
+            await request.post(
+              `/api/tool-managing-system/updateUsageNumber`,
+              usageNumberResetRequestBody
+            );
+
+            setSelectedFile(null);
+            refetch();
+            alert(`사용가능 상태로 변경 되었습니다.`);
+          } catch (error) {
+            console.error(error);
+          }
         }
+      } else {
+        alert(`검수이력 파일이 선택 되지 않았습니다.`);
       }
+    } else {
+      alert(`선택된 펀치가 없습니다.`);
     }
   };
 
@@ -102,7 +106,7 @@ export default function InspectionHistoryForm() {
           }}
         />
         <button className="btn btn-outline-secondary" type="submit">
-          정송
+          전송
         </button>
       </div>
     </form>
