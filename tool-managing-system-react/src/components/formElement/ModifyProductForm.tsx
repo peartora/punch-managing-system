@@ -11,21 +11,25 @@ function ModifyProductForm() {
   const { productList, isLoading } = useBringProductList();
 
   function handleSubmit() {
-    const formData = new FormData();
-    formData.append("product", productName);
-    formData.append("batchSize", batchSize);
-    formData.append("inspectionSize", inspectionSize);
-    if (selectedFile) formData.append("specificationFile", selectedFile);
+    if (batchSize === "" && inspectionSize === "" && selectedFile === null) {
+      alert(`변경 할 정보가 없습니다.`);
+    } else {
+      const formData = new FormData();
+      formData.append("product", productName);
+      formData.append("batchSize", batchSize);
+      formData.append("inspectionSize", inspectionSize);
+      if (selectedFile) formData.append("specificationFile", selectedFile);
 
-    request
-      .post(`/api/tool-managing-system/updateBatchInfor`, formData)
-      .then((response) => {
-        if (!response.ok)
-          throw new Error(`제품 정보 변경 중 error가 발생 하였습니다.`);
-        return response.text();
-      })
-      .then((result) => alert(result))
-      .catch((error) => console.error(error));
+      request
+        .post(`/api/tool-managing-system/updateBatchInfor`, formData)
+        .then((response) => {
+          if (!response.ok)
+            throw new Error(`제품 정보 변경 중 error가 발생 하였습니다.`);
+          return response.text();
+        })
+        .then(() => alert(`정보 변경 되었습니다.`))
+        .catch((error) => console.error(error));
+    }
   }
 
   return (
