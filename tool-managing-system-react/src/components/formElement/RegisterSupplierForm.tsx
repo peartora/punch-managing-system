@@ -56,6 +56,7 @@ function RegisterSupplierForm() {
           placeholder="업체명"
           value={supplier}
           onChange={(event) => setSupplier(event.target.value)}
+          required
         />
       </div>
 
