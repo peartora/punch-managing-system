@@ -70,6 +70,7 @@ function PunchStatusSelect({ punchStatus, punchId, refetch }: Props) {
       .then((response) => {
         if (!response.ok)
           new Error(`새로운 펀치 상태 변경 중 error가 발생 하였습니다.`);
+        alert(`상태 변경 되었습니다.`);
         refetch();
       })
       .catch((error) => console.error(error));
