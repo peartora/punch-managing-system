@@ -14,8 +14,7 @@ function RegisterProductForm() {
     request
       .get(`/api/tool-managing-system/duplicateProduct?${query}`)
       .then((response) => {
-        if (!response.ok)
-          throw new Error(`동일 제품 확인 중 error가 발생 하였습니다.`);
+        if (!response.ok) throw new Error(`duplicate error`);
         return response.text();
       })
       .then((response) => {
@@ -29,17 +28,17 @@ function RegisterProductForm() {
           request
             .post(`/api/tool-managing-system/addProduct`, formData)
             .then((response) => {
-              if (!response.ok)
-                throw new Error(`제품명 등록 중 error가 발생 하였습니다.`);
+              if (!response.ok) throw new Error(`register error`);
               return response.text();
             })
-            .then((result) => alert(result))
+            .then(() => alert(`OK`))
             .catch((error) => console.error(error));
         } else {
-          throw new Error(`${productName}은 이미 등록 된 제품 입니다.`);
+          throw new Error(`${productName} is duplicated`);
         }
       })
       .catch((error) => alert(error));
+    ``;
   }
 
   return (
@@ -55,6 +54,7 @@ function RegisterProductForm() {
           placeholder="제품명"
           value={productName}
           onChange={(event) => setProductName(event.target.value)}
+          required
         />
       </div>
 
@@ -69,6 +69,7 @@ function RegisterProductForm() {
           placeholder="batch-size"
           value={batchSize}
           onChange={(event) => setBatchSize(event.target.value)}
+          required
         />
       </div>
 
@@ -83,6 +84,7 @@ function RegisterProductForm() {
           placeholder="inspection-size"
           value={inspectionSize}
           onChange={(event) => setInspectionSize(event.target.value)}
+          required
         />
       </div>
 
@@ -102,6 +104,7 @@ function RegisterProductForm() {
               setSelectedFile(files[0] as File);
             }
           }}
+          required
         />
       </div>
 
