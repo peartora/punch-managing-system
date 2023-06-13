@@ -30,8 +30,9 @@ function RegisterSupplierForm() {
                 throw new Error(`업체명 등록 중 error가 발생 하였습니다.`);
               return response.text();
             })
-            .then((result) => {
-              alert(`${result}`);
+            .then(() => {
+              alert(`등록 되었습니다.`);
+              setSupplier("");
             })
             .catch((error) => {
               console.error(error);
@@ -60,7 +61,7 @@ function RegisterSupplierForm() {
         />
       </div>
 
-      <input type="submit" value="펀치등록" />
+      <input type="submit" value="업체등록" />
     </form>
   );
 }

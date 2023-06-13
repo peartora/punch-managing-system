@@ -19,8 +19,8 @@ type Data = {
 };
 
 function RegisterPunchForm() {
-  const [startNumber, setStartNumber] = useState("");
-  const [endNumber, setEndNumber] = useState("");
+  const [startNumber, setStartNumber] = useState(undefined);
+  const [endNumber, setEndNumber] = useState(undefined);
   const [registerDate, setRegisterDate] = useState(
     new Date().toISOString().substr(0, 10)
   );
@@ -34,47 +34,56 @@ function RegisterPunchForm() {
   const { supplierList } = useBringSupplierList();
 
   function handleSubmit() {
-    for (let i = Number(startNumber); i <= Number(endNumber); i++) {
-      const punchId = generatePunchId(i, registerDate, productName, punchType);
+    if (Number(endNumber) - Number(startNumber) > 0) {
+      for (let i = Number(startNumber); i <= Number(endNumber); i++) {
+        const punchId = generatePunchId(
+          i,
+          registerDate,
+          productName,
+          punchType
+        );
 
-      const query = new URLSearchParams();
-      query.append("punchId", punchId);
+        const query = new URLSearchParams();
+        query.append("punchId", punchId);
 
-      request
-        .get(`/api/tool-managing-system/duplicate?${query}`)
-        .then((response) => {
-          if (!response.ok)
-            new Error(`${punchId} 중복 확인 중 error 발생 하였습니다.`);
-          return response.text();
-        })
-        .then((result) => {
-          if (result === "0") {
-            const data: Data = {
-              number: punchId,
-              date: registerDate,
-              type: punchType,
-              manufacturer: supplier,
-              status: `사용대기`,
-              location: storageLocation,
-              product: productName,
-              productType: productType,
-            };
+        request
+          .get(`/api/tool-managing-system/duplicate?${query}`)
+          .then((response) => {
+            if (!response.ok)
+              new Error(`${punchId} 중복 확인 중 error 발생 하였습니다.`);
+            return response.text();
+          })
+          .then((result) => {
+            if (result === "0") {
+              const data: Data = {
+                number: punchId,
+                date: registerDate,
+                type: punchType,
+                manufacturer: supplier,
+                status: `사용대기`,
+                location: storageLocation,
+                product: productName,
+                productType: productType,
+              };
 
-            request
-              .post(`/api/tool-managing-system/register`, data)
-              .then((response) => {
-                if (!response.ok)
-                  throw new Error(`펀치 id 등록중 error가 발생 하였습니다.`);
-                return response.text();
-              })
-              .then((result) => {
-                alert(result);
-              })
-              .catch((error) => alert(error));
-          } else {
-            alert(`중복 된 punchId가 존재 합니다.`);
-          }
-        });
+              request
+                .post(`/api/tool-managing-system/register`, data)
+                .then((response) => {
+                  if (!response.ok)
+                    throw new Error(`펀치 id 등록중 error가 발생 하였습니다.`);
+                  return response.text();
+                })
+                .then(() => {
+                  alert(`${punchId} 펀치가 등록 되었습니다.`);
+                })
+                .catch((error) => alert(error));
+            } else {
+              alert(`중복 된 punchId가 존재 합니다.`);
+            }
+          });
+      }
+    } else {
+      alert(`시작 번호는 마지막 번호 보다 작아야 합니다.`);
     }
   }
 
@@ -100,6 +109,7 @@ function RegisterPunchForm() {
           placeholder="시작 번호"
           value={startNumber}
           onChange={(event) => setStartNumber(event.target.value)}
+          required
         />
       </div>
 
@@ -114,6 +124,7 @@ function RegisterPunchForm() {
           placeholder="마지막 번호"
           value={endNumber}
           onChange={(event) => setEndNumber(event.target.value)}
+          required
         />
       </div>
 
@@ -128,6 +139,7 @@ function RegisterPunchForm() {
           placeholder="등록날짜"
           value={registerDate}
           onChange={(event) => setRegisterDate(event.target.value)}
+          required
         />
       </div>
 
@@ -140,6 +152,7 @@ function RegisterPunchForm() {
           className="form-select"
           value={punchType}
           onChange={(event) => setPunchType(event.target.value)}
+          required
         >
           <option value="" disabled>
             아래 list 에서 선택 하세요.
@@ -152,20 +165,6 @@ function RegisterPunchForm() {
         </select>
       </div>
 
-      {/* <div className="input-group mb-3">
-        <label htmlFor="supplier" className="form-label">
-          제조사:
-        </label>
-        <input
-          id="supplier"
-          className="form-control"
-          type="text"
-          placeholder="제조사"
-          value={supplier}
-          onChange={(event) => setSupplier(event.target.value)}
-        />
-      </div> */}
-
       <div className="input-group mb-3">
         <label htmlFor="supplier" className="form-label">
           업체:
@@ -175,6 +174,7 @@ function RegisterPunchForm() {
           className="form-select"
           value={supplier}
           onChange={(event) => setSupplier(event.target.value)}
+          required
         >
           <option value="" disabled>
             아래 list 에서 선택 하세요.
@@ -200,6 +200,7 @@ function RegisterPunchForm() {
           placeholder="보관위치"
           value={storageLocation}
           onChange={(event) => setStorageLocation(event.target.value)}
+          required
         />
       </div>
 
@@ -212,6 +213,7 @@ function RegisterPunchForm() {
           className="form-select"
           value={productName}
           onChange={(event) => setProductName(event.target.value)}
+          required
         >
           <option value="" disabled>
             아래 list 에서 선택 하세요.
@@ -235,6 +237,7 @@ function RegisterPunchForm() {
           className="form-select"
           value={productType}
           onChange={(event) => setProductType(event.target.value)}
+          required
         >
           <option value="" disabled>
             아래 list 에서 선택 하세요.
