@@ -4,7 +4,7 @@ type Props = {
 };
 
 export default function AElement(props: Props) {
-  const path = `http://localhost:8080/resources/pdf/${pdfName}`;
+  const path = `http://localhost:8080/resources/pdf/`;
 
   return (
     <a href={path} target="_blank">

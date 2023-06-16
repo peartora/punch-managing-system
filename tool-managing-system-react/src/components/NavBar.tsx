@@ -39,6 +39,11 @@ export default function NavBar() {
               업체 등록
             </Link>
           </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/overview">
+              요약
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>

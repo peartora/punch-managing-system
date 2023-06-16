@@ -1,4 +1,3 @@
-import FilterablePunchTable from "@/components/FilterablePunchTable";
 import NavBar from "@/components/NavBar";
 
 export default function RegisterPage() {

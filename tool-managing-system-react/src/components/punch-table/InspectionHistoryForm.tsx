@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { request } from "@/common/Service";
 import { usePunchRows } from "@/context/punch-rows-context";
 
 export default function InspectionHistoryForm() {
   const { selectedIds, punchRowsById, refetch } = usePunchRows();
 
+  const formRef = useRef<HTMLFormElement>(
+    undefined as unknown as HTMLFormElement
+  );
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handlerSubmitForPdfUpload = async (
@@ -72,6 +75,7 @@ export default function InspectionHistoryForm() {
             );
 
             setSelectedFile(null);
+            formRef.current.reset();
             refetch();
             alert(`사용가능 상태로 변경 되었습니다.`);
           } catch (error) {
@@ -87,7 +91,7 @@ export default function InspectionHistoryForm() {
   };
 
   return (
-    <form className="col-3" onSubmit={handlerSubmitForPdfUpload}>
+    <form className="col-3" ref={formRef} onSubmit={handlerSubmitForPdfUpload}>
       <label htmlFor="uploadInspectionHistory" className="form-label">
         검수이력 파일(pdf) 업로드:
       </label>

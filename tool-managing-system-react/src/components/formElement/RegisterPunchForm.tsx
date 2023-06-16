@@ -19,8 +19,8 @@ type Data = {
 };
 
 function RegisterPunchForm() {
-  const [startNumber, setStartNumber] = useState(undefined);
-  const [endNumber, setEndNumber] = useState(undefined);
+  const [startNumber, setStartNumber] = useState<number>();
+  const [endNumber, setEndNumber] = useState<number>();
   const [registerDate, setRegisterDate] = useState(
     new Date().toISOString().substr(0, 10)
   );
@@ -105,10 +105,10 @@ function RegisterPunchForm() {
         <input
           id="startNumber"
           className="form-control"
-          type="text"
+          type="number"
           placeholder="시작 번호"
           value={startNumber}
-          onChange={(event) => setStartNumber(event.target.value)}
+          onChange={(event) => setStartNumber(Number(event.target.value))}
           required
         />
       </div>
@@ -120,10 +120,10 @@ function RegisterPunchForm() {
         <input
           id="endNumber"
           className="form-control"
-          type="text"
+          type="number"
           placeholder="마지막 번호"
           value={endNumber}
-          onChange={(event) => setEndNumber(event.target.value)}
+          onChange={(event) => setEndNumber(Number(event.target.value))}
           required
         />
       </div>

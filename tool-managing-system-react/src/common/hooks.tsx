@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { request } from "./Service";
 import { type PunchRow as PunchRowType } from "@/common/types";
 
-export const useDisplay = function (params: URLSearchParams) {
+export const useDisplay = function (params?: URLSearchParams) {
   const [key, setKey] = useState(() => Date.now());
   const [isLoading, setLoading] = useState(true);
   const [rows, setRows] = useState<Array<PunchRowType>>([]);
@@ -11,8 +11,13 @@ export const useDisplay = function (params: URLSearchParams) {
     console.log(`effect happen`);
     setLoading(true);
 
+    let query = "";
+    if (params) {
+      query = params.toString();
+    }
+
     request
-      .get(`/api/tool-managing-system/display?${params.toString()}`)
+      .get(`/api/tool-managing-system/display?${query}`)
       .then((response) => {
         if (!response.ok) {
           console.error(response.statusText);

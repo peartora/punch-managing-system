@@ -91,7 +91,10 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
       <PunchStorageLocationTd punchStorageLocation={row.punchStorageLocation} />
       <ProductTd product={row.product} />
       <ProductTypeTd productType={row.productType} />
-      <CleaningHistoryTd latestCleaningHistory={row.latestCleaningHistory} />
+      <CleaningHistoryTd
+        latestCleaningHistory={row.latestCleaningHistory}
+        punchId={row.punchId}
+      />
       <TotalUsageNumberTd totalUsageNumber={row.totalUsageNumber} />
       <td>{row.maxUsageNumber}</td>
     </tr>

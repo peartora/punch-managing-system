@@ -40,7 +40,7 @@ export const usePunchRows = () => {
 
 export const PunchRowsProvider = (props: {
   children: ReactNode;
-  params: URLSearchParams;
+  params?: URLSearchParams;
 }) => {
   const { rows, refetch, isLoading } = useDisplay(props.params);
 

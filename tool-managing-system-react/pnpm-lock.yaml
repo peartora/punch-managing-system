@@ -2,11 +2,14 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@popperjs/core':
-    specifier: ^2.11.7
-    version: 2.11.7
+    specifier: ^2.11.8
+    version: 2.11.8
   bootstrap:
     specifier: ^5.2.3
-    version: 5.2.3(@popperjs/core@2.11.7)
+    version: 5.2.3(@popperjs/core@2.11.8)
+  bootstrap-icons:
+    specifier: ^1.10.5
+    version: 1.10.5
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -18,6 +21,9 @@ dependencies:
     version: 6.11.1(react-dom@18.2.0)(react@18.2.0)
 
 devDependencies:
+  '@types/bootstrap':
+    specifier: ^5.2.6
+    version: 5.2.6
   '@types/node':
     specifier: ^20.0.0
     version: 20.0.0
@@ -595,14 +601,19 @@ packages:
       fastq: 1.15.0
     dev: true
 
-  /@popperjs/core@2.11.7:
-    resolution: {integrity: sha512-Cr4OjIkipTtcXKjAsm8agyleBuDHvxzeBoa1v543lbv1YaIwQjESsVcmjiWiPEbC1FIeHOG/Op9kdCmAmiS3Kw==}
-    dev: false
+  /@popperjs/core@2.11.8:
+    resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
 
   /@remix-run/router@1.6.1:
     resolution: {integrity: sha512-YUkWj+xs0oOzBe74OgErsuR3wVn+efrFhXBWrit50kOiED+pvQe2r6MWY0iJMQU/mSVKxvNzL4ZaYvjdX+G7ZA==}
     engines: {node: '>=14'}
     dev: false
+
+  /@types/bootstrap@5.2.6:
+    resolution: {integrity: sha512-BlAc3YATdasbHoxMoBWODrSF6qwQO/E9X8wVxCCSa6rWjnaZfpkr2N6pUMCY6jj2+wf0muUtLySbvU9etX6YqA==}
+    dependencies:
+      '@popperjs/core': 2.11.8
+    dev: true
 
   /@types/json-schema@7.0.11:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
@@ -838,12 +849,16 @@ packages:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
     dev: true
 
-  /bootstrap@5.2.3(@popperjs/core@2.11.7):
+  /bootstrap-icons@1.10.5:
+    resolution: {integrity: sha512-oSX26F37V7QV7NCE53PPEL45d7EGXmBgHG3pDpZvcRaKVzWMqIRL9wcqJUyEha1esFtM3NJzvmxFXDxjJYD0jQ==}
+    dev: false
+
+  /bootstrap@5.2.3(@popperjs/core@2.11.8):
     resolution: {integrity: sha512-cEKPM+fwb3cT8NzQZYEu4HilJ3anCrWqh3CHAok1p9jXqMPsPTBhU25fBckEJHJ/p+tTxTFTsFQGM+gaHpi3QQ==}
     peerDependencies:
       '@popperjs/core': ^2.11.6
     dependencies:
-      '@popperjs/core': 2.11.7
+      '@popperjs/core': 2.11.8
     dev: false
 
   /brace-expansion@1.1.11:

@@ -6,6 +6,7 @@ import RegisterProductPage from "./pages/RegisterProductPage";
 import RegisterPunchPage from "./pages/RegisterPunchPage";
 import ModifyProductFormPage from "./pages/ModifyProductFormPage";
 import RegisterSupplierPage from "@/pages/RegisterSupplierPage";
+import Overview from "./pages/Overview";
 
 const router = createHashRouter([
   {
@@ -31,6 +32,10 @@ const router = createHashRouter([
   {
     path: "/add-supplier",
     element: <RegisterSupplierPage />,
+  },
+  {
+    path: "/overview",
+    element: <Overview />,
   },
 ]);
 
