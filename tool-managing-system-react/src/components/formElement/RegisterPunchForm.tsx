@@ -30,7 +30,7 @@ function RegisterPunchForm() {
   const [productName, setProductName] = useState("");
   const [productType, setProductType] = useState("");
 
-  const { productList, isLoading } = useBringProductList();
+  const { productList } = useBringProductList();
   const { supplierList } = useBringSupplierList();
 
   function handleSubmit() {

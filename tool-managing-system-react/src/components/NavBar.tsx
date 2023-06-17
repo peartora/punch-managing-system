@@ -10,8 +10,13 @@ export default function NavBar() {
 
         <ul className="nav">
           <li className="nav-item">
+            <Link className="nav-link" to="/punch-table">
+              펀치 리스트 확인
+            </Link>
+          </li>
+          <li className="nav-item">
             <Link className="nav-link" to="/">
-              홈
+              요약
             </Link>
           </li>
           <li className="nav-item">
@@ -37,11 +42,6 @@ export default function NavBar() {
           <li className="nav-item">
             <Link className="nav-link" to="/add-supplier">
               업체 등록
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link" to="/overview">
-              요약
             </Link>
           </li>
         </ul>

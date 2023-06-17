@@ -11,7 +11,7 @@ import Overview from "./pages/Overview";
 const router = createHashRouter([
   {
     path: "/",
-    element: <HomePage />,
+    element: <Overview />,
   },
   {
     path: "/sign-in",
@@ -34,8 +34,8 @@ const router = createHashRouter([
     element: <RegisterSupplierPage />,
   },
   {
-    path: "/overview",
-    element: <Overview />,
+    path: "/punch-table",
+    element: <HomePage />,
   },
 ]);
 
