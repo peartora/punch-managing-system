@@ -10,28 +10,28 @@ export default function NavBar() {
 
         <ul className="nav">
           <li className="nav-item">
-            <Link className="nav-link" to="/punch-table">
-              펀치 리스트 확인
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link" to="/">
-              요약
-            </Link>
-          </li>
-          <li className="nav-item">
             <Link className="nav-link" to="/sign-in">
               로그인
             </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/register-product">
-              제품등록
+            <Link className="nav-link" to="/">
+              펀치 리스트 요약
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/punch-table">
+              펀치 리스트 상세
             </Link>
           </li>
           <li className="nav-item">
             <Link className="nav-link" to="/register-punch">
               펀치등록
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/register-product">
+              제품등록
             </Link>
           </li>
           <li className="nav-item">

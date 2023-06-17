@@ -1,6 +1,8 @@
 import NavBar from "@/components/NavBar";
 import { useDisplay } from "@/common/hooks";
 
+import "@/css/Overview.css";
+
 const OverViewList = () => {
   const { rows } = useDisplay();
 
@@ -58,11 +60,11 @@ const OverViewList = () => {
           let checkResult = "";
 
           if (nr?.count !== 3) {
-            checkResult = "초과";
+            checkResult = "orange";
           }
 
           return (
-            <tr key={index}>
+            <tr className={checkResult} key={index}>
               <td>{nr?.newPunchId}</td>
               <td>{nr?.count}</td>
             </tr>
