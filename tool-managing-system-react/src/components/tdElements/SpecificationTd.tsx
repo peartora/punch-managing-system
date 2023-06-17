@@ -8,13 +8,32 @@ function SpecificationTd({ specification }: Props) {
   console.log("pdfName");
   console.log(pdfName);
 
-  const fullPath = `http://localhost:8080/resources/pdf/${pdfName}`;
+  const fullPath = `http://localhost:8080/resources/pdf/specification/${pdfName}`;
 
   return (
     <td>
-      <a href={specification}>{pdfName}</a>
+      <a href={fullPath} target="_blank">
+        {pdfName}
+      </a>
     </td>
   );
 }
 
 export default SpecificationTd;
+
+// type Props = {
+//   path: string;
+//   date?: string;
+// };
+
+// export default function AElement(props: Props) {
+//   const { path } = props;
+//   const pdfName = path.substring(path.lastIndexOf("\\") + 1);
+//   const fullPath = `http://localhost:8080/resources/pdf/inspection/${pdfName}`;
+
+//   return (
+//     <a href={fullPath} target="_blank">
+//       {props.date}
+//     </a>
+//   );
+// }

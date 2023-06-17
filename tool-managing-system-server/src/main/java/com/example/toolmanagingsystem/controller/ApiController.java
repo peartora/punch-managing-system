@@ -291,7 +291,7 @@ public class ApiController
     {
         String fileName = specificationFile.getOriginalFilename();
         // String strFilePath = "C:\\Users\\lsm1dae\\Desktop\\specifications\\" + fileName;
-        String strFilePath = "C:\\Users\\peart\\Desktop\\pdf\\specifications\\" + fileName;
+        String strFilePath = "C:\\Users\\peart\\Desktop\\pdf\\specification\\" + fileName;
 
         fileHandling(strFilePath, specificationFile);
 
