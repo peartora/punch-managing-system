@@ -202,15 +202,14 @@ public class PunchDao
 
     public void deletePunch(PunchScrapDao punchScrapDao)
     {
-
         Map<String, Object> deleteInformation = punchScrapDao.returnMapCollection();
 
         System.out.println("deleteInformation");
 
         System.out.println(deleteInformation);
 
-        this.template.update("update `punch-list` set `status` = :newStatus where number = :number", deleteInformation);
-        this.template.update("insert into `delete-history` (`punch-number`, `reason`, `date`) values (:number, :reason, now())", deleteInformation);
+        this.template.update("update `punch-list` set `status` = :newStatus where number = :punchId", deleteInformation);
+        this.template.update("insert into `delete-history` (`punch-number`, `reason`, `date`) values (:punchId, :reason, now())", deleteInformation);
     }
 
     public void addCleanHistory(HashMap<String, Object> number)
