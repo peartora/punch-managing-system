@@ -5,7 +5,7 @@ import { useBringSupplierList } from "@/common/hooks";
 import { request } from "./../../common/Service";
 
 const options = ["상부", "하부", "다이"];
-const productTypeoptions = ["AA", "BB", "CC"];
+const productTypeoptions = ["BB", "B", "D"];
 
 type Data = {
   number: string;
