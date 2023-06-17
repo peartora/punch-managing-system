@@ -55,6 +55,12 @@ const OverViewList = () => {
       </thead>
       <tbody>
         {newRows.map((nr, index) => {
+          let checkResult = "";
+
+          if (nr?.count !== 3) {
+            checkResult = "초과";
+          }
+
           return (
             <tr key={index}>
               <td>{nr?.newPunchId}</td>
