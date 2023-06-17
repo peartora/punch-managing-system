@@ -14,7 +14,7 @@ import java.util.Map;
 @Component
 public class PunchScrapDao
 {
-    private String number;
+    private String punchId;
     private PunchStatus newStatus;
     private String reason;
 
@@ -22,7 +22,7 @@ public class PunchScrapDao
     {
         Map<String, Object> deleteInformation = new HashMap<>();
 
-        deleteInformation.put("number", this.number);
+        deleteInformation.put("punchId", this.punchId);
         deleteInformation.put("newStatus", this.newStatus.폐기.toString());
         deleteInformation.put("reason", this.reason);
 

@@ -12,6 +12,11 @@ type Data = {
   newStatus: string;
 };
 
+type DataForDelete = {
+  punchId: string;
+  reason: string | null;
+};
+
 const options = ["사용대기", "사용가능", "사용중", "사용불가", "폐기"] as const;
 
 function PunchStatusSelect({ punchStatus, punchId, refetch }: Props) {
@@ -60,20 +65,38 @@ function PunchStatusSelect({ punchStatus, punchId, refetch }: Props) {
   function handleChange(e: any) {
     const newStatus = e.target.value;
 
-    const data: Data = {
-      punchId: punchId,
-      newStatus: newStatus,
-    };
+    if (newStatus === "폐기") {
+      const reason = window.prompt("폐기 사유를 입력 하세요");
 
-    request
-      .post(`/api/tool-managing-system/updateStatus`, data)
-      .then((response) => {
-        if (!response.ok)
-          new Error(`새로운 펀치 상태 변경 중 error가 발생 하였습니다.`);
-        alert(`상태 변경 되었습니다.`);
-        refetch();
-      })
-      .catch((error) => console.error(error));
+      const dataForDelete: DataForDelete = {
+        punchId: punchId,
+        reason: reason,
+      };
+
+      request
+        .post(`/api/tool-managing-system/updateStatus/scrap`, dataForDelete)
+        .then((response) => {
+          if (!response.ok)
+            throw new Error(`상태 변경 중 에러가 발생 했습니다.`);
+        })
+        .then(() => alert(`상태 변경 되었습니다.`))
+        .catch((error) => alert(error));
+    } else {
+      const data: Data = {
+        punchId: punchId,
+        newStatus: newStatus,
+      };
+
+      request
+        .post(`/api/tool-managing-system/updateStatus`, data)
+        .then((response) => {
+          if (!response.ok)
+            new Error(`새로운 펀치 상태 변경 중 error가 발생 하였습니다.`);
+          alert(`상태 변경 되었습니다.`);
+        })
+        .catch((error) => console.error(error));
+    }
+    refetch();
   }
 
   return (

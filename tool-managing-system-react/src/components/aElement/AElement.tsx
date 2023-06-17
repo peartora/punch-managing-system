@@ -6,7 +6,7 @@ type Props = {
 export default function AElement(props: Props) {
   const { path } = props;
   const pdfName = path.substring(path.lastIndexOf("\\") + 1);
-  const fullPath = `http://localhost:8080/resources/pdf/${pdfName}`;
+  const fullPath = `http://localhost:8080/resources/pdf/inspection/${pdfName}`;
 
   return (
     <a href={fullPath} target="_blank">

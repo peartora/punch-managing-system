@@ -81,6 +81,8 @@ public class ApiController
     @PostMapping("/updateStatus/scrap")
     public void scrapPunch(@RequestBody PunchScrapDao punchScrapDao)
     {
+        System.out.println("/updateStatus/scrap");
+        System.out.println(punchScrapDao);
         this.dao.deletePunch(punchScrapDao);
     }
     @PostMapping("/addCleanHistory")
