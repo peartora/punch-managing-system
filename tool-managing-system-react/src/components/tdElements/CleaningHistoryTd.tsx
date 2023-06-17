@@ -11,9 +11,6 @@ type Props = {
 };
 
 function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
-  console.log("punchId");
-  console.log(punchId);
-
   const [uniqueId] = useState(() => _uniqueId++);
   const [cleanHistory, setCleanHistory] = useState<object[]>([]);
 
@@ -22,29 +19,29 @@ function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
     query.append("punchId", punchId);
 
     request
-      .get(`/api/tool-managing-system/getCleanHistory?${query}`)
+      .get(`/api/tool-managing-system/getCleanHistory?${query.toString()}`)
       .then((response) => {
+        console.log("response");
+        console.log(response);
+
         if (!response.ok)
           throw new Error(
             `${punchId}의 청소이력을 로딩하는 중 error 발생 하였습니다.`
           );
         return response.json();
       })
-      .then(
-        (response: Array<{ punchId: string[]; "when-cleaned": string[] }>) => {
-          const dateArray: object[] = response.map((r) => {
-            return {
-              punchId: r.punchId,
-              date: `${r["when-cleaned"][0]}년 ${r["when-cleaned"][1]}월 ${r["when-cleaned"][2]}일 ${r["when-cleaned"][3]}시 ${r["when-cleaned"][4]}분`,
-            };
-          });
+      .then((response: Array<{ "when-cleaned": string[] }>) => {
+        const dateArray: object[] = response.map((r) => {
+          return {
+            date: `${r["when-cleaned"][0]}년 ${r["when-cleaned"][1]}월 ${r["when-cleaned"][2]}일 ${r["when-cleaned"][3]}시 ${r["when-cleaned"][4]}분`,
+          };
+        });
 
-          console.log("dateArray");
-          console.log(dateArray);
+        console.log("dateArray");
+        console.log(dateArray);
 
-          setCleanHistory([...dateArray]);
-        }
-      )
+        setCleanHistory([...dateArray]);
+      })
       .catch((error) => console.error(error));
   };
 
@@ -53,13 +50,13 @@ function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
       {latestCleaningHistory}
       <OpenFileButton
         data-bs-toggle="modal"
-        data-bs-target={`#myModal-${uniqueId}`}
+        data-bs-target={`#myModalForClean-${uniqueId}`}
         onClick={clickHandler}
       >
         이력 확인
       </OpenFileButton>
 
-      <div id={`myModal-${uniqueId}`} className="modal" tabIndex={-1}>
+      <div id={`myModalForClean-${uniqueId}`} className="modal" tabIndex={-1}>
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
@@ -76,10 +73,10 @@ function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
                 {cleanHistory
                   .slice()
                   .reverse()
-                  .map((history: any, i) => (
-                    <li key={i}>
+                  .map((history: any) => (
+                    <li key={history.date}>
                       <AElementForCleanHistory
-                        punchId={history.punchId}
+                        punchId={punchId}
                         date={history.date}
                       />
                     </li>

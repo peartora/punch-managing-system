@@ -100,9 +100,13 @@ public class ApiController
     }
 
     @GetMapping("/getCleanHistory")
-    public List<Map<String, Object>> retrieveHistory(@RequestParam String number)
+    public List<Map<String, Object>> retrieveHistory(@RequestParam String punchId)
     {
-        return this.dao.retrievCleanHistory(number);
+        System.out.println("getCleanHistory");
+        System.out.println(punchId);
+
+        System.out.println(this.dao.retrievCleanHistory(punchId));
+        return this.dao.retrievCleanHistory(punchId);
     }
 
     @GetMapping("/getInspectionHistory")

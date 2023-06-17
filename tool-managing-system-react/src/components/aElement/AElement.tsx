@@ -1,6 +1,7 @@
 type Props = {
   path: string;
   date?: string;
+  punchId?: string;
 };
 
 export default function AElement(props: Props) {

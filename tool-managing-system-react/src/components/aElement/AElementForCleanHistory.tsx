@@ -4,7 +4,13 @@ type Props = {
 };
 
 export default function AElement(props: Props) {
-  const path = `http://localhost:8080/resources/pdf/`;
+  const encodedPunchId = encodeURIComponent(props.punchId);
+  const encodedDate = encodeURIComponent(props.date);
+
+  const path = `http://localhost:5173/#/print-label/${encodedPunchId}/${encodedDate}`;
+
+  console.log("path");
+  console.log(path);
 
   return (
     <a href={path} target="_blank">

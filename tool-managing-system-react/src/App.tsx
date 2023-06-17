@@ -7,6 +7,7 @@ import RegisterPunchPage from "./pages/RegisterPunchPage";
 import ModifyProductFormPage from "./pages/ModifyProductFormPage";
 import RegisterSupplierPage from "@/pages/RegisterSupplierPage";
 import Overview from "./pages/Overview";
+import PrintCleanHistory from "./pages/PrintCleanHistory";
 
 const router = createHashRouter([
   {
@@ -36,6 +37,10 @@ const router = createHashRouter([
   {
     path: "/punch-table",
     element: <HomePage />,
+  },
+  {
+    path: "/print-label",
+    element: <PrintCleanHistory />,
   },
 ]);
 
