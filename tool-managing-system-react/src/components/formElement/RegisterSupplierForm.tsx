@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { request } from "./../../common/Service";
 
+
 function RegisterSupplierForm() {
   const [supplier, setSupplier] = useState(``);
 
@@ -60,10 +61,14 @@ function RegisterSupplierForm() {
           required
         />
       </div>
-
       <input type="submit" value="업체등록" />
     </form>
   );
+
+
+
+
+
 }
 
 export default RegisterSupplierForm;
