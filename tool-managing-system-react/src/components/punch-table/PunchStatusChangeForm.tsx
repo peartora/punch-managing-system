@@ -83,12 +83,12 @@ export default function PunchStatusChangeForm() {
           펀치상태 변경:
         </label>
         <select
+          value="선택 하세요."
           id="punchStatusSelect"
           className="form-select"
-          defaultValue=""
           onChange={handleChange}
         >
-          <option value="" disabled selected>
+          <option value="선택 하세요." disabled>
             선택 하세요.
           </option>
           {options.map((o) => {
