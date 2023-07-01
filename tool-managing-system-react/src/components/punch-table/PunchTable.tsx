@@ -11,9 +11,7 @@ function PunchTable() {
 
   return (
     <>
-      <thead>
-        <TableHeader />
-      </thead>
+      <TableHeader />
       <tbody>
         {rows.map((row) => (
           <PunchRow

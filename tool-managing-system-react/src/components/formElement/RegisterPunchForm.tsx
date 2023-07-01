@@ -19,8 +19,8 @@ type Data = {
 };
 
 function RegisterPunchForm() {
-  const [startNumber, setStartNumber] = useState<number>();
-  const [endNumber, setEndNumber] = useState<number>();
+  const [startNumber, setStartNumber] = useState<number>(0);
+  const [endNumber, setEndNumber] = useState<number>(0);
   const [registerDate, setRegisterDate] = useState(
     new Date().toISOString().substr(0, 10)
   );
@@ -33,7 +33,9 @@ function RegisterPunchForm() {
   const { productList } = useBringProductList();
   const { supplierList } = useBringSupplierList();
 
-  function handleSubmit() {
+  function handleSubmit(event: any) {
+    event.preventDefault();
+
     if (Number(endNumber) - Number(startNumber) > 0) {
       for (let i = Number(startNumber); i <= Number(endNumber); i++) {
         const punchId = generatePunchId(
@@ -73,8 +75,14 @@ function RegisterPunchForm() {
                     throw new Error(`펀치 id 등록중 error가 발생 하였습니다.`);
                   return response.text();
                 })
-                .then(() => {
-                  alert(`${punchId} 펀치가 등록 되었습니다.`);
+                .then((result) => {
+                  if (result === "1") {
+                    alert(`${punchId}가 정상적으로 등록 되었습니다.`);
+                  } else {
+                    alert(
+                      `${punchId}가 정상적으로 등록 되지 않았습니다. 관리자에게 문의 하십시오.`
+                    );
+                  }
                 })
                 .catch((error) => alert(error));
             } else {

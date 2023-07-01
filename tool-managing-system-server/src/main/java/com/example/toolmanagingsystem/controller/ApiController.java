@@ -21,18 +21,13 @@ public class ApiController
 {
     private final PunchDao dao;
     @PostMapping("/register")
-    public String registerPunch(@RequestBody Punch punch)
+    public int registerPunch(@RequestBody Punch punch)
     {
         System.out.println(punch);
 
-        int numberOfAffectedRows = this.dao.registerPunch(punch);
-
-        if (numberOfAffectedRows == 1)
-        {
-            return "펀치 ID :" + punch.getNumber() + " 가 정상적으로 등록 되었습니다.";
-        }
-        return "등록 요청이 정상적으로 처리 되지 않았습니다.";
+        return this.dao.registerPunch(punch);
     }
+
     @PostMapping("/updateUsageNumber")
     public void updateUsageNumber(@RequestBody HashMap<String, Object> number)
     {
@@ -139,7 +134,7 @@ public class ApiController
     }
 
     @PostMapping("/updateBatchInfor")
-    public String updateBatchSize(
+    public int updateBatchSize(
             @RequestParam(value = "product") String productName,
             @RequestParam(value = "batchSize", required = false) String batchSize,
             @RequestParam(value = "inspectionSize", required = false) String inspectionSize,
@@ -196,19 +191,8 @@ public class ApiController
             mapParams.put("product", productName);
             mapParams.put("specificationFilePath", strFilePath);
         }
-        else
-        {
-            return "변경하고자 하는 값이 하나도 입력 되지 않았습니다.";
-        }
 
-        int numberOfAffectedRows = this.dao.updateSizeInformation(mapParams);
-
-        if (numberOfAffectedRows == 1)
-        {
-            return mapParams.get("product") + "의 batch 정보가 변경 되었습니다.";
-        }
-
-        return "batch 정보 변경 요청이 정상적으로 처리 되지 않았습니다.";
+        return this.dao.updateSizeInformation(mapParams);
     }
 
     @GetMapping("/duplicateProduct")
@@ -218,7 +202,7 @@ public class ApiController
     }
 
     @PostMapping("/addProduct")
-    public String addProduct(
+    public int addProduct(
             @RequestParam("product") String productName,
             @RequestParam("batchSize") String batchSize,
             @RequestParam("inspectionSize") String inspectionSize,
@@ -233,15 +217,7 @@ public class ApiController
         mapParams.put("inspectionSize", inspectionSize);
         mapParams.put("specificationFilePath", strFilePath);
 
-        int numberOfAffectedRows = this.dao.addProduct(mapParams);
-
-        if (numberOfAffectedRows == 1)
-        {
-            // return mapParams.get("product") + " 정보가 정상적으로 등록 되었습니다.";
-            return "정보가 정상적으로 등록 되었습니다.";
-        }
-
-        return "제품등록 요청이 정상적으로 처리 되지 않았습니다.";
+        return this.dao.addProduct(mapParams);
     }
     @PostMapping("updateInspectionResult")
     public void updateInspectionResult(MultipartHttpServletRequest params)
@@ -267,17 +243,9 @@ public class ApiController
     }
 
     @PostMapping("/addSupplier")
-    public String addSupplier(@RequestBody HashMap<String, Object> params)
+    public int addSupplier(@RequestBody HashMap<String, Object> params)
     {
-
-        int numberOfAffectedRows = this.dao.addSupplier(params);
-
-        if (numberOfAffectedRows == 1)
-        {
-            return params.get("supplier") + " 이 등록 되었습니다.";
-        }
-
-        return params.get("supplier") + " 등록 중 error가 발생 하였습니다.";
+        return this.dao.addSupplier(params);
     }
 
     @GetMapping("/duplicateSupplier")

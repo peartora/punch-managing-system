@@ -3,14 +3,16 @@ import { request } from "./../../common/Service";
 
 function RegisterProductForm() {
   const [productName, setProductName] = useState("");
-  const [batchSize, setBatchSize] = useState("");
-  const [inspectionSize, setInspectionSize] = useState("");
+  const [batchSize, setBatchSize] = useState(0);
+  const [inspectionSize, setInspectionSize] = useState(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const query = new URLSearchParams();
   query.append("product", productName);
 
-  function handleSubmit() {
+  function handleSubmit(event: any) {
+    event.preventDefault();
+
     request
       .get(`/api/tool-managing-system/duplicateProduct?${query}`)
       .then((response) => {
@@ -21,8 +23,8 @@ function RegisterProductForm() {
         if (response === "0") {
           const formData = new FormData();
           formData.append("product", productName);
-          formData.append("batchSize", batchSize);
-          formData.append("inspectionSize", inspectionSize);
+          formData.append("batchSize", batchSize.toString());
+          formData.append("inspectionSize", inspectionSize.toString());
           if (selectedFile) formData.append("specificationFile", selectedFile);
 
           request
@@ -31,14 +33,21 @@ function RegisterProductForm() {
               if (!response.ok) throw new Error(`register error`);
               return response.text();
             })
-            .then(() => alert(`OK`))
-            .catch((error) => console.error(error));
+            .then((result) => {
+              if (result === "1") {
+                alert(`${productName}이 정상적으로 등록 되었습니다.`);
+              } else {
+                throw new Error(
+                  `${productName}이 정상적으로 등록 되지 않았습니다. 관리자에게 문의 하십시오.`
+                );
+              }
+            })
+            .catch((error) => alert(error));
         } else {
           throw new Error(`${productName} is duplicated`);
         }
       })
       .catch((error) => alert(error));
-    ``;
   }
 
   return (
@@ -68,7 +77,7 @@ function RegisterProductForm() {
           type="number"
           placeholder="batch-size"
           value={batchSize}
-          onChange={(event) => setBatchSize(event.target.value)}
+          onChange={(event) => setBatchSize(parseInt(event.target.value))}
           required
         />
       </div>
@@ -83,7 +92,7 @@ function RegisterProductForm() {
           type="number"
           placeholder="inspection-size"
           value={inspectionSize}
-          onChange={(event) => setInspectionSize(event.target.value)}
+          onChange={(event) => setInspectionSize(parseInt(event.target.value))}
           required
         />
       </div>

@@ -11,9 +11,11 @@ export default function PunchController() {
   const { isLoading } = usePunchRows();
 
   if (isLoading) {
-    <table className="table table-striped table-bordered table-hover">
-      <TableHeader />
-    </table>;
+    return (
+      <table className="table table-striped table-bordered table-hover">
+        <TableHeader />
+      </table>
+    );
   }
 
   return (

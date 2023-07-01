@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { request } from "./../../common/Service";
 
-
 function RegisterSupplierForm() {
   const [supplier, setSupplier] = useState(``);
 
-  function handleSubmit() {
+  function handleSubmit(event: any) {
+    event.preventDefault();
+
     const query = new URLSearchParams();
     query.append("supplier", supplier);
 
@@ -31,8 +32,14 @@ function RegisterSupplierForm() {
                 throw new Error(`업체명 등록 중 error가 발생 하였습니다.`);
               return response.text();
             })
-            .then(() => {
-              alert(`등록 되었습니다.`);
+            .then((result) => {
+              if (result === "1") {
+                alert(`${supplier}가 등록 되었습니다.`);
+              } else {
+                alert(
+                  `${supplier}가 등록 되지 않았습니다. 관리자에게 문의 하십시오.`
+                );
+              }
               setSupplier("");
             })
             .catch((error) => {
@@ -64,11 +71,6 @@ function RegisterSupplierForm() {
       <input type="submit" value="업체등록" />
     </form>
   );
-
-
-
-
-
 }
 
 export default RegisterSupplierForm;

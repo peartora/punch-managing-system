@@ -8,7 +8,6 @@ import ProductTd from "../tdElements/ProductTd";
 import ProductTypeTd from "../tdElements/ProductTypeTd";
 import CleaningHistoryTd from "../tdElements/CleaningHistoryTd";
 import TotalUsageNumberTd from "../tdElements/TotalUsageNumberTd";
-import OpenFileButton from "../buttonElement/OpenFileButton";
 import { type PunchRow } from "@/common/types";
 import PunchStatusSelect from "../selectElement/PunchStatusSelect";
 import CheckBox from "../checkBox/CheckBox";

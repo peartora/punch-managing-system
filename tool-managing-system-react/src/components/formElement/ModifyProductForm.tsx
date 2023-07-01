@@ -10,7 +10,9 @@ function ModifyProductForm() {
 
   const { productList, isLoading } = useBringProductList();
 
-  function handleSubmit() {
+  function handleSubmit(event: any) {
+    event.preventDefault();
+
     if (batchSize === "" && inspectionSize === "" && selectedFile === null) {
       alert(`변경 할 정보가 없습니다.`);
     } else {
@@ -27,7 +29,15 @@ function ModifyProductForm() {
             throw new Error(`제품 정보 변경 중 error가 발생 하였습니다.`);
           return response.text();
         })
-        .then(() => alert(`정보 변경 되었습니다.`))
+        .then((result) => {
+          if (result === "1") {
+            alert(`${productName}의 정보가 변경 되었습니다.`);
+          } else {
+            alert(
+              `${productName}의 정보가 변경 되지 않았습니다. 관리자에게 문의 하십시오.`
+            );
+          }
+        })
         .catch((error) => console.error(error));
     }
   }
