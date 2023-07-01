@@ -3,3 +3,6 @@ spring:
     resources:
       static-locations:
         - file:src/main/resources/static/
+
+server:
+  port: 7070
