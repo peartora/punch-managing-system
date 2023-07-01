@@ -16,6 +16,7 @@ export type PunchRow = {
   punchStorageLocation: string;
   product: string;
   productType: string;
+  punchType: string;
   latestCleaningHistory: string;
   totalUsageNumber: number;
   usageNumber: number;

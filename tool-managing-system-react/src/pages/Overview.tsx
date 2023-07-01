@@ -1,48 +1,38 @@
 import NavBar from "@/components/NavBar";
 import { useDisplay } from "@/common/hooks";
 
-import "@/css/Overview.css";
+type ProductInformation = {
+  [key: string]: number;
+};
 
 const OverViewList = () => {
   const { rows } = useDisplay();
 
-  let currentPunchId = "";
-  let countForCurrentPunchId = 0;
+  let results: Array<ProductInformation> = [];
 
-  const newRows = rows
-    .map((r, index) => {
-      const parts = r.punchId.split("-");
-      parts.pop();
-      const updatedPunchId = parts.join("-");
+  results = rows.map((r) => {
+    const productName = r.product;
+    const punchType = r.punchType;
+    const keyName = `${productName}.${punchType}`;
 
-      if (currentPunchId === "" || currentPunchId === null) {
-        currentPunchId = updatedPunchId;
-        countForCurrentPunchId++;
-      } else {
-        if (updatedPunchId === currentPunchId) {
-          countForCurrentPunchId++;
-
-          if (index + 1 === rows.length) {
-            return {
-              newPunchId: currentPunchId,
-              count: countForCurrentPunchId,
-            };
-          }
+    if (results.length === 0) {
+      return {
+        [keyName]: 1,
+      };
+    } else {
+      results.forEach((r) => {
+        if (keyName in r) {
+          console.log("YES");
+          r[keyName] = r[keyName] + 1;
         } else {
-          const punchIdForReturn = currentPunchId;
-          currentPunchId = updatedPunchId;
-
-          const countForReturn = countForCurrentPunchId;
-          countForCurrentPunchId = 1;
-
-          return {
-            newPunchId: punchIdForReturn,
-            count: countForReturn,
-          };
+          r[keyName] = 1;
         }
-      }
-    })
-    .filter((nr) => nr !== undefined);
+      });
+    }
+  }) as ProductInformation[];
+
+  console.log("results");
+  console.log(results);
 
   return (
     <table
@@ -51,26 +41,13 @@ const OverViewList = () => {
     >
       <thead>
         <tr>
-          <th>펀치 대표 id</th>
-          <th>등록 개수</th>
+          <th>제품명</th>
+          <th>상부 펀치 개수</th>
+          <th>하부 펀치 개수</th>
+          <th>다이 펀치 개수</th>
         </tr>
       </thead>
-      <tbody>
-        {newRows.map((nr, index) => {
-          let checkResult = "";
-
-          if (nr?.count !== 3) {
-            checkResult = "orange";
-          }
-
-          return (
-            <tr className={checkResult} key={index}>
-              <td>{nr?.newPunchId}</td>
-              <td>{nr?.count}</td>
-            </tr>
-          );
-        })}
-      </tbody>
+      <tbody></tbody>
     </table>
   );
 };
