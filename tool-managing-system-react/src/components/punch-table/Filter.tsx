@@ -109,12 +109,12 @@ export default function Filter(props: Props) {
         </div>
 
         <div className="col">
-          <label htmlFor="productType" className="form-label">
+          <label htmlFor="punchType" className="form-label">
             펀치 타입:{" "}
           </label>
           <select
             required
-            id="productType"
+            id="punchType"
             className="form-select"
             value={formData.type}
             onChange={(event) => {
@@ -193,8 +193,11 @@ export default function Filter(props: Props) {
         </div>
 
         <div className="col">
-          <label className="form-label">펀치 보관위치: </label>
+          <label htmlFor="storage" className="form-label">
+            펀치 보관위치:{" "}
+          </label>
           <input
+            id="storage"
             className="form-control"
             type="text"
             placeholder="펀치 보관위치"

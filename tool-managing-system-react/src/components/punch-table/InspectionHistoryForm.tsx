@@ -97,7 +97,7 @@ export default function InspectionHistoryForm() {
       </label>
       <div className="input-group">
         <input
-          id="inspectionHistory"
+          id="uploadInspectionHistory"
           className="form-control"
           type="file"
           accept=".pdf"
