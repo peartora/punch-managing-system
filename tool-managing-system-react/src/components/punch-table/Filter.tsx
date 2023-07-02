@@ -256,9 +256,9 @@ export default function Filter(props: Props) {
             <option value="" disabled>
               선택 하세요.
             </option>
-            <option value="AA">AA</option>
-            <option value="BB">BB</option>
-            <option value="CC">CC</option>
+            <option value="AA">BB</option>
+            <option value="BB">B</option>
+            <option value="CC">D</option>
             <option value="All">All</option>
           </select>
         </div>

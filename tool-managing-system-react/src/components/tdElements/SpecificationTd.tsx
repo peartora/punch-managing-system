@@ -8,7 +8,7 @@ function SpecificationTd({ specification }: Props) {
   console.log("pdfName");
   console.log(pdfName);
 
-  const fullPath = `http://localhost:8080/resources/pdf/specification/${pdfName}`;
+  const fullPath = `http://localhost:7070/resources/pdf/specification/${pdfName}`;
 
   return (
     <td>
