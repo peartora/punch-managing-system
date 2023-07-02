@@ -57,7 +57,7 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
         .then((response) => {
           if (!response.ok)
             throw new Error(`상태 변경 중 error가 발생 하였습니다.`);
-          refetch();
+          // refetch();
         })
         .catch((error) => console.error(error));
     }
