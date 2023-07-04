@@ -23,15 +23,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 //	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'mysql:mysql-connector-java:8.0.28'
 
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'org.mariadb.jdbc:mysql-java-client'
+	runtimeOnly 'com.mysql:mysql-connector-j:8.0.33'
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
-}
-
-tasks.named('test') {
-	useJUnitPlatform()
 }

@@ -1,4 +1,8 @@
-import { createBrowserRouter, createHashRouter, RouterProvider } from "react-router-dom";
+import {
+  createHashRouter,
+  RouterProvider,
+  useLoaderData,
+} from "react-router-dom";
 
 import HomePage from "./pages/HomePage";
 import SignInPage from "./pages/SignInPage";
@@ -9,7 +13,7 @@ import RegisterSupplierPage from "@/pages/RegisterSupplierPage";
 import Overview from "./pages/Overview";
 import PrintCleanHistory from "./pages/PrintCleanHistory";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     element: <Overview />,

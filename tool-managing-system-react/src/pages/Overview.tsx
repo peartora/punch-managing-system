@@ -1,14 +1,10 @@
 import NavBar from "@/components/NavBar";
 import { useDisplay } from "@/common/hooks";
 
-type ProductInformation = {
-  [key: string]: number;
-};
-
 const OverViewList = () => {
   const { rows } = useDisplay();
 
-  let result: any = [];
+  const result: any = [];
   let countForIndex = 0;
   let keys: string[] = [];
 
@@ -86,7 +82,7 @@ const OverViewList = () => {
         </tr>
       </thead>
       <tbody>
-        {result.map((r: any, i: number) => {
+        {result.map((r: any) => {
           const products = Object.keys(r);
           const productName = products[0];
 

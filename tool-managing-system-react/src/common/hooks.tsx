@@ -1,15 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { request } from "./Service";
 import { type PunchRow as PunchRowType } from "@/common/types";
 
 export const useDisplay = function (params?: URLSearchParams) {
   const [key, setKey] = useState(() => Date.now());
+  const [isFirst, setIsFirst] = useState(true);
   const [isLoading, setLoading] = useState(true);
   const [rows, setRows] = useState<Array<PunchRowType>>([]);
 
   useEffect(() => {
     console.log(`effect happen`);
-    setLoading(true);
+    if (isFirst) {
+      setLoading(true);
+    }
 
     let query = "";
     if (params) {
@@ -27,14 +30,17 @@ export const useDisplay = function (params?: URLSearchParams) {
       })
       .then((response) => {
         setRows(response);
+        if (isFirst) {
+          setIsFirst(false);
+        }
       })
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
-  }, [params, key]);
+  }, [params, key, isFirst]);
 
-  const refetch = () => {
+  const refetch = useCallback(() => {
     setKey(Date.now());
-  };
+  }, []);
 
   return {
     rows,

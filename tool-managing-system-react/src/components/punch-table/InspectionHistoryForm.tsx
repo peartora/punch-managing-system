@@ -92,7 +92,7 @@ export default function InspectionHistoryForm() {
 
   return (
     <form className="col-3" ref={formRef} onSubmit={handlerSubmitForPdfUpload}>
-      <label htmlFor="uploadInspectionHistory" className="form-label">
+      <label htmlFor="inspectionHistory" className="form-label">
         검수이력 파일(pdf) 업로드:
       </label>
       <div className="input-group">

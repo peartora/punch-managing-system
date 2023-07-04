@@ -46,7 +46,13 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
   }
 
   useEffect(() => {
+    // alert(`=============`);
+
     if (row.canUse === "초과") {
+      if (row.punchStatus === "사용불가" || row.punchStatus === "폐기") {
+        return;
+      }
+
       const data: Data = {
         punchId: punchId,
         newStatus: `사용불가`,
@@ -55,13 +61,14 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
       request
         .post(`/api/tool-managing-system/updateStatus`, data)
         .then((response) => {
-          if (!response.ok)
+          if (!response.ok) {
             throw new Error(`상태 변경 중 error가 발생 하였습니다.`);
+          }
           refetch();
         })
         .catch((error) => console.error(error));
     }
-  }, [row.canUse]);
+  }, [punchId, refetch, row.canUse, row.punchStatus]);
 
   return (
     <tr className={checkResult}>

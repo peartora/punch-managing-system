@@ -1,122 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Tool Managing System</title>
-    <link rel="stylesheet" href="./css/bootstrap.min.css">
-
-    <style>
-        .clean-punch {color: red;}
-    </style>
-
-</head>
-    <body>
-        <div class="container pt-3">
-            <nav class="navbar navbar-expand-lg bg-light">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="#">Tool Manage System</a>
-                    <div class="collapse navbar-collapse">
-                        <ul class="navbar-nav me-auto">
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">로그인</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="register.html">등록</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="add-batch-infor.html">제품명 및 batch 정보 등록</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="modify-batch-infor.html">size 정보 수정</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-
-            <br />
-
-            <h4>display 할 내용을 입력 하세요</h4>
-
-            <br />
-
-            <form id="search-form">
-                <div class="row">
-                    <div class="col">
-                        <label for="number" class="form-label">등록번호 :</label>
-                        <input id="number" type="text" class="form-control"  />
-                    </div>
-                    <div class="col">
-                        <label for="date" class="form-label">등록날짜:</label>
-                        <input id="date" type="date" class="form-control"  />
-                    </div>
-                    <div class="col">
-                        <label for="type" class="form-label">타입 :</label>
-                        <select id="type" name="type" class="form-control">
-                            <option value="upper">상부 펀치</option>
-                            <option value="lower">하부 펀치</option>
-                        </select>
-                    </div>
-                    <div class="col">
-                        <label for="manufacturer" class="form-label">제조사 :</label>
-                        <input id="manufacturer" type="text" class="form-control"  />
-                    </div>
-                    <div class="col">
-                        <label for="status" class="form-label">상태 :</label>
-                        <select id="status" class="form-control">
-                            <option value="사용대기">사용대기</option>
-                            <option value="사용가능">사용가능</option>
-                            <option value="사용중">사용중</option>
-                            <option value="사용불가">사용불가</option>
-                            <option value="폐기">폐기</option>
-                            <option value="All">모든 Punch</option>
-                        </select>
-                    </div>
-                    <div class="col">
-                        <label for="storage-location" class="form-label">보관위치 :</label>
-                        <input id="storage-location" type="text" class="form-control"  />
-                    </div>
-
-                    <div class="col">
-                        <label for="search-product" class="form-label">제품 :</label>
-                        <select id="search-product" class="form-control"></select>
-                    </div>
-
-                    <input class="col btn btn-primary" type="submit" value="Submit">
-                </div>
-            </form>
-
-            <br />
-            <br />
-
-            <button id="accumulate-usage-number" class="btn btn-danger me-md-2 mb-md-2">사용횟수반영</button>
-
-
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>등록번호</th>
-                        <th>등록날짜</th>
-                        <th>타입</th>
-                        <th>제조사</th>
-                        <th>규격</th>
-                        <th>검수이력</th>
-                        <th>펀치상태</th>
-                        <th>펀치보관위치</th>
-                        <th>제품</th>
-                        <th>제품 type</th>
-                        <th>청소이력</th>
-                        <th>누적사용횟수</th>
-                        <th>금일사용횟수</th>
-                        <th>최대사용횟수(inspection-size)</th>
-                    </tr>
-                </thead>
-                <tbody id="t-body">
-                </tbody>
-            </table>
-        </div>
-
-    <script type="module" src="./js/search.js"></script>
-    <script type="module" src="./js/index.js"></script>
-    </body>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React + TS</title>
+    <script type="module" crossorigin src="/assets/index-0f35b169.js"></script>
+    <link rel="stylesheet" href="/assets/index-6f760553.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    
+  </body>
 </html>
