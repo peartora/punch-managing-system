@@ -35,6 +35,17 @@ public class PunchDao
 
     public List<HashMap<String, Object>> getUsingPunchList(Map<String, Object> params)
     {
+        String whereClauses = "";
+
+        if (params.isEmpty())
+        {
+            whereClauses = "WHERE p.status NOT LIKE '폐기'";
+        }
+        else
+        {
+            whereClauses = "WHERE 1=1";
+        }
+
         String startDate = "";
         String endDate = "";
 
@@ -56,7 +67,7 @@ public class PunchDao
             "LEFT JOIN " +
                 "`size-control` AS s " +
                 "ON p.`product` = s.`product` " +
-            "WHERE 1=1";
+            whereClauses;
 
         List<HashMap<String, Object>> rowFromDB = new ArrayList<>();
 
