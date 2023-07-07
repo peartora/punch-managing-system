@@ -10,8 +10,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-//@EnableWebMvc
-//@Configuration
+@EnableWebMvc
+@Configuration
 public class MvcConfig implements WebMvcConfigurer
 {
     @Override
