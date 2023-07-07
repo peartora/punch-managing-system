@@ -193,8 +193,11 @@ export default function Filter(props: Props) {
         </div>
 
         <div className="col">
-          <label className="form-label">펀치 보관위치: </label>
+          <label htmlFor="storage" className="form-label">
+            펀치 보관위치:{" "}
+          </label>
           <input
+            id="storage"
             className="form-control"
             type="text"
             placeholder="펀치 보관위치"
@@ -256,9 +259,9 @@ export default function Filter(props: Props) {
             <option value="" disabled>
               선택 하세요.
             </option>
-            <option value="AA">AA</option>
-            <option value="BB">BB</option>
-            <option value="CC">CC</option>
+            <option value="AA">BB</option>
+            <option value="BB">B</option>
+            <option value="CC">D</option>
             <option value="All">All</option>
           </select>
         </div>
