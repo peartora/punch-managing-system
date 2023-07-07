@@ -63,6 +63,7 @@ function PunchStatusSelect({ punchStatus, punchId, refetch }: Props) {
   });
 
   function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    e.preventDefault();
 
     const newStatus = e.target.value;
 
@@ -106,11 +107,7 @@ function PunchStatusSelect({ punchStatus, punchId, refetch }: Props) {
   }
 
   return (
-    <select
-      className="form-select"
-      value={punchStatus}
-      onChange={(e) => handleChange(e)}
-    >
+    <select className="form-select" value={punchStatus} onChange={handleChange}>
       {results}
     </select>
   );
