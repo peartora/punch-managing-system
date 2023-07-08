@@ -3,6 +3,7 @@ package com.example.toolmanagingsystem.controller;
 import com.example.toolmanagingsystem.dao.PunchDao;
 import com.example.toolmanagingsystem.dto.PunchScrapDao;
 import com.example.toolmanagingsystem.dto.Punch;
+import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -106,7 +107,7 @@ public class ApiController
     }
 
     @GetMapping("/getInspectionHistory")
-    public List<Map<String, Object>> retrieveInspectionHistory(@RequestParam String punchId)
+    public List<InspectionHistoryVO> retrieveInspectionHistory(@RequestParam String punchId)
     {
         System.out.println("getInspectionHistory");
         System.out.println("punchId");

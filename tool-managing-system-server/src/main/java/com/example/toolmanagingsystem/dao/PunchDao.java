@@ -2,6 +2,7 @@ package com.example.toolmanagingsystem.dao;
 
 import com.example.toolmanagingsystem.dto.Punch;
 import com.example.toolmanagingsystem.dto.PunchScrapDao;
+import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -271,12 +272,15 @@ public class PunchDao
         return this.template.queryForList( "select `when-cleaned` from `clean-history` where `punch-number` = :punchId", numberMap);
     }
 
-    public List<Map<String, Object>> retrievInspectionHistory(String punchId)
+    public List<InspectionHistoryVO> retrievInspectionHistory(String punchId)
     {
-        Map<String, String> numberMap = new HashMap<>();
-        numberMap.put("punchId", punchId);
+        Map<String, String> input = new HashMap<>();
+        input.put("punchId", punchId);
 
-        return this.template.queryForList( "select `when-inspected`, `file-path` from `inspection-history` where `punch-number` = :punchId", numberMap);
+        final List<InspectionHistoryVO> output = this.template.query( "select `when-inspected`, `file-path` from `inspection-history` where `punch-number` = :punchId", input, new InspectionHistoryVO.Mapper());
+
+
+        return output;
     }
 
     public String retrievSpecification(String punchId)

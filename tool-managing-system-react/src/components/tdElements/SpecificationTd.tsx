@@ -8,7 +8,7 @@ function SpecificationTd({ specification }: Props) {
   console.log("pdfName");
   console.log(pdfName);
 
-  const fullPath = `http://localhost:7070/resources/pdf/specification/${pdfName}`;
+  const fullPath = `/resources/pdf/specification/${pdfName}`;
 
   return (
     <td>
@@ -29,7 +29,7 @@ export default SpecificationTd;
 // export default function AElement(props: Props) {
 //   const { path } = props;
 //   const pdfName = path.substring(path.lastIndexOf("\\") + 1);
-//   const fullPath = `http://localhost:8080/resources/pdf/inspection/${pdfName}`;
+//   const fullPath = `/resources/pdf/inspection/${pdfName}`;
 
 //   return (
 //     <a href={fullPath} target="_blank">

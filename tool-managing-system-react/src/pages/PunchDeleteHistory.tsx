@@ -1,44 +1,56 @@
+import { useState } from "react";
 import { useBringProductList } from "@/common/hooks";
 
+import { request } from "@/common/Service";
+
 function PunchDeleteHistory() {
-  //   let product = "";
-  //   const result: any = [];
+  const [scrappedPunchList, setScrappedPunchList] = useState([]);
 
-  //   const { productList } = useBringProductList();
+  let selectedProduct = "";
 
-  //   function changeHandler(event: React.ChangeEvent<HTMLSelectElement>) {
-  //     if (event !== undefined) {
-  //       product = event.target.value;
-  //     }
-  //   }
+  const result: any = [];
 
-  //   if (productList) {
-  //     return (
-  //       <div className="input-group mb-3">
-  //         <label htmlFor="productName" className="form-label">
-  //           제품:
-  //         </label>
-  //         <select
-  //           id="productName"
-  //           className="form-select"
-  //           value={product}
-  //           onChange={changeHandler}
-  //           required
-  //         >
-  //           <option value="" disabled>
-  //             아래 list 에서 선택 하세요.
-  //           </option>
-  //           {productList.map((productName) => {
-  //             return (
-  //               <option key={productName} value={productName}>
-  //                 {productName}
-  //               </option>
-  //             );
-  //           })}
-  //         </select>
-  //       </div>
-  //     );
-  //   }
+  const { productList } = useBringProductList();
+
+  function changeHandler(event: React.ChangeEvent<HTMLSelectElement>) {
+    selectedProduct = event.target.value;
+
+    console.log(selectedProduct);
+
+    const query = new URLSearchParams();
+    query.append("product", selectedProduct);
+
+    request.get(`/api/tool-managing-system/display-scrapped?${query}`);
+  }
+
+  if (productList) {
+    return (
+      <div className="input-group mb-3">
+        <label htmlFor="productName" className="form-label">
+          제품:
+        </label>
+        <select
+          id="productName"
+          className="form-select"
+          value={selectedProduct}
+          onChange={changeHandler}
+          required
+        >
+          <option value="" disabled>
+            아래 list 에서 선택 하세요.
+          </option>
+          {productList.map((productName) => {
+            return (
+              <option key={productName} value={productName}>
+                {productName}
+              </option>
+            );
+          })}
+          <option value="All">All</option>
+        </select>
+      </div>
+    );
+  }
 
   return (
     <table>

@@ -1,4 +1,7 @@
 import { useState } from "react";
+
+import dayjs from "dayjs";
+
 import { request } from "@/common/Service";
 import OpenFileButton from "../buttonElement/OpenFileButton";
 import AElement from "../aElement/AElement";
@@ -34,20 +37,14 @@ function InspectionHistoryTd({ latestInspectionDate, punchId }: Props) {
       })
       .then(
         (
-          response: Array<{ "when-inspected": string[]; "file-path": string[] }>
+          response: Array<{ "when-inspected": string; "file-path": string[] }>
         ) => {
-          const dateArray: object[] = response.map((r) => {
-            // const timeStringArray = r["when-inspected"];
-            // const timeString = Array.isArray(timeStringArray)
-            //   ? timeStringArray[0]
-            //   : timeStringArray;
-            // const [datePart, timePart] = timeString.split("T");
-            // const [year, month, day] = datePart.split("-");
-            // const [hour, min, sec] = timePart.split(":");
-
+          const dateArray: object[] = response.map((item) => {
             return {
-              date: `${r["when-inspected"][0]}년 ${r["when-inspected"][1]}월 ${r["when-inspected"][2]}일 ${r["when-inspected"][3]}시 ${r["when-inspected"][4]}분`,
-              path: r["file-path"],
+              date: dayjs(item["when-inspected"]).format(
+                "YY년 MM월 DD일 HH시 mm분"
+              ),
+              path: item["file-path"],
             };
           });
 
