@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useBringProductList } from "@/common/hooks";
 
 import { request } from "@/common/Service";
+import ScrappedPunchList from "@/components/delete-punch/ScrappedPunchList";
+import NavBar from "@/components/NavBar";
 
 function PunchDeleteHistory() {
   const [scrappedPunchList, setScrappedPunchList] = useState([]);
@@ -15,16 +17,34 @@ function PunchDeleteHistory() {
   function changeHandler(event: React.ChangeEvent<HTMLSelectElement>) {
     selectedProduct = event.target.value;
 
-    console.log(selectedProduct);
+    setScrappedPunchList([]);
 
     const query = new URLSearchParams();
     query.append("product", selectedProduct);
 
-    request.get(`/api/tool-managing-system/display-scrapped?${query}`);
+    request
+      .get(`/api/tool-managing-system/display-scrapped?${query}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            `폐각 펀치 list를 불러 오는 중 error가 발생 하였습니다.`
+          );
+        }
+        return response.json();
+      })
+      .then((result) => {
+        console.log("result");
+        console.log(result);
+
+        setScrappedPunchList(result);
+      })
+      .catch((error) => alert(error));
   }
 
-  if (productList) {
-    return (
+  return (
+    <>
+      <NavBar />
+
       <div className="input-group mb-3">
         <label htmlFor="productName" className="form-label">
           제품:
@@ -49,26 +69,8 @@ function PunchDeleteHistory() {
           <option value="All">All</option>
         </select>
       </div>
-    );
-  }
-
-  return (
-    <table>
-      <thead>
-        <tr>
-          <th>펀치 ID</th>
-          <th>폐각 날짜</th>
-          <th>폐각 사유</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>2</td>
-          <td>3</td>
-        </tr>
-      </tbody>
-    </table>
+      <ScrappedPunchList punchList={scrappedPunchList} />
+    </>
   );
 }
 

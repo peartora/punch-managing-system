@@ -42,7 +42,7 @@ function InspectionHistoryTd({ latestInspectionDate, punchId }: Props) {
           const dateArray: object[] = response.map((item) => {
             return {
               date: dayjs(item["when-inspected"]).format(
-                "YY년 MM월 DD일 HH시 mm분"
+                "YYYY년 MM월 DD일 HH시 mm분"
               ),
               path: item["file-path"],
             };

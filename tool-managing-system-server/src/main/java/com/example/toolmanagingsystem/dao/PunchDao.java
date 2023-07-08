@@ -390,7 +390,7 @@ public class PunchDao
 
     public List<Map<String, Object>> getScrappedPunchList(Map<String, Object> params)
     {
-        if (params.get("product") == "All")
+        if ("All".equals(params.get("product")))
         {
             return this.template.queryForList( "select `punch-number`, `reason`, `date` from `delete-history`", params);
         }
