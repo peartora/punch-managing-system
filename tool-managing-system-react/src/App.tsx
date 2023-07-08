@@ -11,7 +11,8 @@ import RegisterPunchPage from "./pages/RegisterPunchPage";
 import ModifyProductFormPage from "./pages/ModifyProductFormPage";
 import RegisterSupplierPage from "@/pages/RegisterSupplierPage";
 import Overview from "./pages/Overview";
-import PrintCleanHistory from "./pages/PrintCleanHistory";
+// import PrintCleanHistory from "./pages/PrintCleanHistory";
+import PunchDeleteHistory from "./pages/PunchDeleteHistory";
 
 const router = createHashRouter([
   {
@@ -43,8 +44,8 @@ const router = createHashRouter([
     element: <HomePage />,
   },
   {
-    path: "/print-label",
-    element: <PrintCleanHistory />,
+    path: "/delete-punch",
+    element: <PunchDeleteHistory />,
   },
 ]);
 

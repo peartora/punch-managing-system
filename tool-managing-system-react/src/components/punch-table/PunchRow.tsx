@@ -91,6 +91,7 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
         <PunchStatusSelect
           punchStatus={row.punchStatus}
           punchId={row.punchId}
+          product={row.product}
           refetch={refetch}
         />
       </td>

@@ -220,7 +220,7 @@ public class PunchDao
         System.out.println(deleteInformation);
 
         this.template.update("update `punch-list` set `status` = :newStatus where number = :punchId", deleteInformation);
-        this.template.update("insert into `delete-history` (`punch-number`, `reason`, `date`) values (:punchId, :reason, now())", deleteInformation);
+        this.template.update("insert into `delete-history` (`punch-number`, `product`, `reason`, `date`) values (:punchId, :product, :reason, now())", deleteInformation);
     }
 
     public void addCleanHistory(HashMap<String, Object> number)
