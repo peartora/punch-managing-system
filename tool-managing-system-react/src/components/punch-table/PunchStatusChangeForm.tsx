@@ -1,7 +1,7 @@
 import { request } from "@/common/Service";
 import { usePunchRows } from "@/context/punch-rows-context";
 
-const options = ["사용대기", "사용가능", "사용중", "사용불가", "폐기"] as const;
+const options = ["사용대기", "사용가능", "사용중", "사용불가"] as const;
 
 export default function PunchStatusChangeForm() {
   const { selectedIds, punchRowsById, refetch } = usePunchRows();
@@ -80,7 +80,7 @@ export default function PunchStatusChangeForm() {
     <>
       <div className="col-3">
         <label htmlFor="punchStatusSelect" className="form-label">
-          펀치상태 변경:
+          펀치상태 변경(폐각은 여기서 진행 할 수 없습니다.):
         </label>
         <select
           value="선택 하세요."
