@@ -3,6 +3,7 @@ spring:
     resources:
       static-locations:
         - file:src/main/resources/static/
+        - file:C:\\Users\\peart\\Desktop\\tool-management-static\\
 
 server:
   port: 7070

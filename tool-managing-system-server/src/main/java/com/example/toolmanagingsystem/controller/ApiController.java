@@ -261,6 +261,17 @@ public class ApiController
         return this.dao.returnSuppliers();
     }
 
+    @GetMapping("/display-scrapped")
+    public void returnScrappedPunchList(@RequestParam Map<String, Object> params)
+    {
+        System.out.println("returnScrappedPunchList");
+        System.out.println(params);
+
+        System.out.println(dao.getScrappedPunchList(params));
+
+//        List<Map<String, Object>>
+    }
+
 
     private String saveSpecificationFile(MultipartFile specificationFile)
     {

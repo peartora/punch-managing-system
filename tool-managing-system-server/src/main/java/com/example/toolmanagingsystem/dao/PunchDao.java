@@ -6,9 +6,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
@@ -385,6 +382,19 @@ public class PunchDao
         Map<String, Object> paramMap = Collections.emptyMap();
 
         return this.template.queryForList( "select `supplier` from `manufacturer`", paramMap, String.class);
+    }
+
+    public List<Map<String, Object>> getScrappedPunchList(Map<String, Object> params)
+    {
+        if (params.get("product") == "All")
+        {
+            return this.template.queryForList( "select `punch-number`, `reason`, `date` from `delete-history`", params);
+        }
+        else
+        {
+            return this.template.queryForList( "select `punch-number`, `reason`, `date` from `delete-history` where `product` = :product", params);
+        }
+
     }
 
 //    "insert into `inspection-history` (`punch-number`, `when-inspected`, `file-path`) values (:number, now(), :filePath)"
