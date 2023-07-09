@@ -78,12 +78,13 @@ function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
                   .slice()
                   .reverse()
                   .map((history: any) => (
-                    <li key={history.date}>
-                      <AElementForCleanHistory
-                        punchId={punchId}
-                        date={history.date}
-                      />
-                    </li>
+                    <li key={history.date}>{history.date}</li>
+                    // <li key={history.date}>
+                    // <AElementForCleanHistory
+                    //   punchId={punchId}
+                    //   date={history.date}
+                    // />
+                    // </li>
                   ))}
               </ul>
             </div>
