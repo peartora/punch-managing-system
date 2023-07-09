@@ -87,7 +87,7 @@ function PunchStatusSelect({ punchStatus, punchId, product, refetch }: Props) {
           .catch((error) => alert(error));
       } else {
         alert(`사유를 입력 해야 합니다.`);
-        // return;
+        return;
       }
     } else {
       const data: Data = {
