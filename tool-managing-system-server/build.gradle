@@ -29,3 +29,20 @@ dependencies {
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
 	annotationProcessor 'org.projectlombok:lombok'
 }
+
+task buildReact {
+	doLast {
+		exec {
+			workingDir "../tool-managing-system-react"
+			commandLine "cmd", "/c", "pnpm run build"
+		}
+		copy {
+			from "../tool-managing-system-react/dist"
+			into "./src/main/resources/dist"
+		}
+	}
+}
+
+tasks.bootJar {
+	dependsOn("buildReact")
+}

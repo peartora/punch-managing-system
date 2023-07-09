@@ -2,8 +2,7 @@ spring:
   web:
     resources:
       static-locations:
-        - file:src/main/resources/static/
-        - file:C:\\Users\\peart\\Desktop\\tool-management-static\\
+        - file:${TOOL_MANAGING_SYSTEM_STATIC_PATH}
 
 server:
   port: 7070

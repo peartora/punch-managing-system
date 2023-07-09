@@ -5,6 +5,7 @@ import com.example.toolmanagingsystem.dto.PunchScrapDao;
 import com.example.toolmanagingsystem.dto.Punch;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -20,6 +21,9 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ApiController
 {
+    @Value("${TOOL_MANAGING_SYSTEM_STATIC_PATH}")
+    private String staticPath;
+
     private final PunchDao dao;
     @PostMapping("/register")
     public int registerPunch(@RequestBody Punch punch)
@@ -277,7 +281,8 @@ public class ApiController
     {
         String fileName = specificationFile.getOriginalFilename();
         // String strFilePath = "C:\\Users\\lsm1dae\\Desktop\\specifications\\" + fileName;
-        String strFilePath = "C:\\Users\\peart\\Desktop\\pdf\\specification\\" + fileName;
+        String strFilePath = this.staticPath + "resources\\pdf\\specification\\" + fileName;
+
 
         fileHandling(strFilePath, specificationFile);
 
@@ -288,7 +293,7 @@ public class ApiController
     {
         String fileName = specificationFile.getOriginalFilename();
         // String strFilePath = "C:\\Users\\lsm1dae\\Desktop\\inspection\\" + fileName;
-        String strFilePath = "C:\\Users\\peart\\Desktop\\pdf\\inspection\\" + fileName;
+        String strFilePath = this.staticPath + "resources\\pdf\\inspection\\" + fileName;
 
         fileHandling(strFilePath, specificationFile);
 

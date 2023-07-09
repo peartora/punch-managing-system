@@ -2,5 +2,5 @@ spring:
   web:
     resources:
       static-locations:
-        - classpath:/static/
-        - file:C:\\Users\\peart\\Desktop\\tool-management-static\\
+        - classpath:/dist/
+        - file:${TOOL_MANAGING_SYSTEM_STATIC_PATH}
