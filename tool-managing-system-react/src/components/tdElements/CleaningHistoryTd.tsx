@@ -3,6 +3,8 @@ import { request } from "@/common/Service";
 import OpenFileButton from "../buttonElement/OpenFileButton";
 import AElementForCleanHistory from "../aElement/AElementForCleanHistory";
 
+import dayjs from "dayjs";
+
 let _uniqueId = 1;
 
 type Props = {
@@ -30,10 +32,12 @@ function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
           );
         return response.json();
       })
-      .then((response: Array<{ "when-cleaned": string[] }>) => {
-        const dateArray: object[] = response.map((r) => {
+      .then((response: Array<{ "when-cleaned": string }>) => {
+        const dateArray: object[] = response.map((item) => {
           return {
-            date: `${r["when-cleaned"][0]}년 ${r["when-cleaned"][1]}월 ${r["when-cleaned"][2]}일 ${r["when-cleaned"][3]}시 ${r["when-cleaned"][4]}분`,
+            date: dayjs(item["when-cleaned"]).format(
+              "YYYY년 MM월 DD일 HH시 mm분"
+            ),
           };
         });
 
