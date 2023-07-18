@@ -89,7 +89,7 @@ function RegisterPunchForm() {
               alert(`중복 된 punchId가 존재 합니다.`);
             }
           });
-      }
+      } // for loop end.
     } else {
       alert(`시작 번호는 마지막 번호 보다 작아야 합니다.`);
     }
