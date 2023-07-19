@@ -4,6 +4,8 @@ import {
   useLoaderData,
 } from "react-router-dom";
 
+import { AuthProvider } from "./common/auth";
+
 import HomePage from "./pages/HomePage";
 import SignInPage from "./pages/SignInPage";
 import RegisterProductPage from "./pages/RegisterProductPage";
@@ -13,6 +15,7 @@ import RegisterSupplierPage from "@/pages/RegisterSupplierPage";
 import Overview from "./pages/Overview";
 // import PrintCleanHistory from "./pages/PrintCleanHistory";
 import PunchDeleteHistory from "./pages/PunchDeleteHistory";
+import { LoginPage } from "./pages/LoginPage";
 
 const router = createHashRouter([
   {
@@ -50,7 +53,12 @@ const router = createHashRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <AuthProvider
+      afterLoginComponent={<RouterProvider router={router} />}
+      beforeLoginComponent={<LoginPage />}
+    />
+  );
 }
 
 export default App;
