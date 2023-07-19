@@ -26,11 +26,14 @@ public class ApiController
 
     private final PunchDao dao;
     @PostMapping("/register")
-    public int registerPunch(@RequestBody Punch punch)
+    public void registerPunch(@RequestBody List<Punch> punchs)
     {
-        System.out.println(punch);
+        System.out.println("registerPunch");
+        System.out.println(punchs);
 
-        return this.dao.registerPunch(punch);
+        // return this.dao.registerPunch(punchs);
+
+
     }
 
     @PostMapping("/updateUsageNumber")

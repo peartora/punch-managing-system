@@ -2,11 +2,14 @@ package com.example.toolmanagingsystem.dao;
 
 import com.example.toolmanagingsystem.dto.Punch;
 import com.example.toolmanagingsystem.dto.PunchScrapDao;
+import com.example.toolmanagingsystem.dto.PunchStatus;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Component
@@ -19,16 +22,32 @@ public class PunchDao
         this.template = new NamedParameterJdbcTemplate(dataSource);
     }
 
-    public int registerPunch(Punch punch)
+    public int[] registerPunch(List<Punch> punchs)
     {
-        Map<String, Object> registerInformation = punch.returnMapCollection();
-
+        Map<String, Object> registerInformation = punchs.get(0).returnMapCollection();
         String sql = "SELECT `specification-path` FROM `size-control` WHERE `product` = :product";
         String specificationPath = this.template.queryForObject(sql, registerInformation, String.class);
 
-        registerInformation.put("specification", specificationPath);
+        MapSqlParameterSource[] batchParams = new MapSqlParameterSource[punchs.size()];
 
-        return this.template.update("insert into `punch-list` (`number`, `register-date`, `type`, `manufacturer`, `specification`, `status`, `location`, `product`, `ptype`, `count`) values (:number, :date, :type, :manufacturer, :specification, :status, :location, :product, :productType, 0)", registerInformation);
+        for (int i = 0; i < punchs.size(); i++) {
+            Punch punch = punchs.get(i);
+            MapSqlParameterSource paramSource = new MapSqlParameterSource()
+                    .addValue("number", punch.getNumber())
+                    .addValue("register-date", punch.getDate())
+                    .addValue("type", punch.getType())
+                    .addValue("manufacturer", punch.getManufacturer())
+                    .addValue("specification", specificationPath)
+                    .addValue("status", punch.getStatus())
+                    .addValue("location", punch.getLocation())
+                    .addValue("product", punch.getProduct())
+                    .addValue("ptype", punch.getProductType());
+            batchParams[i] = paramSource;
+        }
+
+        String sqlForBatchUpdate = "insert into `punch-list` (`number`, `register-date`, `type`, `manufacturer`, `specification`, `status`, `location`, `product`, `ptype`, `count`) values (:number, :date, :type, :manufacturer, :specification, :status, :location, :product, :productType, 0)";
+
+        return this.template.batchUpdate(sqlForBatchUpdate, batchParams);
     }
 
     public List<HashMap<String, Object>> getUsingPunchList(Map<String, Object> params)
