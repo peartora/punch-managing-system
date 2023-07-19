@@ -2,7 +2,11 @@ export const request = {
   get(url: string) {
     return fetch(url);
   },
-  post(url: string, payload: FormData | Record<string, unknown>) {
+  post(
+    url: string,
+    payload: FormData | Record<string, unknown>,
+    headers: Record<string, string> = {}
+  ) {
     if (payload instanceof FormData) {
       return fetch(url, {
         method: "POST",
@@ -12,7 +16,7 @@ export const request = {
     } else {
       return fetch(url, {
         method: "POST",
-        headers: { "content-Type": "application/json" },
+        headers: { "content-Type": "application/json", ...headers },
         body: JSON.stringify(payload),
       });
     }
@@ -22,10 +26,10 @@ export const request = {
   },
 };
 
-export const formatDate = function(date: Date): string {
-    const year = date.getFullYear();
-  const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are 0-indexed in JavaScript
-  const day = ('0' + date.getDate()).slice(-2);
+export const formatDate = function (date: Date): string {
+  const year = date.getFullYear();
+  const month = ("0" + (date.getMonth() + 1)).slice(-2); // Months are 0-indexed in JavaScript
+  const day = ("0" + date.getDate()).slice(-2);
 
   return `${year}-${month}-${day}`;
-}
+};

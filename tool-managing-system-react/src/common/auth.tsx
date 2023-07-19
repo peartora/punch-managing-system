@@ -6,8 +6,9 @@ import {
   useState,
 } from "react";
 
-type AuthContextValue = {
-  user?: string;
+type AuthContextValue<LOGIN extends boolean = false> = (LOGIN extends true
+  ? { user: string }
+  : { user?: string }) & {
   login: (user: string) => void;
   logout: () => void;
 };
@@ -16,8 +17,8 @@ const AuthContext = createContext<AuthContextValue>(
   undefined as unknown as AuthContextValue
 );
 
-export const useAuth = () => {
-  const value = useContext(AuthContext);
+export const useAuth = <LOGIN extends boolean = false>() => {
+  const value = useContext(AuthContext) as AuthContextValue<LOGIN>;
   if (value == null) {
     throw new Error("useAuth는 반드시 AuthProvider 아래서 사용해야합니다.");
   }
