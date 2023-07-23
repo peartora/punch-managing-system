@@ -417,8 +417,21 @@ public class PunchDao
         {
             return this.template.queryForList( "select `punch-number`, `reason`, `date` from `delete-history` where `product` = :product", params);
         }
-
     }
 
-//    "insert into `inspection-history` (`punch-number`, `when-inspected`, `file-path`) values (:number, now(), :filePath)"
+    public String checkUserIdAndPassword(Map<String, Object> params)
+    {
+
+        String returnedPassword = this.template.queryForObject("select `password` from `employee` where `username` = :username", params, String.class);
+
+        if (Objects.equals(params.get("password"), returnedPassword))
+        {
+            return "OK";
+        }
+        else
+        {
+            return "NOK";
+        }
+
+    }
 }

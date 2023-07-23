@@ -276,6 +276,16 @@ public class ApiController
         System.out.println(params);
 
         return dao.getScrappedPunchList(params);
+    }
+
+    @PostMapping("/usercheck")
+    public String checkUserId (@RequestBody Map<String, Object> params)
+    {
+        System.out.println("checkUserId");
+        System.out.println(params);
+
+        System.out.println(dao.checkUserIdAndPassword(params));
+        return dao.checkUserIdAndPassword(params);
 
     }
 
