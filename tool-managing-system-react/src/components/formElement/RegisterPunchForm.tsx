@@ -33,69 +33,6 @@ function RegisterPunchForm() {
   const { productList } = useBringProductList();
   const { supplierList } = useBringSupplierList();
 
-  // function handleSubmit(event: any) {
-  //   event.preventDefault();
-
-  //   const punchIdArrays: any = [];
-  //   let count = 0;
-
-  //   if (Number(endNumber) - Number(startNumber) > 0) {
-  //     for (let i = Number(startNumber); i <= Number(endNumber); i++) {
-  //       const punchId = generatePunchId(
-  //         i,
-  //         registerDate,
-  //         productName,
-  //         punchType
-  //       );
-
-  //       const query = new URLSearchParams();
-  //       query.append("punchId", punchId);
-
-  //       request
-  //         .get(`/api/tool-managing-system/duplicate?${query}`)
-  //         .then((response) => {
-  //           if (!response.ok)
-  //             new Error(`${punchId} 중복 확인 중 error 발생 하였습니다.`);
-  //           return response.text();
-  //         })
-  //         .then((result) => {
-  //           if (result === "0") {
-  //             const data: Data = {
-  //               number: punchId,
-  //               date: registerDate,
-  //               type: punchType,
-  //               manufacturer: supplier,
-  //               status: `사용대기`,
-  //               location: storageLocation,
-  //               product: productName,
-  //               productType: productType,
-  //             };
-
-  //             punchIdArrays.push(data);
-  //           } else {
-  //             count++;
-  //             alert(`중복 된 punchId가 존재 합니다.`);
-  //             return;
-  //           }
-  //         });
-  //     }
-  //   } else {
-  //     alert(`시작 번호는 마지막 번호 보다 작아야 합니다.`);
-  //   }
-
-  //   if (count === 0) {
-  //     console.log(punchIdArrays);
-
-  //     request
-  //       .post(`/api/tool-managing-system/register`, punchIdArrays)
-  //       .then((response) => {
-  //         if (!response.ok)
-  //           throw new Error(`펀치 id 등록중 error가 발생 하였습니다.`);
-  //       })
-  //       .catch((error) => alert(error));
-  //   }
-  // }
-
   async function handleSubmit(event: any) {
     event.preventDefault();
 
