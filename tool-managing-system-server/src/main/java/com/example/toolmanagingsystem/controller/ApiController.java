@@ -1,6 +1,7 @@
 package com.example.toolmanagingsystem.controller;
 
 import com.example.toolmanagingsystem.dao.PunchDao;
+import com.example.toolmanagingsystem.dto.PunchRegister;
 import com.example.toolmanagingsystem.dto.PunchScrapDao;
 import com.example.toolmanagingsystem.dto.Punch;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
@@ -26,14 +27,16 @@ public class ApiController
 
     private final PunchDao dao;
     @PostMapping("/register")
-    public void registerPunch(@RequestBody List<Punch> punchs)
+    public int[] registerPunch(@RequestBody List<PunchRegister> punchIdArrays)
     {
         System.out.println("registerPunch");
-        System.out.println(punchs);
+        System.out.println(punchIdArrays);
 
-        // return this.dao.registerPunch(punchs);
+        for (PunchRegister data : punchIdArrays) {
+            System.out.println(data.getDate());
+        }
 
-
+        return this.dao.registerPunch(punchIdArrays);
     }
 
     @PostMapping("/updateUsageNumber")

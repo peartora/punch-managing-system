@@ -33,10 +33,73 @@ function RegisterPunchForm() {
   const { productList } = useBringProductList();
   const { supplierList } = useBringSupplierList();
 
-  function handleSubmit(event: any) {
+  // function handleSubmit(event: any) {
+  //   event.preventDefault();
+
+  //   const punchIdArrays: any = [];
+  //   let count = 0;
+
+  //   if (Number(endNumber) - Number(startNumber) > 0) {
+  //     for (let i = Number(startNumber); i <= Number(endNumber); i++) {
+  //       const punchId = generatePunchId(
+  //         i,
+  //         registerDate,
+  //         productName,
+  //         punchType
+  //       );
+
+  //       const query = new URLSearchParams();
+  //       query.append("punchId", punchId);
+
+  //       request
+  //         .get(`/api/tool-managing-system/duplicate?${query}`)
+  //         .then((response) => {
+  //           if (!response.ok)
+  //             new Error(`${punchId} 중복 확인 중 error 발생 하였습니다.`);
+  //           return response.text();
+  //         })
+  //         .then((result) => {
+  //           if (result === "0") {
+  //             const data: Data = {
+  //               number: punchId,
+  //               date: registerDate,
+  //               type: punchType,
+  //               manufacturer: supplier,
+  //               status: `사용대기`,
+  //               location: storageLocation,
+  //               product: productName,
+  //               productType: productType,
+  //             };
+
+  //             punchIdArrays.push(data);
+  //           } else {
+  //             count++;
+  //             alert(`중복 된 punchId가 존재 합니다.`);
+  //             return;
+  //           }
+  //         });
+  //     }
+  //   } else {
+  //     alert(`시작 번호는 마지막 번호 보다 작아야 합니다.`);
+  //   }
+
+  //   if (count === 0) {
+  //     console.log(punchIdArrays);
+
+  //     request
+  //       .post(`/api/tool-managing-system/register`, punchIdArrays)
+  //       .then((response) => {
+  //         if (!response.ok)
+  //           throw new Error(`펀치 id 등록중 error가 발생 하였습니다.`);
+  //       })
+  //       .catch((error) => alert(error));
+  //   }
+  // }
+
+  async function handleSubmit(event: any) {
     event.preventDefault();
 
-    const punchIds: any = [];
+    const punchIdArrays: Data[] = []; // 빈 배열로 초기화
     let count = 0;
 
     if (Number(endNumber) - Number(startNumber) > 0) {
@@ -47,66 +110,70 @@ function RegisterPunchForm() {
           productName,
           punchType
         );
-
         const query = new URLSearchParams();
         query.append("punchId", punchId);
 
-        request
-          .get(`/api/tool-managing-system/duplicate?${query}`)
-          .then((response) => {
-            if (!response.ok)
-              new Error(`${punchId} 중복 확인 중 error 발생 하였습니다.`);
-            return response.text();
-          })
-          .then((result) => {
-            if (result === "0") {
-              const data: Data = {
-                number: punchId,
-                date: registerDate,
-                type: punchType,
-                manufacturer: supplier,
-                status: `사용대기`,
-                location: storageLocation,
-                product: productName,
-                productType: productType,
-              };
+        try {
+          // await 키워드를 사용하여 비동기 처리 완료를 기다림
+          const response = await request.get(
+            `/api/tool-managing-system/duplicate?${query}`
+          );
+          if (!response.ok)
+            throw new Error(`${punchId} 중복 확인 중 error 발생 하였습니다.`);
+          const result = await response.text();
 
-              punchIds.push(data);
-            } else {
-              count++;
-              alert(`중복 된 punchId가 존재 합니다.`);
-              return;
-            }
-          });
+          if (result === "0") {
+            const data: Data = {
+              number: punchId,
+              date: registerDate,
+              type: punchType,
+              manufacturer: supplier,
+              status: `사용대기`,
+              location: storageLocation,
+              product: productName,
+              productType: productType,
+            };
+
+            punchIdArrays.push(data);
+          } else {
+            count++;
+            alert(`중복 된 punchId가 존재 합니다.`);
+          }
+        } catch (error) {
+          console.error(error);
+          alert("오류가 발생했습니다.");
+          return;
+        }
       }
     } else {
       alert(`시작 번호는 마지막 번호 보다 작아야 합니다.`);
+      return;
     }
 
     if (count === 0) {
-      console.log("punchIds");
-      console.log(punchIds);
+      console.log(punchIdArrays);
 
-      request
-        .post(`/api/tool-managing-system/register`, punchIds)
-        .then((response) => {
-          if (!response.ok)
-            throw new Error(`펀치 id 등록중 error가 발생 하였습니다.`);
-          return response.text();
-        })
-        .then((result) => {
-          console.log("result");
-          console.log(result);
+      try {
+        // await 키워드를 사용하여 비동기 처리 완료를 기다림
+        const response = await request.post(
+          `/api/tool-managing-system/register`,
+          punchIdArrays
+        );
 
-          // if (result === "1") {
-          //   alert(`${punchId}가 정상적으로 등록 되었습니다.`);
-          // } else {
-          //   alert(
-          //     `${punchId}가 정상적으로 등록 되지 않았습니다. 관리자에게 문의 하십시오.`
-          //   );
-          // }
-        })
-        .catch((error) => alert(error));
+        if (!response.ok) {
+          throw new Error(`펀치 id 등록중 error가 발생 하였습니다.`);
+        }
+
+        const result = await response.json();
+        const confirmedResult = result.filter((r: any) => r === 1);
+
+        if (confirmedResult.length === punchIdArrays.length) {
+          alert(`펀치 ${punchIdArrays.length}개가 성공적으로 등록되었습니다.`);
+        }
+      } catch (error) {
+        console.error(error);
+        alert("오류가 발생했습니다.");
+      }
     }
   }
 

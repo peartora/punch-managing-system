@@ -1,6 +1,7 @@
 package com.example.toolmanagingsystem.dao;
 
 import com.example.toolmanagingsystem.dto.Punch;
+import com.example.toolmanagingsystem.dto.PunchRegister;
 import com.example.toolmanagingsystem.dto.PunchScrapDao;
 import com.example.toolmanagingsystem.dto.PunchStatus;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
@@ -22,30 +23,32 @@ public class PunchDao
         this.template = new NamedParameterJdbcTemplate(dataSource);
     }
 
-    public int[] registerPunch(List<Punch> punchs)
+    public int[] registerPunch(List<PunchRegister> punchIdArrays)
     {
-        Map<String, Object> registerInformation = punchs.get(0).returnMapCollection();
+        Map<String, Object> registerInformation = punchIdArrays.get(0).returnMapCollection();
         String sql = "SELECT `specification-path` FROM `size-control` WHERE `product` = :product";
         String specificationPath = this.template.queryForObject(sql, registerInformation, String.class);
 
-        MapSqlParameterSource[] batchParams = new MapSqlParameterSource[punchs.size()];
+        System.out.println(specificationPath);
 
-        for (int i = 0; i < punchs.size(); i++) {
-            Punch punch = punchs.get(i);
+        MapSqlParameterSource[] batchParams = new MapSqlParameterSource[punchIdArrays.size()];
+
+        for (int i = 0; i < punchIdArrays.size(); i++) {
+            PunchRegister punch = punchIdArrays.get(i);
             MapSqlParameterSource paramSource = new MapSqlParameterSource()
                     .addValue("number", punch.getNumber())
-                    .addValue("register-date", punch.getDate())
+                    .addValue("date", punch.getDate())
                     .addValue("type", punch.getType())
                     .addValue("manufacturer", punch.getManufacturer())
                     .addValue("specification", specificationPath)
-                    .addValue("status", punch.getStatus())
+                    .addValue("status", PunchStatus.사용대기.toString())
                     .addValue("location", punch.getLocation())
                     .addValue("product", punch.getProduct())
                     .addValue("ptype", punch.getProductType());
             batchParams[i] = paramSource;
         }
 
-        String sqlForBatchUpdate = "insert into `punch-list` (`number`, `register-date`, `type`, `manufacturer`, `specification`, `status`, `location`, `product`, `ptype`, `count`) values (:number, :date, :type, :manufacturer, :specification, :status, :location, :product, :productType, 0)";
+        String sqlForBatchUpdate = "insert into `punch-list` (`number`, `register-date`, `type`, `manufacturer`, `specification`, `status`, `location`, `product`, `ptype`, `count`) values (:number, :date, :type, :manufacturer, :specification, :status, :location, :product, :ptype, 0)";
 
         return this.template.batchUpdate(sqlForBatchUpdate, batchParams);
     }
