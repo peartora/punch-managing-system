@@ -5,6 +5,7 @@ import com.example.toolmanagingsystem.dto.PunchRegister;
 import com.example.toolmanagingsystem.dto.PunchScrapDao;
 import com.example.toolmanagingsystem.dto.Punch;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -93,10 +94,15 @@ public class ApiController
         this.dao.deletePunch(punchScrapDao);
     }
     @PostMapping("/addCleanHistory")
-    public void addCleanHistory(@RequestBody HashMap<String, Object> params)
+    public void addCleanHistory(@RequestBody HashMap<String, Object> params, HttpServletRequest request)
     {
-        System.out.println(params);
+        String username = request.getHeader("X-User");
+        List<Object> listParam = (List<Object>) params.get("rows");
+        HashMap<String, String> firstObject = (HashMap<String, String>) listParam.get(0);
+        firstObject.put("username", username);
+
         System.out.println("params");
+        System.out.println(params);
 
         this.dao.addCleanHistory(params);
     }

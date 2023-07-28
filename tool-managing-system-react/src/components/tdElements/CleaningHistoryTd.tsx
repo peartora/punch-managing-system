@@ -32,12 +32,13 @@ function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
           );
         return response.json();
       })
-      .then((response: Array<{ "when-cleaned": string }>) => {
+      .then((response: Array<{ "when-cleaned": string; username: string }>) => {
         const dateArray: object[] = response.map((item) => {
           return {
             date: dayjs(item["when-cleaned"]).format(
               "YYYY년 MM월 DD일 HH시 mm분"
             ),
+            username: item["username"],
           };
         });
 
@@ -78,7 +79,9 @@ function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
                   .slice()
                   .reverse()
                   .map((history: any) => (
-                    <li key={history.date}>{history.date}</li>
+                    <li key={history.date}>
+                      청소시간: {history.date}, 담당자: {history.username}
+                    </li>
                     // <li key={history.date}>
                     // <AElementForCleanHistory
                     //   punchId={punchId}

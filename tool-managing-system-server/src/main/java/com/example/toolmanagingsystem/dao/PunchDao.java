@@ -1,6 +1,5 @@
 package com.example.toolmanagingsystem.dao;
 
-import com.example.toolmanagingsystem.dto.Punch;
 import com.example.toolmanagingsystem.dto.PunchRegister;
 import com.example.toolmanagingsystem.dto.PunchScrapDao;
 import com.example.toolmanagingsystem.dto.PunchStatus;
@@ -11,7 +10,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Component
@@ -246,7 +244,6 @@ public class PunchDao
 
     public void addCleanHistory(HashMap<String, Object> number)
     {
-
         List<HashMap<String, Object>> punchIdsAndDateTime = (List<HashMap<String, Object>>)  number.get("rows");
 
         for (HashMap<String, Object> map: punchIdsAndDateTime)
@@ -263,7 +260,7 @@ public class PunchDao
 
 
 
-            this.template.update("insert into `clean-history` (`punch-number`, `punch-status`, `when-cleaned`) values (:punchId, :punchStatus, :cleanTimeDate)", information);
+            this.template.update("insert into `clean-history` (`punch-number`, `punch-status`, `when-cleaned`, `username`) values (:punchId, :punchStatus, :cleanTimeDate, :username)", information);
         }
     }
 
@@ -292,7 +289,7 @@ public class PunchDao
         Map<String, String> numberMap = new HashMap<>();
         numberMap.put("punchId", punchId);
 
-        return this.template.queryForList( "select `when-cleaned` from `clean-history` where `punch-number` = :punchId", numberMap);
+        return this.template.queryForList( "select `when-cleaned`, `username` from `clean-history` where `punch-number` = :punchId", numberMap);
     }
 
     public List<InspectionHistoryVO> retrievInspectionHistory(String punchId)
