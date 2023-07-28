@@ -9,11 +9,11 @@ export default function NavBar() {
         </a>
 
         <ul className="nav">
-          {/* <li className="nav-item">
+          <li className="nav-item">
             <Link className="nav-link" to="/sign-in">
               로그인
             </Link>
-          </li> */}
+          </li>
           <li className="nav-item">
             <Link className="nav-link" to="/">
               펀치 리스트 요약

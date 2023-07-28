@@ -7,7 +7,6 @@ import {
 import { AuthProvider } from "./common/auth";
 
 import HomePage from "./pages/HomePage";
-import SignInPage from "./pages/SignInPage";
 import RegisterProductPage from "./pages/RegisterProductPage";
 import RegisterPunchPage from "./pages/RegisterPunchPage";
 import ModifyProductFormPage from "./pages/ModifyProductFormPage";
@@ -16,6 +15,7 @@ import Overview from "./pages/Overview";
 // import PrintCleanHistory from "./pages/PrintCleanHistory";
 import PunchDeleteHistory from "./pages/PunchDeleteHistory";
 import { LoginPage } from "./pages/LoginPage";
+import NavBarForId from "./components/NavBarForId";
 
 const router = createHashRouter([
   {
@@ -24,7 +24,7 @@ const router = createHashRouter([
   },
   {
     path: "/sign-in",
-    element: <SignInPage />,
+    element: <LoginPage />,
   },
   {
     path: "/register-product",
@@ -49,6 +49,10 @@ const router = createHashRouter([
   {
     path: "/delete-punch",
     element: <PunchDeleteHistory />,
+  },
+  {
+    path: "/password-change",
+    element: <NavBarForId />,
   },
 ]);
 

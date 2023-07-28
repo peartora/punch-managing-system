@@ -10,7 +10,7 @@ export default function HomePage() {
       <NavBar />
 
       <div>
-        혼재 로그인 유저: {user},{" "}
+        현재 로그인 유저: {user},{" "}
         <button type="button" onClick={logout}>
           로그아웃
         </button>

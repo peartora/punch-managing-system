@@ -2,9 +2,13 @@ import { useState } from "react";
 import { request } from "@/common/Service";
 
 import { useAuth } from "@/common/auth";
+import NavBar from "@/components/NavBar";
+import NavBarForId from "@/components/NavBarForId";
+
+// username을 받아와서, 있으면 login 상태를 표시 하는 로직.
 
 export const LoginPage = () => {
-  const { login } = useAuth();
+  const { user, login, logout } = useAuth();
 
   const [username, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -28,6 +32,7 @@ export const LoginPage = () => {
       })
       .then((result) => {
         if (result === "OK") {
+          console.log(`result is ok`);
           login(username);
         } else {
           setIsLogIned(false);
@@ -44,8 +49,23 @@ export const LoginPage = () => {
       });
   };
 
+  if (user) {
+    return (
+      <>
+        <NavBar />
+        <h3>{user} id로 로그인 되었습니다.</h3>
+        <div>
+          <button type="button" onClick={logout}>
+            로그아웃
+          </button>
+        </div>
+      </>
+    );
+  }
+
   return (
     <div>
+      {/* <NavBarForId /> */}
       <form onSubmit={handleSubmit}>
         <div>
           id:{" "}
