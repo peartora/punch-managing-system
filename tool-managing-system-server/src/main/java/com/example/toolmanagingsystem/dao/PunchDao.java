@@ -6,6 +6,7 @@ import com.example.toolmanagingsystem.dto.PunchScrapDao;
 import com.example.toolmanagingsystem.dto.PunchStatus;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -424,8 +425,16 @@ public class PunchDao
 
     public String checkUserIdAndPassword(Map<String, Object> params)
     {
+        String returnedPassword;
 
-        String returnedPassword = this.template.queryForObject("select `password` from `employee` where `username` = :username", params, String.class);
+        try
+        {
+            returnedPassword = this.template.queryForObject("select `password` from `employee` where `username` = :username", params, String.class);
+        }
+        catch (EmptyResultDataAccessException e)
+        {
+            return "NoId";
+        }
 
         if (Objects.equals(params.get("password"), returnedPassword))
         {

@@ -8,6 +8,8 @@ export const LoginPage = () => {
 
   const [username, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [isLogIned, setIsLogIned] = useState<boolean>(true);
+  const [isIdExists, setIsIdExists] = useState<boolean>(true);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -27,6 +29,14 @@ export const LoginPage = () => {
       .then((result) => {
         if (result === "OK") {
           login(username);
+        } else {
+          setIsLogIned(false);
+
+          if (result === "NoId") {
+            setIsIdExists(false);
+          } else if (result === "NOK") {
+            setIsIdExists(true);
+          }
         }
       })
       .catch((error) => {
@@ -61,6 +71,12 @@ export const LoginPage = () => {
           <button type="submit">로그인</button>
         </div>
       </form>
+      {!isLogIned && isIdExists && (
+        <h5>비밀번호가 다릅니다. 다시 확인 하세요</h5>
+      )}
+      {!isIdExists && !isIdExists && (
+        <h5>id를 찾을 수 없습니다. 다시 확인 하세요</h5>
+      )}
     </div>
   );
 };
