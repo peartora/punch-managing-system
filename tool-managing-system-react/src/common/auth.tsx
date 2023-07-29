@@ -6,6 +6,8 @@ import {
   useState,
 } from "react";
 
+const CURRENT_USER_KEY = "tool-managing-system-current-user";
+
 type AuthContextValue<LOGIN extends boolean = false> = (LOGIN extends true
   ? { user: string }
   : { user?: string }) & {
@@ -30,13 +32,22 @@ export const AuthProvider = (props: {
   afterLoginComponent: ReactNode;
   beforeLoginComponent: ReactNode;
 }) => {
-  const [user, setUser] = useState<string>();
+  const [user, setUser] = useState<string | undefined>(() => {
+    const currentUser = localStorage.getItem(CURRENT_USER_KEY);
+    if (currentUser) {
+      return currentUser;
+    } else {
+      return undefined;
+    }
+  });
 
   const login = useCallback((user: string) => {
+    localStorage.setItem(CURRENT_USER_KEY, user);
     setUser(user);
   }, []);
 
   const logout = useCallback(() => {
+    localStorage.removeItem(CURRENT_USER_KEY);
     setUser(undefined);
   }, []);
 

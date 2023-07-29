@@ -11,7 +11,7 @@ export default function NavBar() {
         <ul className="nav">
           <li className="nav-item">
             <Link className="nav-link" to="/sign-in">
-              로그인
+              마이페이지
             </Link>
           </li>
           <li className="nav-item">
