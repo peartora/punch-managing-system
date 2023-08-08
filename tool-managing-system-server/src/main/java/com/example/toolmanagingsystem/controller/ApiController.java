@@ -85,6 +85,26 @@ public class ApiController
         }
     }
 
+    @PostMapping("/recover")
+    public int recoverPunchFromDeleteStatus(@RequestBody Map<String, Object> params)
+    {
+        System.out.println("recoverPunchFromDeleteStatus");
+        System.out.println(params);
+        System.out.println("params");
+
+        return this.dao.updateNewStatusForRecoveryPunch(params);
+    }
+
+    @PostMapping("/delete")
+    public int deletePunchFromDeleteHistory(@RequestBody Map<String, Object> params)
+    {
+        System.out.println("deletePunchFromDeleteHistory");
+        System.out.println(params);
+        System.out.println("params");
+
+        return this.dao.deletePunchFromDeleteHistory(params);
+    }
+
     @PostMapping("/updateStatus/scrap")
     public void scrapPunch(@RequestBody PunchScrapDao punchScrapDao)
     {

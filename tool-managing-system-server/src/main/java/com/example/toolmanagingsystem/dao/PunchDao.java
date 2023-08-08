@@ -222,6 +222,20 @@ public class PunchDao
         this.template.update("update `punch-list` set `status` = :newStatus where `number` = :punchId", params);
     }
 
+    public int updateNewStatusForRecoveryPunch(Map<String, Object> params)
+    {
+        return this.template.update("update `punch-list` set `status` = :newStatus where `number` = :punchId", params);
+    }
+
+    public int deletePunchFromDeleteHistory(Map<String, Object> params)
+    {
+        System.out.println("params");
+        System.out.println(params);
+
+
+        return this.template.update("delete from `delete-history` where `punch-number` = :punchId", params);
+    }
+
     public int checkDuplicate(String punchId)
     {
         Map<String, String> idMap = new HashMap<>();
