@@ -4,6 +4,8 @@ import NavBar from "@/components/NavBar";
 export const MyPage = () => {
   const { user, logout } = useAuth();
 
+  console.log("<div>", <div>hh</div>);
+
   return (
     <div>
       <NavBar />
