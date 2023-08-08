@@ -68,26 +68,28 @@ function PunchStatusSelect({ punchStatus, punchId, product, refetch }: Props) {
     const newStatus = e.target.value;
 
     if (newStatus === "폐기") {
-      const reason = window.prompt("폐기 사유를 입력 하세요");
+      if (confirm(`펀치 Id: ${punchId}의 폐각 등록을 진행 하시겠습니까?`)) {
+        const reason = window.prompt("폐기 사유를 입력 하세요");
 
-      if (reason) {
-        const dataForDelete: DataForDelete = {
-          punchId: punchId,
-          product: product,
-          reason: reason,
-        };
+        if (reason) {
+          const dataForDelete: DataForDelete = {
+            punchId: punchId,
+            product: product,
+            reason: reason,
+          };
 
-        request
-          .post(`/api/tool-managing-system/updateStatus/scrap`, dataForDelete)
-          .then((response) => {
-            if (!response.ok)
-              throw new Error(`상태 변경 중 에러가 발생 했습니다.`);
-          })
-          .then(() => alert(`상태 변경 되었습니다.`))
-          .catch((error) => alert(error));
-      } else {
-        alert(`사유를 입력 해야 합니다.`);
-        return;
+          request
+            .post(`/api/tool-managing-system/updateStatus/scrap`, dataForDelete)
+            .then((response) => {
+              if (!response.ok)
+                throw new Error(`상태 변경 중 에러가 발생 했습니다.`);
+            })
+            .then(() => alert(`상태 변경 되었습니다.`))
+            .catch((error) => alert(error));
+        } else {
+          alert(`사유를 입력 해야 합니다.`);
+          return;
+        }
       }
     } else {
       const data: Data = {
