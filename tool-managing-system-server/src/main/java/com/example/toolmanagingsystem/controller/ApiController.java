@@ -93,13 +93,8 @@ public class ApiController
         this.dao.deletePunch(punchScrapDao);
     }
     @PostMapping("/addCleanHistory")
-    public void addCleanHistory(@RequestBody HashMap<String, Object> params, HttpServletRequest request)
+    public void addCleanHistory(@RequestBody HashMap<String, Object> params)
     {
-        String username = request.getHeader("X-User");
-        List<Object> listParam = (List<Object>) params.get("rows");
-        HashMap<String, String> firstObject = (HashMap<String, String>) listParam.get(0);
-        firstObject.put("username", username);
-
         System.out.println("params");
         System.out.println(params);
 
@@ -117,7 +112,6 @@ public class ApiController
         System.out.println("getCleanHistory");
         System.out.println(punchId);
 
-        System.out.println(this.dao.retrievCleanHistory(punchId));
         return this.dao.retrievCleanHistory(punchId);
     }
 

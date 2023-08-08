@@ -9,6 +9,8 @@ export default function CleanHistoryButton() {
   const { punchRowsById, selectedIds, refetch } = usePunchRows();
 
   const [timeAndDate, setTimeAndDate] = useState("");
+  const [comment, setComment] = useState("");
+  const [batch, setBatch] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -33,6 +35,9 @@ export default function CleanHistoryButton() {
                 punchId: id,
                 punchStatus: punchRowsById[id].punchStatus,
                 cleanTimeDate: timeAndDate,
+                batch: batch,
+                comment: comment,
+                username: user,
               };
             });
           } catch (error) {
@@ -44,9 +49,7 @@ export default function CleanHistoryButton() {
           };
 
           request
-            .post(`/api/tool-managing-system/addCleanHistory`, requestBody, {
-              "X-USER": user,
-            })
+            .post(`/api/tool-managing-system/addCleanHistory`, requestBody)
             .then((response) => {
               if (!response.ok)
                 throw new Error(
@@ -55,6 +58,8 @@ export default function CleanHistoryButton() {
 
               refetch();
               setTimeAndDate("");
+              setComment("");
+              setBatch("");
               alert(`결과 반영 되었습니다.`);
             })
             .catch((error) => console.error(error));
@@ -81,11 +86,39 @@ export default function CleanHistoryButton() {
           value={timeAndDate}
           onChange={(event) => setTimeAndDate(event.target.value)}
         />
-
-        <button className="btn btn-outline-secondary" type="submit">
-          전송
-        </button>
       </div>
+
+      <label htmlFor="batch" className="form-label">
+        배치 정보 입력:
+      </label>
+      <div className="input-group">
+        <input
+          id="batch"
+          className="form-control"
+          type="text"
+          placeholder="배치 정보를 입력 하세요"
+          value={batch}
+          onChange={(event) => setBatch(event.target.value)}
+        />
+      </div>
+
+      <label htmlFor="comment" className="form-label">
+        코멘트(필요시) 추가:
+      </label>
+      <div className="input-group">
+        <input
+          id="comment"
+          className="form-control"
+          type="text"
+          placeholder="코멘트가 있으면 입력 하세요"
+          value={comment}
+          onChange={(event) => setComment(event.target.value)}
+        />
+      </div>
+
+      <button className="btn btn-outline-secondary" type="submit">
+        전송
+      </button>
     </form>
   );
 }

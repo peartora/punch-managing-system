@@ -32,21 +32,32 @@ function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
           );
         return response.json();
       })
-      .then((response: Array<{ "when-cleaned": string; username: string }>) => {
-        const dateArray: object[] = response.map((item) => {
-          return {
-            date: dayjs(item["when-cleaned"]).format(
-              "YYYY년 MM월 DD일 HH시 mm분"
-            ),
-            username: item["username"],
-          };
-        });
+      .then(
+        (
+          response: Array<{
+            "when-cleaned": string;
+            username: string;
+            batch: string;
+            comment: string;
+          }>
+        ) => {
+          const dateArray: object[] = response.map((item) => {
+            return {
+              date: dayjs(item["when-cleaned"]).format(
+                "YYYY년 MM월 DD일 HH시 mm분"
+              ),
+              username: item["username"],
+              batch: item["batch"],
+              comment: item["comment"],
+            };
+          });
 
-        console.log("dateArray");
-        console.log(dateArray);
+          console.log("dateArray");
+          console.log(dateArray);
 
-        setCleanHistory([...dateArray]);
-      })
+          setCleanHistory([...dateArray]);
+        }
+      )
       .catch((error) => console.error(error));
   };
 
@@ -62,10 +73,10 @@ function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
       </OpenFileButton>
 
       <div id={`myModalForClean-${uniqueId}`} className="modal" tabIndex={-1}>
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-lg">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Modal title</h5>
+              <h5 className="modal-title">청소 이력</h5>
               <button
                 type="button"
                 className="btn-close"
@@ -80,7 +91,8 @@ function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
                   .reverse()
                   .map((history: any) => (
                     <li key={history.date}>
-                      청소시간: {history.date}, 담당자: {history.username}
+                      청소시간: {history.date}, 담당자: {history.username},
+                      배치정보: {history.batch}, 기타: {history.comment}
                     </li>
                     // <li key={history.date}>
                     // <AElementForCleanHistory
@@ -98,9 +110,6 @@ function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
                 data-bs-dismiss="modal"
               >
                 Close
-              </button>
-              <button type="button" className="btn btn-primary">
-                Save changes
               </button>
             </div>
           </div>

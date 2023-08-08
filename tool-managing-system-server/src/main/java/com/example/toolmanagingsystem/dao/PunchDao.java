@@ -242,9 +242,9 @@ public class PunchDao
         this.template.update("insert into `delete-history` (`punch-number`, `product`, `reason`, `date`) values (:punchId, :product, :reason, now())", deleteInformation);
     }
 
-    public void addCleanHistory(HashMap<String, Object> number)
+    public void addCleanHistory(HashMap<String, Object> param)
     {
-        List<HashMap<String, Object>> punchIdsAndDateTime = (List<HashMap<String, Object>>)  number.get("rows");
+        List<HashMap<String, Object>> punchIdsAndDateTime = (List<HashMap<String, Object>>)  param.get("rows");
 
         for (HashMap<String, Object> map: punchIdsAndDateTime)
         {
@@ -260,7 +260,8 @@ public class PunchDao
 
 
 
-            this.template.update("insert into `clean-history` (`punch-number`, `punch-status`, `when-cleaned`, `username`) values (:punchId, :punchStatus, :cleanTimeDate, :username)", information);
+            this.template.update("insert into `clean-history` (`punch-number`, `punch-status`, `when-cleaned`, `username`, `batch`, `comment`) " +
+                    "values (:punchId, :punchStatus, :cleanTimeDate, :username, :batch, :comment)", information);
         }
     }
 
@@ -289,7 +290,7 @@ public class PunchDao
         Map<String, String> numberMap = new HashMap<>();
         numberMap.put("punchId", punchId);
 
-        return this.template.queryForList( "select `when-cleaned`, `username` from `clean-history` where `punch-number` = :punchId", numberMap);
+        return this.template.queryForList( "select `when-cleaned`, `username`, `batch`, `comment` from `clean-history` where `punch-number` = :punchId", numberMap);
     }
 
     public List<InspectionHistoryVO> retrievInspectionHistory(String punchId)
