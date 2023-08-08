@@ -8,8 +8,8 @@ type Props = {
 };
 
 type FormData = {
-  startDate: Date;
-  endDate: Date;
+  startDate: Date | string;
+  endDate: Date | string;
   type: string;
   manufacturer: string;
   status: string;
@@ -20,8 +20,8 @@ type FormData = {
 
 export default function Filter(props: Props) {
   const [formData, setFormData] = useState<FormData>({
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: "",
+    endDate: "",
     type: "",
     manufacturer: "",
     status: "",
@@ -84,7 +84,6 @@ export default function Filter(props: Props) {
                 startDate: dateValue,
               }));
             }}
-            required
           />
         </div>
 
@@ -104,7 +103,6 @@ export default function Filter(props: Props) {
                 endDate: dateValue,
               }));
             }}
-            required
           />
         </div>
 
