@@ -16,6 +16,7 @@ type Data = {
 type DataForDelete = {
   punchId: string;
   product: string;
+  previousStatus: string;
   reason: string | null;
 };
 
@@ -75,6 +76,7 @@ function PunchStatusSelect({ punchStatus, punchId, product, refetch }: Props) {
           const dataForDelete: DataForDelete = {
             punchId: punchId,
             product: product,
+            previousStatus: punchStatus,
             reason: reason,
           };
 

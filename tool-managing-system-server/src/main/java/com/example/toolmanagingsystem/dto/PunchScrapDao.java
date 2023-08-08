@@ -16,6 +16,8 @@ public class PunchScrapDao
 {
     private String punchId;
     private String product;
+
+    private String previousStatus;
     private PunchStatus newStatus;
     private String reason;
 
@@ -25,6 +27,7 @@ public class PunchScrapDao
 
         deleteInformation.put("punchId", this.punchId);
         deleteInformation.put("product", this.product);
+        deleteInformation.put("previousStatus", this.previousStatus);
         deleteInformation.put("newStatus", this.newStatus.폐기.toString());
         deleteInformation.put("reason", this.reason);
 

@@ -234,12 +234,12 @@ public class PunchDao
     {
         Map<String, Object> deleteInformation = punchScrapDao.returnMapCollection();
 
+        System.out.println(deleteInformation);
         System.out.println("deleteInformation");
 
-        System.out.println(deleteInformation);
 
         this.template.update("update `punch-list` set `status` = :newStatus where number = :punchId", deleteInformation);
-        this.template.update("insert into `delete-history` (`punch-number`, `product`, `reason`, `date`) values (:punchId, :product, :reason, now())", deleteInformation);
+        this.template.update("insert into `delete-history` (`punch-number`, `product`, `previous_status`, `reason`, `date`) values (:punchId, :product, :previousStatus, :reason, now())", deleteInformation);
     }
 
     public void addCleanHistory(HashMap<String, Object> param)
@@ -413,11 +413,11 @@ public class PunchDao
     {
         if ("All".equals(params.get("product")))
         {
-            return this.template.queryForList( "select `punch-number`, `reason`, `date` from `delete-history`", params);
+            return this.template.queryForList( "select `punch-number`, `reason`, `date`, `previous_status` from `delete-history`", params);
         }
         else
         {
-            return this.template.queryForList( "select `punch-number`, `reason`, `date` from `delete-history` where `product` = :product", params);
+            return this.template.queryForList( "select `punch-number`, `reason`, `date`, `previous_status` from `delete-history` where `product` = :product", params);
         }
     }
 
