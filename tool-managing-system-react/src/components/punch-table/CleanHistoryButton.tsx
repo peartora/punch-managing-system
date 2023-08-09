@@ -1,4 +1,7 @@
 import { useState } from "react";
+
+import dayjs from "dayjs";
+
 import { request } from "@/common/Service";
 import { usePunchRows } from "@/context/punch-rows-context";
 import { useAuth } from "@/common/auth";
@@ -8,7 +11,9 @@ export default function CleanHistoryButton() {
 
   const { punchRowsById, selectedIds, refetch } = usePunchRows();
 
-  const [timeAndDate, setTimeAndDate] = useState("");
+  const [timeAndDate, setTimeAndDate] = useState(() =>
+    dayjs().format("YYYY-MM-DDTHH:mm")
+  );
   const [comment, setComment] = useState("");
   const [batch, setBatch] = useState("");
 
