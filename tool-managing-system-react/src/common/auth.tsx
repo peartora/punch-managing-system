@@ -33,7 +33,7 @@ export const AuthProvider = (props: {
   beforeLoginComponent: ReactNode;
 }) => {
   const [user, setUser] = useState<string | undefined>(() => {
-    const currentUser = localStorage.getItem(CURRENT_USER_KEY);
+    const currentUser = sessionStorage.getItem(CURRENT_USER_KEY);
     if (currentUser) {
       return currentUser;
     } else {
@@ -42,12 +42,12 @@ export const AuthProvider = (props: {
   });
 
   const login = useCallback((user: string) => {
-    localStorage.setItem(CURRENT_USER_KEY, user);
+    sessionStorage.setItem(CURRENT_USER_KEY, user);
     setUser(user);
   }, []);
 
   const logout = useCallback(() => {
-    localStorage.removeItem(CURRENT_USER_KEY);
+    sessionStorage.removeItem(CURRENT_USER_KEY);
     setUser(undefined);
   }, []);
 
