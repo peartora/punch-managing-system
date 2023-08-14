@@ -1,4 +1,5 @@
 import { request } from "@/common/Service";
+// import { usePunchRows } from "@/context/punch-rows-context";
 
 type PunchListType = {
   "punch-number": string;
@@ -18,6 +19,8 @@ type DataForDelete = {
 };
 
 function ScrappedPunchList({ punchList }: { punchList: PunchListType[] }) {
+  // const { refetch } = usePunchRows();
+
   const clickHandler = function (punch: any) {
     console.log("punch");
     console.log(punch);
@@ -57,6 +60,8 @@ function ScrappedPunchList({ punchList }: { punchList: PunchListType[] }) {
         }
       })
       .catch((error) => console.error(error));
+
+    refetch();
   };
 
   return (
