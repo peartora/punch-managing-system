@@ -5,6 +5,7 @@ type PunchListType = {
   reason: string;
   date: string;
   previous_status: string;
+  previous_count: number;
 };
 
 type Data = {
@@ -66,6 +67,7 @@ function ScrappedPunchList({ punchList }: { punchList: PunchListType[] }) {
           <th>폐각 날짜</th>
           <th>폐각 사유</th>
           <th>폐각 전 펀치 상태</th>
+          <th>폐각 전 누적 사용 횟수</th>
           <th>폐각 펀치 복구</th>
         </tr>
       </thead>
@@ -76,6 +78,7 @@ function ScrappedPunchList({ punchList }: { punchList: PunchListType[] }) {
             <td>{punch["date"]}</td>
             <td>{punch["reason"]}</td>
             <td>{punch["previous_status"]}</td>
+            <td>{punch["previous_count"]}</td>
             <td>
               <button
                 onClick={() => {

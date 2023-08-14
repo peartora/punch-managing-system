@@ -46,8 +46,6 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
   }
 
   useEffect(() => {
-    // alert(`=============`);
-
     if (row.canUse === "초과") {
       if (row.punchStatus === "사용불가" || row.punchStatus === "폐기") {
         return;
@@ -90,6 +88,7 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
       <td>
         <PunchStatusSelect
           punchStatus={row.punchStatus}
+          count={row.totalUsageNumber}
           punchId={row.punchId}
           product={row.product}
           refetch={refetch}
