@@ -256,50 +256,7 @@ public class PunchDao
 
     public int updateSizeInformation(Map<String, Object> mapParams)
     {
-        int counter = 0;
-
-        String sql = "update `size-control` set ";
-        String sqlWhereClauses = " where `product` = :product";
-
-        for (Map.Entry<String, Object> entry: mapParams.entrySet())
-        {
-            counter++;
-
-            String key = entry.getKey();
-            String keyForTable = "";
-            String value = (String) entry.getValue();
-
-            if (Objects.equals(key, "product"))
-            {
-                continue;
-            }
-
-            if (Objects.equals(key, "batchSize"))
-            {
-                keyForTable = "batch" + "-" + "size";
-            }
-            else if (Objects.equals(key, "inspectionSize"))
-            {
-                keyForTable = "inspection" + "-" + "size";
-            }
-            else if (Objects.equals(key, "specificationFilePath"))
-            {
-                keyForTable = "specification" + "-" + "path";
-            }
-
-            if ((!Objects.equals(value, "")))
-            {
-                if (counter == mapParams.size())
-                {
-                    sql += "`" + keyForTable + "`" + " = :" + key + ", " + "`date` = now()";
-                }
-                else
-                {
-                    sql += "`" + keyForTable + "`" + " = :" + key + ", ";
-                }
-            }
-        }
-        sql += sqlWhereClauses;
+        String sql = "update `size-control` set `specification-path` = :specificationFilePath where `product` = :product";
 
         return this.template.update(sql, mapParams);
     }
@@ -315,8 +272,8 @@ public class PunchDao
     public int addProduct(Map<String, Object> mapParams)
     {
         return this.template.update(
-        "insert into `size-control` (`product`, `batch-size`, `inspection-size`, `specification-path`, `date`) " +
-            "values (:product, :batchSize, :inspectionSize, :specificationFilePath, now())", mapParams);
+        "insert into `size-control` (`product`, `specification-path`, `date`) " +
+            "values (:product, :specificationFilePath, now())", mapParams);
     }
 
     public int updateInspectionResult(Map<String, Object> mapParamsWithPdfFile)

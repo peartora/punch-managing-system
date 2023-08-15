@@ -3,8 +3,6 @@ import { request } from "./../../common/Service";
 
 function RegisterProductForm() {
   const [productName, setProductName] = useState("");
-  const [batchSize, setBatchSize] = useState(0);
-  const [inspectionSize, setInspectionSize] = useState(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const query = new URLSearchParams();
@@ -23,8 +21,6 @@ function RegisterProductForm() {
         if (response === "0") {
           const formData = new FormData();
           formData.append("product", productName);
-          formData.append("batchSize", batchSize.toString());
-          formData.append("inspectionSize", inspectionSize.toString());
           if (selectedFile) formData.append("specificationFile", selectedFile);
 
           request
@@ -63,36 +59,6 @@ function RegisterProductForm() {
           placeholder="제품명"
           value={productName}
           onChange={(event) => setProductName(event.target.value)}
-          required
-        />
-      </div>
-
-      <div className="input-group mb-3">
-        <label htmlFor="batchSize" className="form-label">
-          등록할 batch-size를 입력 하세요 :
-        </label>
-        <input
-          id="batchSize"
-          className="form-control"
-          type="number"
-          placeholder="batch-size"
-          value={batchSize}
-          onChange={(event) => setBatchSize(parseInt(event.target.value))}
-          required
-        />
-      </div>
-
-      <div className="input-group mb-3">
-        <label htmlFor="inspectionSize" className="form-label">
-          등록할 inspection-size를 입력 하세요 :
-        </label>
-        <input
-          id="inspectionSize"
-          className="form-control"
-          type="number"
-          placeholder="inspection-size"
-          value={inspectionSize}
-          onChange={(event) => setInspectionSize(parseInt(event.target.value))}
           required
         />
       </div>

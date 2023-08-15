@@ -156,61 +156,15 @@ public class ApiController
     @PostMapping("/updateBatchInfor")
     public int updateBatchSize(
             @RequestParam(value = "product") String productName,
-            @RequestParam(value = "batchSize", required = false) String batchSize,
-            @RequestParam(value = "inspectionSize", required = false) String inspectionSize,
             @RequestParam(value = "specificationFile", required = false) MultipartFile specificationFile
     )
     {
         HashMap<String, Object> mapParams = new HashMap<>();
 
-        if ((!Objects.equals(batchSize, "")) && (!Objects.equals(inspectionSize, "")) && (specificationFile != null))
-        {
-            String strFilePath = saveSpecificationFile(specificationFile);
+        String strFilePath = saveSpecificationFile(specificationFile);
 
-            mapParams.put("product", productName);
-            mapParams.put("batchSize", batchSize);
-            mapParams.put("inspectionSize", inspectionSize);
-            mapParams.put("specificationFilePath", strFilePath);
-        }
-        else if ((!Objects.equals(batchSize, "")) && (!Objects.equals(inspectionSize, "")))
-        {
-            mapParams.put("product", productName);
-            mapParams.put("batchSize", batchSize);
-            mapParams.put("inspectionSize", inspectionSize);
-        }
-        else if ((!Objects.equals(batchSize, "")) && (specificationFile != null))
-        {
-            String strFilePath = saveSpecificationFile(specificationFile);
-
-            mapParams.put("product", productName);
-            mapParams.put("batchSize", batchSize);
-            mapParams.put("specificationFilePath", strFilePath);
-        }
-        else if ((!Objects.equals(inspectionSize, "")) && (specificationFile != null))
-        {
-            String strFilePath = saveSpecificationFile(specificationFile);
-
-            mapParams.put("product", productName);
-            mapParams.put("inspectionSize", inspectionSize);
-            mapParams.put("specificationFilePath", strFilePath);
-        }
-        else if (!Objects.equals(batchSize, ""))
-        {
-            mapParams.put("product", productName);
-            mapParams.put("batchSize", batchSize);
-        }
-        else if (!Objects.equals(inspectionSize, ""))
-        {
-            mapParams.put("product", productName);
-            mapParams.put("inspectionSize", inspectionSize);
-        }
-        else if (specificationFile != null)
-        {
-            String strFilePath = saveSpecificationFile(specificationFile);
-
-            mapParams.put("product", productName);
-            mapParams.put("specificationFilePath", strFilePath);
-        }
+        mapParams.put("product", productName);
+        mapParams.put("specificationFilePath", strFilePath);
 
         return this.dao.updateSizeInformation(mapParams);
     }
@@ -224,8 +178,6 @@ public class ApiController
     @PostMapping("/addProduct")
     public int addProduct(
             @RequestParam("product") String productName,
-            @RequestParam("batchSize") String batchSize,
-            @RequestParam("inspectionSize") String inspectionSize,
             @RequestParam("specificationFile") MultipartFile specificationFile
     )
     {
@@ -233,8 +185,6 @@ public class ApiController
 
         HashMap<String, Object> mapParams = new HashMap<>();
         mapParams.put("product", productName);
-        mapParams.put("batchSize", batchSize);
-        mapParams.put("inspectionSize", inspectionSize);
         mapParams.put("specificationFilePath", strFilePath);
 
         return this.dao.addProduct(mapParams);

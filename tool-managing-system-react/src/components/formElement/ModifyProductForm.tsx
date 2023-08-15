@@ -4,8 +4,6 @@ import { request } from "./../../common/Service";
 
 function ModifyProductForm() {
   const [productName, setProductName] = useState("");
-  const [batchSize, setBatchSize] = useState("");
-  const [inspectionSize, setInspectionSize] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const { productList, isLoading } = useBringProductList();
@@ -13,13 +11,11 @@ function ModifyProductForm() {
   function handleSubmit(event: any) {
     event.preventDefault();
 
-    if (batchSize === "" && inspectionSize === "" && selectedFile === null) {
+    if (selectedFile === null) {
       alert(`변경 할 정보가 없습니다.`);
     } else {
       const formData = new FormData();
       formData.append("product", productName);
-      formData.append("batchSize", batchSize);
-      formData.append("inspectionSize", inspectionSize);
       if (selectedFile) formData.append("specificationFile", selectedFile);
 
       request
@@ -66,32 +62,6 @@ function ModifyProductForm() {
             );
           })}
         </select>
-      </div>
-
-      <div className="input-group mb-3">
-        <label htmlFor="batchSize" className="form-label">
-          새로운 batch-size를 입력 하세요 :
-        </label>
-        <input
-          id="batchSize"
-          className="form-control"
-          type="number"
-          placeholder="batch-size"
-          onChange={(event) => setBatchSize(event.target.value)}
-        />
-      </div>
-
-      <div className="input-group mb-3">
-        <label htmlFor="inspectionSize" className="form-label">
-          새로운 inspection-size를 입력 하세요 :
-        </label>
-        <input
-          id="inspectionSize"
-          className="form-control"
-          type="number"
-          placeholder="inspection-size"
-          onChange={(event) => setInspectionSize(event.target.value)}
-        />
       </div>
 
       <div className="input-group mb-3">
