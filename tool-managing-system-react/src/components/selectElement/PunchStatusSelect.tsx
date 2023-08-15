@@ -18,19 +18,12 @@ type DataForDelete = {
   punchId: string;
   product: string;
   previousStatus: string;
-  previousCount: number;
   reason: string | null;
 };
 
 const options = ["사용대기", "사용가능", "사용중", "사용불가", "폐기"] as const;
 
-function PunchStatusSelect({
-  punchStatus,
-  count,
-  punchId,
-  product,
-  refetch,
-}: Props) {
+function PunchStatusSelect({ punchStatus, punchId, product, refetch }: Props) {
   const results = options.map((option) => {
     const disabledOption = (
       <option key={option} value={option} disabled>
@@ -85,7 +78,6 @@ function PunchStatusSelect({
             punchId: punchId,
             product: product,
             previousStatus: punchStatus,
-            previousCount: count,
             reason: reason,
           };
 

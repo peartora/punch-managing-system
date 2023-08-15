@@ -39,7 +39,7 @@ function RegisterPunchForm() {
     const punchIdArrays: Data[] = []; // 빈 배열로 초기화
     let count = 0;
 
-    if (Number(endNumber) - Number(startNumber) > 0) {
+    if (Number(endNumber) - Number(startNumber) >= 0) {
       for (let i = Number(startNumber); i <= Number(endNumber); i++) {
         const punchId = generatePunchId(
           i,

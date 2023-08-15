@@ -62,7 +62,7 @@ export default function CleanHistoryButton() {
                 );
 
               refetch();
-              setTimeAndDate("");
+              setTimeAndDate(() => dayjs().format("YYYY-MM-DDTHH:mm"));
               setComment("");
               setBatch("");
               alert(`결과 반영 되었습니다.`);

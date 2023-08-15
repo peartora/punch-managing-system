@@ -193,7 +193,7 @@ public class PunchDao
 
 
         this.template.update("update `punch-list` set `status` = :newStatus where number = :punchId", deleteInformation);
-        this.template.update("insert into `delete-history` (`punch-number`, `product`, `previous_status`, `previous_count`, `reason`, `date`) values (:punchId, :product, :previousStatus, :previousCount, " +
+        this.template.update("insert into `delete-history` (`punch-number`, `product`, `previous_status`, `reason`, `date`) values (:punchId, :product, :previousStatus," +
                 ":reason, now())", deleteInformation);
     }
 
@@ -305,11 +305,11 @@ public class PunchDao
     {
         if ("All".equals(params.get("product")))
         {
-            return this.template.queryForList( "select `punch-number`, `reason`, `date`, `previous_status`, `previous_count` from `delete-history`", params);
+            return this.template.queryForList( "select `punch-number`, `reason`, `date`, `previous_status` from `delete-history`", params);
         }
         else
         {
-            return this.template.queryForList( "select `punch-number`, `reason`, `date`, `previous_status`, `previous_count` from `delete-history` where `product` = :product", params);
+            return this.template.queryForList( "select `punch-number`, `reason`, `date`, `previous_status` from `delete-history` where `product` = :product", params);
         }
     }
 
