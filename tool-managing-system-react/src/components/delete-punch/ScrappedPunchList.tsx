@@ -22,9 +22,6 @@ function ScrappedPunchList({ punchList }: { punchList: PunchListType[] }) {
   // const { refetch } = usePunchRows();
 
   const clickHandler = function (punch: any) {
-    console.log("punch");
-    console.log(punch);
-
     const data: Data = {
       punchId: punch["punch-number"],
       newStatus: punch.previous_status,
@@ -39,8 +36,6 @@ function ScrappedPunchList({ punchList }: { punchList: PunchListType[] }) {
       })
       .then((result) => {
         if (result === "1") {
-          alert(`heee`);
-
           const dataForDelete: DataForDelete = {
             punchId: punch["punch-number"],
           };
@@ -54,14 +49,14 @@ function ScrappedPunchList({ punchList }: { punchList: PunchListType[] }) {
             })
             .then((result) => {
               if (result === "1") {
-                alert(`삭제성공`)!;
+                alert(`펀치가 복구 되었습니다.`)!;
               }
             });
         }
       })
       .catch((error) => console.error(error));
 
-    refetch();
+    // refetch();
   };
 
   return (
@@ -72,7 +67,6 @@ function ScrappedPunchList({ punchList }: { punchList: PunchListType[] }) {
           <th>폐각 날짜</th>
           <th>폐각 사유</th>
           <th>폐각 전 펀치 상태</th>
-          <th>폐각 전 누적 사용 횟수</th>
           <th>폐각 펀치 복구</th>
         </tr>
       </thead>
@@ -83,7 +77,6 @@ function ScrappedPunchList({ punchList }: { punchList: PunchListType[] }) {
             <td>{punch["date"]}</td>
             <td>{punch["reason"]}</td>
             <td>{punch["previous_status"]}</td>
-            <td>{punch["previous_count"]}</td>
             <td>
               <button
                 onClick={() => {

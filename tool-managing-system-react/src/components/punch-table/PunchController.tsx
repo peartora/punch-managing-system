@@ -3,7 +3,6 @@ import { usePunchRows } from "@/context/punch-rows-context";
 import PunchTable from "./PunchTable";
 import TableHeader from "./TableHeader";
 import CleanHistoryButton from "./CleanHistoryButton";
-import UsagetimeUpdate from "./UsagetimeUpdate";
 import InspectionHistoryForm from "./InspectionHistoryForm";
 import PunchStatusChangeForm from "./PunchStatusChangeForm";
 
@@ -22,7 +21,6 @@ export default function PunchController() {
     <div>
       <div className="row">
         <CleanHistoryButton />
-        <UsagetimeUpdate />
         <InspectionHistoryForm />
         <PunchStatusChangeForm />
       </div>

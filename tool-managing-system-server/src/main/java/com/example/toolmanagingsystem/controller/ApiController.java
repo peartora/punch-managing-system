@@ -39,12 +39,6 @@ public class ApiController
         return this.dao.registerPunch(punchIdArrays);
     }
 
-    @PostMapping("/updateUsageNumber")
-    public void updateUsageNumber(@RequestBody HashMap<String, Object> number)
-    {
-         this.dao.updateUsageNumber(number);
-    }
-
     @GetMapping("/display")
     public List<HashMap<String, Object>> returnPunchList(@RequestParam Map<String, Object> params)
     {
@@ -119,11 +113,6 @@ public class ApiController
         System.out.println(params);
 
         this.dao.addCleanHistory(params);
-    }
-    @PostMapping("/resetCount")
-    public int resetCount(@RequestBody String number)
-    {
-        return this.dao.resetCountZero(number);
     }
 
     @GetMapping("/getCleanHistory")

@@ -47,7 +47,7 @@ public class PunchDao
             batchParams[i] = paramSource;
         }
 
-        String sqlForBatchUpdate = "insert into `punch-list` (`number`, `register-date`, `type`, `manufacturer`, `specification`, `status`, `location`, `product`, `ptype`, `count`) values (:number, :date, :type, :manufacturer, :specification, :status, :location, :product, :ptype, 0)";
+        String sqlForBatchUpdate = "insert into `punch-list` (`number`, `register-date`, `type`, `manufacturer`, `specification`, `status`, `location`, `product`, `ptype`) values (:number, :date, :type, :manufacturer, :specification, :status, :location, :product, :ptype)";
 
         return this.template.batchUpdate(sqlForBatchUpdate, batchParams);
     }
@@ -72,9 +72,7 @@ public class PunchDao
             "SELECT " +
                 "p.*, " +
                 "MAX(c.`when-cleaned`) AS `latestCleanDate`, " +
-                "MAX(i.`when-inspected`) AS `latestInspectionDate`, " +
-                "s.`inspection-size` AS `inspectionSize`, " +
-                "s.`batch-size` AS `batchSize` " +
+                "MAX(i.`when-inspected`) AS `latestInspectionDate`" +
             "FROM " +
                 "`punch-list` AS p " +
             "LEFT JOIN " +
@@ -83,9 +81,7 @@ public class PunchDao
             "LEFT JOIN " +
                 "`inspection-history` AS i " +
                 "ON p.`number` = i.`punch-number` " +
-            "LEFT JOIN " +
-                "`size-control` AS s " +
-                "ON p.`product` = s.`product` " +
+
             whereClauses;
 
         List<HashMap<String, Object>> rowFromDB = new ArrayList<>();
@@ -154,67 +150,11 @@ public class PunchDao
             singleRow.put("productType", rs.getString("ptype"));
             singleRow.put("latestCleaningHistory", rs.getString("latestCleanDate"));
             singleRow.put("latestInspectionDate", rs.getString("latestInspectionDate"));
-
-            int count = rs.getInt("count");
-            singleRow.put("totalUsageNumber", count);
-
-            int inspectionSize = rs.getInt("inspectionSize");
-            singleRow.put("maxUsageNumber", inspectionSize);
-
             singleRow.put("isSelected", false);
-
-            int batchSize = rs.getInt("batchSize");
-
-
-            if ((count > inspectionSize) || (Objects.equals(rs.getString("status"), "사용불가")))
-            {
-                singleRow.put("canUse", "초과");
-            }
-            else
-            {
-                if ((inspectionSize - count) <= batchSize)
-                {
-                    singleRow.put("canUse", "금일중만료");
-                }
-                else
-                {
-                    singleRow.put("canUse", "양호");
-                }
-            }
 
             rowFromDB.add(singleRow);
         });
         return rowFromDB;
-    }
-
-    public void updateUsageNumber(HashMap<String, Object> number)
-    {
-        List<HashMap<String, Object>> punchIdsWithUsageNumber = (List<HashMap<String, Object>>)  number.get("rows");
-
-        for (HashMap<String, Object> map: punchIdsWithUsageNumber)
-        {
-            Map<String, Object> information = new HashMap<>();
-
-            System.out.println("map");
-            System.out.println(map);
-
-            for (String key: map.keySet())
-            {
-                System.out.println(key);
-
-                if (Objects.equals(key, "punchId"))
-                {
-                    information.put("punchId", map.get(key));
-                }
-                else
-                {
-                    information.put("totalUsageNumber", map.get(key));
-                }
-
-                System.out.println(information);
-            }
-            this.template.update("update `punch-list` set `count` = :totalUsageNumber where number = :punchId", information);
-        }
     }
 
     public void updateNewStatus(Map<String, Object> params)
@@ -278,26 +218,6 @@ public class PunchDao
             this.template.update("insert into `clean-history` (`punch-number`, `punch-status`, `when-cleaned`, `username`, `batch`, `comment`) " +
                     "values (:punchId, :punchStatus, :cleanTimeDate, :username, :batch, :comment)", information);
         }
-    }
-
-    public int addInvestigationHistory(String number, String filePath)
-    {
-        Map<String, String> dataForFile = new HashMap<>();
-
-        dataForFile.put("number", number);
-        dataForFile.put("filePath", filePath);
-
-        return this.template.update("insert into `inspection-history` (`punch-number`, `when-inspected`, `file-path`) values (:number, now(), :filePath)", dataForFile);
-    }
-
-    public int resetCountZero(String number)
-    {
-        Map<String, Object> information = new HashMap<>();
-
-        information.put("number", number);
-        information.put("count", 0);
-
-        return this.template.update( "update `punch-list` set `count` = :count where number = :number", information);
     }
 
     public List<Map<String, Object>> retrievCleanHistory(String punchId)
