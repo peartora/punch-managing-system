@@ -49,7 +49,7 @@ function ScrappedPunchList({ punchList }: { punchList: PunchListType[] }) {
             })
             .then((result) => {
               if (result === "1") {
-                alert(`펀치가 복구 되었습니다.`)!;
+                alert(`펀치가 복구 되었습니다.`);
               }
             });
         }
