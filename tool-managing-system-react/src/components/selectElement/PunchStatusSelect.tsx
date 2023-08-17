@@ -66,7 +66,7 @@ function PunchStatusSelect({ punchStatus, punchId, product, refetch }: Props) {
     }
   });
 
-  function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
+  async function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
     const newStatus = e.target.value;
 
     if (newStatus === "폐기") {
@@ -81,14 +81,18 @@ function PunchStatusSelect({ punchStatus, punchId, product, refetch }: Props) {
             reason: reason,
           };
 
-          request
-            .post(`/api/tool-managing-system/updateStatus/scrap`, dataForDelete)
-            .then((response) => {
-              if (!response.ok)
-                throw new Error(`상태 변경 중 에러가 발생 했습니다.`);
-            })
-            .then(() => alert(`상태 변경 되었습니다.`))
-            .catch((error) => alert(error));
+          try {
+            const response = await request.post(
+              `/api/tool-managing-system/updateStatus/scrap`,
+              dataForDelete
+            );
+            if (!response.ok) {
+              throw new Error(`상태 변경 중 에러가 발생 했습니다.`);
+            }
+            alert(`상태 변경 되었습니다.`);
+          } catch (error) {
+            alert(error);
+          }
         } else {
           alert(`사유를 입력 해야 합니다.`);
           return;
@@ -100,14 +104,18 @@ function PunchStatusSelect({ punchStatus, punchId, product, refetch }: Props) {
         newStatus: newStatus,
       };
 
-      request
-        .post(`/api/tool-managing-system/updateStatus`, data)
-        .then((response) => {
-          if (!response.ok)
-            new Error(`새로운 펀치 상태 변경 중 error가 발생 하였습니다.`);
-          alert(`상태 변경 되었습니다.`);
-        })
-        .catch((error) => console.error(error));
+      try {
+        const response = await request.post(
+          `/api/tool-managing-system/updateStatus`,
+          data
+        );
+        if (!response.ok) {
+          new Error(`새로운 펀치 상태 변경 중 error가 발생 하였습니다.`);
+        }
+        alert(`상태 변경 되었습니다.`);
+      } catch (error) {
+        console.error(error);
+      }
     }
     refetch();
   }

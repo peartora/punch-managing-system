@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { Link } from "react-router-dom";
+
 import { request } from "@/common/Service";
 import { useAuth } from "@/common/auth";
 
@@ -73,6 +75,10 @@ export const LoginFormPage = () => {
           <button type="submit">로그인</button>
         </div>
       </form>
+
+      <Link to="/find-password">비밀번호 변경</Link>
+      <a href="">id 등록</a>
+
       {!isLogIned && isIdExists && (
         <h5>비밀번호가 다릅니다. 다시 확인 하세요</h5>
       )}

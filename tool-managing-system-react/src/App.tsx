@@ -1,5 +1,6 @@
 import {
   createHashRouter,
+  Navigate,
   RouterProvider,
   useLoaderData,
 } from "react-router-dom";
@@ -15,16 +16,13 @@ import Overview from "./pages/Overview";
 // import PrintCleanHistory from "./pages/PrintCleanHistory";
 import PunchDeleteHistory from "./pages/PunchDeleteHistory";
 import { LoginPage } from "./pages/LoginPage";
-import NavBarForId from "./components/NavBarForId";
+import PasswordChange from "./pages/PasswordChange";
+import { MyPage } from "./pages/MyPage";
 
-const router = createHashRouter([
+const routerAfterLogin = createHashRouter([
   {
     path: "/",
     element: <Overview />,
-  },
-  {
-    path: "/sign-in",
-    element: <LoginPage />,
   },
   {
     path: "/register-product",
@@ -51,16 +49,31 @@ const router = createHashRouter([
     element: <PunchDeleteHistory />,
   },
   {
-    path: "/password-change",
-    element: <NavBarForId />,
+    path: "/mypage",
+    element: <MyPage />,
+  },
+]);
+
+const routerBeforeLogin = createHashRouter([
+  {
+    path: "*",
+    element: <Navigate to="/sign-in" replace />,
+  },
+  {
+    path: "/sign-in",
+    element: <LoginPage />,
+  },
+  {
+    path: "/find-password",
+    element: <div>비밀번호 찾기</div>,
   },
 ]);
 
 function App() {
   return (
     <AuthProvider
-      afterLoginComponent={<RouterProvider router={router} />}
-      beforeLoginComponent={<LoginPage />}
+      afterLoginComponent={<RouterProvider router={routerAfterLogin} />}
+      beforeLoginComponent={<RouterProvider router={routerBeforeLogin} />}
     />
   );
 }

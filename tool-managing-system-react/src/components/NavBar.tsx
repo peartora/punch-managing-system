@@ -10,7 +10,7 @@ export default function NavBar() {
 
         <ul className="nav">
           <li className="nav-item">
-            <Link className="nav-link" to="/sign-in">
+            <Link className="nav-link" to="/mypage">
               마이페이지
             </Link>
           </li>
