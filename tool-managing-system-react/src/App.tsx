@@ -65,7 +65,7 @@ const routerBeforeLogin = createHashRouter([
   },
   {
     path: "/find-password",
-    element: <div>비밀번호 찾기</div>,
+    element: <PasswordChange />,
   },
 ]);
 
