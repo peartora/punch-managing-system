@@ -6,9 +6,6 @@ import PunchRow from "./PunchRow";
 function PunchTable() {
   const { rows, refetch, selection, toggle } = usePunchRows();
 
-  console.log("rows");
-  console.log(rows);
-
   return (
     <>
       <TableHeader />

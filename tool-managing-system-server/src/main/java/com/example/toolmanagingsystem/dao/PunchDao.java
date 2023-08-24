@@ -54,16 +54,7 @@ public class PunchDao
 
     public List<HashMap<String, Object>> getUsingPunchList(Map<String, Object> params)
     {
-        String whereClauses = "";
-
-        if (params.isEmpty())
-        {
-            whereClauses = "WHERE p.status NOT LIKE '폐기'";
-        }
-        else
-        {
-            whereClauses = "WHERE 1=1";
-        }
+        String whereClauses = "WHERE p.status NOT LIKE '폐기'";
 
         String startDate = "";
         String endDate = "";

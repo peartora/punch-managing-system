@@ -28,7 +28,6 @@ const PunchRowsContext = createContext<PunchRowsContextValue>(
   undefined as unknown as PunchRowsContextValue
 );
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const usePunchRows = () => {
   const value = useContext(PunchRowsContext);
   if (value == null) {
