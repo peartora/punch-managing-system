@@ -29,6 +29,9 @@ export const useDisplay = function (params?: URLSearchParams) {
         return response.json();
       })
       .then((response) => {
+        console.log("response");
+        console.log(response);
+
         setRows(response);
         if (isFirst) {
           setIsFirst(false);

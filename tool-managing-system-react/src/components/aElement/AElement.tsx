@@ -5,13 +5,20 @@ type Props = {
 };
 
 export default function AElement(props: Props) {
-  const { path } = props;
-  const pdfName = path.substring(path.lastIndexOf("\\") + 1);
-  const fullPath = `/resources/pdf/inspection/${pdfName}`;
+  const { path, date } = props;
 
-  return (
-    <a href={fullPath} target="_blank">
-      {props.date}
+  let fullPath = "";
+
+  if (path !== null) {
+    const pdfName = path.substring(path.lastIndexOf("\\") + 1);
+    fullPath = `/resources/pdf/inspection/${pdfName}`;
+  }
+
+  return date ? (
+    <a href={fullPath} target="_blank" rel="noopener noreferrer">
+      {date}
     </a>
+  ) : (
+    <p>검수이력 없음</p>
   );
 }

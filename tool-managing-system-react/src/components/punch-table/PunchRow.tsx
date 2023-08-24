@@ -22,6 +22,9 @@ type Props = {
 };
 
 function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
+  console.log("row");
+  console.log(row);
+
   const punchId = row.punchId;
 
   let checkResult = "";
@@ -45,6 +48,7 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
 
       <InspectionHistoryTd
         latestInspectionDate={row.latestInspectionDate}
+        inspectionFilePath={row.inspectionFilePath}
         punchId={punchId}
       />
       <td>

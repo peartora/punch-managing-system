@@ -62,8 +62,10 @@ public class PunchDao
         String sql =
             "SELECT " +
                 "p.*, " +
-                "MAX(c.`when-cleaned`) AS `latestCleanDate`, " +
-                "MAX(i.`when-inspected`) AS `latestInspectionDate`" +
+                "c.`when-cleaned` AS `latestCleanDate`, " +
+                "i.`when-inspected` AS `latestInspectionDate`," +
+                "i1.`file-path` AS `inspectionFilePath`" +
+
             "FROM " +
                 "`punch-list` AS p " +
             "LEFT JOIN " +
@@ -72,6 +74,9 @@ public class PunchDao
             "LEFT JOIN " +
                 "`inspection-history` AS i " +
                 "ON p.`number` = i.`punch-number` " +
+            "LEFT JOIN " +
+                "`inspection-history` AS i1 " +
+                "ON p.`number` = i1.`punch-number` " +
 
             whereClauses;
 
@@ -141,6 +146,8 @@ public class PunchDao
             singleRow.put("productType", rs.getString("ptype"));
             singleRow.put("latestCleaningHistory", rs.getString("latestCleanDate"));
             singleRow.put("latestInspectionDate", rs.getString("latestInspectionDate"));
+            singleRow.put("inspectionFilePath", rs.getString("inspectionFilePath"));
+
             singleRow.put("isSelected", false);
 
             rowFromDB.add(singleRow);

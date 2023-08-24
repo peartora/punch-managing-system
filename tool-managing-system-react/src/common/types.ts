@@ -1,9 +1,4 @@
-const PUNCH_STATUS = [
-  "사용대기",
-  "사용가능",
-  "사용중",
-  "폐기",
-] as const;
+const PUNCH_STATUS = ["사용대기", "사용가능", "사용중", "폐기"] as const;
 export type PunchStatus = (typeof PUNCH_STATUS)[number];
 
 export type PunchRow = {
@@ -11,6 +6,7 @@ export type PunchRow = {
   supplier: string;
   specification: string;
   latestInspectionDate: string;
+  inspectionFilePath: string;
   punchStatus: PunchStatus;
   punchStorageLocation: string;
   product: string;
