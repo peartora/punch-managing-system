@@ -2,7 +2,7 @@ package com.example.toolmanagingsystem.dto;
 
 public enum PunchStatus
 {
-    사용대기(0), 사용가능(1), 사용중(2), 사용불가(3), 폐기(4);
+    사용대기(0), 사용가능(1), 사용중(2), 폐기(3);
 
     private final int statusValue;
 
@@ -25,8 +25,7 @@ public enum PunchStatus
             case 0 -> PunchStatus.사용대기;
             case 1 -> PunchStatus.사용가능;
             case 2 -> PunchStatus.사용중;
-            case 3 -> PunchStatus.사용불가;
-            case 4 -> PunchStatus.폐기;
+            case 3 -> PunchStatus.폐기;
             default -> throw new IllegalStateException("Unexpected value: " + statusValue);
         };
     }

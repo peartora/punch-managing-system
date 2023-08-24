@@ -1,9 +1,7 @@
 import { request } from "@/common/Service";
 import { usePunchRows } from "@/context/punch-rows-context";
 
-const options = ["사용가능", "사용중", "사용불가"] as const;
-
-// const options = ["사용대기", "사용가능", "사용중", "사용불가", "폐기"] as const;
+const options = ["사용가능", "사용중"] as const;
 
 export default function PunchStatusChangeForm() {
   const { selectedIds, punchRowsById, refetch } = usePunchRows();
@@ -23,12 +21,11 @@ export default function PunchStatusChangeForm() {
         for (const id of selectedIds) {
           if (
             punchRowsById[id].punchStatus === "사용대기" ||
-            punchRowsById[id].punchStatus === "사용불가" ||
             punchRowsById[id].punchStatus === "폐기"
           ) {
             e.target.value = `선택 하세요.`;
             alert(
-              `사용대기, 사용불가, 폐기 상태의 펀치는 해당 기능으로 상태 변경 할 수 없습니다.
+              `사용대기, 폐기 상태의 펀치는 해당 기능으로 상태 변경 할 수 없습니다.
                 (해당 되지 않는 펀치도 상태변경 되지 않습니다.)`
             );
             return;

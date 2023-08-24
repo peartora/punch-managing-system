@@ -26,7 +26,7 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
 
   let checkResult = "";
 
-  if (row.punchStatus === "사용대기" || row.punchStatus === "사용불가") {
+  if (row.punchStatus === "사용대기") {
     checkResult = "orange";
   }
 

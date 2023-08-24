@@ -28,13 +28,8 @@ export default function InspectionHistoryForm() {
 
           try {
             for (const id of selectedIds) {
-              if (
-                punchRowsById[id].punchStatus !== "사용대기" &&
-                punchRowsById[id].punchStatus !== "사용불가"
-              ) {
-                alert(
-                  `검수이력은 사용대기 혹은 사용불가 상태의 펀치만 가능 합니다.`
-                );
+              if (punchRowsById[id].punchStatus !== "사용대기") {
+                alert(`검수이력은 사용대기 상태의 펀치만 가능 합니다.`);
                 throw new Error("Check failed"); // Throw an exception
               }
 

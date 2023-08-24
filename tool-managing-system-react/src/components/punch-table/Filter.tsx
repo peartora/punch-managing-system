@@ -184,7 +184,6 @@ export default function Filter(props: Props) {
             <option value="사용대기">사용대기</option>
             <option value="사용가능">사용가능</option>
             <option value="사용중">사용중</option>
-            <option value="사용불가">사용불가</option>
             <option value="폐기">폐기</option>
             <option value="All">All</option>
           </select>

@@ -5,9 +5,6 @@ type Props = {
 function SpecificationTd({ specification }: Props) {
   const pdfName = specification.substring(specification.lastIndexOf("\\") + 1);
 
-  console.log("pdfName");
-  console.log(pdfName);
-
   const fullPath = `/resources/pdf/specification/${pdfName}`;
 
   return (
