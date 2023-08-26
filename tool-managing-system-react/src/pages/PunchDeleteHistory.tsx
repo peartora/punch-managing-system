@@ -33,9 +33,6 @@ function PunchDeleteHistory() {
         return response.json();
       })
       .then((result) => {
-        console.log("result");
-        console.log(result);
-
         setScrappedPunchList(result);
       })
       .catch((error) => alert(error));
@@ -69,7 +66,10 @@ function PunchDeleteHistory() {
           <option value="All">All</option>
         </select>
       </div>
-      <ScrappedPunchList punchList={scrappedPunchList} />
+      <ScrappedPunchList
+        punchList={scrappedPunchList}
+        setScrappedPunchList={setScrappedPunchList}
+      />
     </>
   );
 }

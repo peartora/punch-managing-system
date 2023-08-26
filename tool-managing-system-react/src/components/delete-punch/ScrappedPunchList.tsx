@@ -1,5 +1,5 @@
+import { useState } from "react";
 import { request } from "@/common/Service";
-// import { usePunchRows } from "@/context/punch-rows-context";
 
 type PunchListType = {
   "punch-number": string;
@@ -18,8 +18,14 @@ type DataForDelete = {
   punchId: string;
 };
 
-function ScrappedPunchList({ punchList }: { punchList: PunchListType[] }) {
-  // const { refetch } = usePunchRows();
+function ScrappedPunchList({
+  punchList,
+  setScrappedPunchList,
+}: {
+  punchList: PunchListType[];
+  setScrappedPunchList: any;
+}) {
+  const [key, setKey] = useState(() => Date.now());
 
   const clickHandler = function (punch: any) {
     const data: Data = {
@@ -49,14 +55,17 @@ function ScrappedPunchList({ punchList }: { punchList: PunchListType[] }) {
             })
             .then((result) => {
               if (result === "1") {
+                const filteredPunchList = punchList.filter(
+                  (p) => p["punch-number"] !== dataForDelete["punchId"]
+                );
+                setScrappedPunchList(filteredPunchList);
+
                 alert(`펀치가 복구 되었습니다.`);
               }
             });
         }
       })
       .catch((error) => console.error(error));
-
-    // refetch();
   };
 
   return (
@@ -71,23 +80,30 @@ function ScrappedPunchList({ punchList }: { punchList: PunchListType[] }) {
         </tr>
       </thead>
       <tbody>
-        {punchList.map((punch, i) => (
-          <tr key={punch["punch-number"] + i}>
-            <td>{punch["punch-number"]}</td>
-            <td>{punch["date"]}</td>
-            <td>{punch["reason"]}</td>
-            <td>{punch["previous_status"]}</td>
-            <td>
-              <button
-                onClick={() => {
-                  clickHandler(punch);
-                }}
-              >
-                복구버튼
-              </button>
-            </td>
+        {punchList.length > 0 ? (
+          punchList.map((punch, i) => (
+            <tr key={punch["punch-number"] + i}>
+              <td>{punch["punch-number"]}</td>
+              <td>{punch["date"]}</td>
+              <td>{punch["reason"]}</td>
+              <td>{punch["previous_status"]}</td>
+              <td>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    clickHandler(punch);
+                  }}
+                >
+                  복구버튼
+                </button>
+              </td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan={5}>현재, 조회된 폐각 list가 없습니다.</td>
           </tr>
-        ))}
+        )}
       </tbody>
     </table>
   );
