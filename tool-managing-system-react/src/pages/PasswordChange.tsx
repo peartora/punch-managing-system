@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { request } from "@/common/Service";
 
@@ -9,6 +10,8 @@ export default function PasswordChange() {
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordForConfirmation, setNewPasswordForConfirmation] =
     useState("");
+
+  const navigate = useNavigate();
 
   const checkUserNameHandler = function () {
     const body = {
@@ -58,6 +61,9 @@ export default function PasswordChange() {
           .then((result) => {
             if (result === "OK") {
               alert(`${username}의 비밀번호가 변경 되었습니다.`);
+              navigate(`/sign-in`);
+            } else if (result === "NOK") {
+              alert(`${username}의 비밀번호 변경 중 error가 발생 하였습니다.`);
             }
           })
           .catch((error) => console.error(error));
