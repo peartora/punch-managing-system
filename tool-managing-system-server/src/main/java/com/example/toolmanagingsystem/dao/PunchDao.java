@@ -332,6 +332,10 @@ public class PunchDao
         {
             return "NOK";
         }
+    }
 
+    public int changePassword(Map<String, Object> params)
+    {
+        return this.template.update("UPDATE `employee` SET `password` = :newPassword WHERE `username` = :username", params);
     }
 }

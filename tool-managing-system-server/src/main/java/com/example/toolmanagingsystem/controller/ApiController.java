@@ -247,7 +247,25 @@ public class ApiController
 
         System.out.println(dao.checkUserIdAndPassword(params));
         return dao.checkUserIdAndPassword(params);
+    }
 
+    @PostMapping("/password_change")
+    public String changePassword (@RequestBody Map<String, Object> params)
+    {
+        System.out.println("changePassword");
+        System.out.println(params);
+
+        System.out.println(dao.checkUserIdAndPassword(params));
+        int effectedRow = dao.changePassword(params);
+
+        if (effectedRow == 1)
+        {
+            return "OK";
+        }
+        else
+        {
+            return "NOK";
+        }
     }
 
 
