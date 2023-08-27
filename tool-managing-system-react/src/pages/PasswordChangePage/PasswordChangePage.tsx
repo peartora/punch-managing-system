@@ -1,6 +1,6 @@
-import NavBar from "@/components/NavBar";
+import { NavBar } from "@/components/NavBar";
 
-import { CheckIdAndPassword } from "@/components/formElement/CheckIdAndPassword";
+import { CheckIdAndPassword } from "./components/CheckIdAndPassword";
 
 export function PasswordChangePage() {
   return (

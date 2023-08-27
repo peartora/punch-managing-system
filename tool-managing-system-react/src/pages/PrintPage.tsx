@@ -1,5 +1,6 @@
-import NavBar from "@/components/NavBar";
 import { useParams } from "react-router-dom";
+
+import { NavBar } from "@/components/NavBar";
 
 export default function HomePage() {
   const { punchId, date } = useParams();

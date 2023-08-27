@@ -1,5 +1,5 @@
-import NavBar from "@/components/NavBar";
 import { useDisplay } from "@/common/hooks";
+import { NavBar } from "@/components/NavBar";
 
 const OverViewList = () => {
   const { rows } = useDisplay();

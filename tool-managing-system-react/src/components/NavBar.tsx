@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function NavBar() {
+export function NavBar() {
   return (
     <nav className="navbar">
       <div className="container">
