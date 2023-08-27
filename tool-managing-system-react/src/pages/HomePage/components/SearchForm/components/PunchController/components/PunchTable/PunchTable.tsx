@@ -1,4 +1,4 @@
-import { usePunchRows } from "@/context/punch-rows-context";
+import { usePunchRows } from "@/common/contexts/punch-rows-context";
 
 import { TableHeader } from "@/common/components/TableHeader";
 

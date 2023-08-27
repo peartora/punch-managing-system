@@ -1,5 +1,5 @@
 import { CheckBox } from "@/common/components/CheckBox";
-import { usePunchRows } from "@/context/punch-rows-context";
+import { usePunchRows } from "@/common/contexts/punch-rows-context";
 
 export function TableHeader() {
   const { selectedIds, isAllSelected, toggleAll } = usePunchRows();

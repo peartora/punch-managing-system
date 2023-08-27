@@ -3,7 +3,7 @@ import { useState } from "react";
 import dayjs from "dayjs";
 
 import { request } from "@/common/Service";
-import { usePunchRows } from "@/context/punch-rows-context";
+import { usePunchRows } from "@/common/contexts/punch-rows-context";
 import { useAuth } from "@/common/auth";
 
 export function CleanHistoryButton() {

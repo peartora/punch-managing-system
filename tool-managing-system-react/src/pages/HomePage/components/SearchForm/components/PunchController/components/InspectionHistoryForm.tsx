@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 
 import { request } from "@/common/Service";
-import { usePunchRows } from "@/context/punch-rows-context";
+import { usePunchRows } from "@/common/contexts/punch-rows-context";
 
 export function InspectionHistoryForm() {
   const { selectedIds, punchRowsById, refetch } = usePunchRows();

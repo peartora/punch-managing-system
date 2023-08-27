@@ -1,5 +1,5 @@
 import { request } from "@/common/Service";
-import { usePunchRows } from "@/context/punch-rows-context";
+import { usePunchRows } from "@/common/contexts/punch-rows-context";
 
 const options = ["사용가능", "사용중"] as const;
 
