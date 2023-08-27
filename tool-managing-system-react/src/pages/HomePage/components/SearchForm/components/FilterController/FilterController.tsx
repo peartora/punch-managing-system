@@ -1,4 +1,4 @@
-import { useBringProductList } from "@/common/hooks";
+import { useBringProductList } from "@/common/hooks/useBringProductList";
 import { useBringSupplierList } from "@/common/hooks";
 
 import { Filter } from "./components/Filter";

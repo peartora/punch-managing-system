@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useBringProductList } from "@/common/hooks";
+import { useBringProductList } from "@/common/hooks/useBringProductList";
 import { request } from "@/common/utils/ajax";
 import { NavBar } from "@/common/components/NavBar";
 

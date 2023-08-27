@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-import { useBringProductList, useBringSupplierList } from "@/common/hooks";
+import { useBringProductList } from "@/common/hooks/useBringProductList";
+import { useBringSupplierList } from "@/common/hooks";
 import { request } from "@/common/utils/ajax";
 
 const options = ["상부", "하부", "다이"];
