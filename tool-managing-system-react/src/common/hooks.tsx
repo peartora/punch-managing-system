@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { request } from "./Service";
+
+import { request } from "@/common/utils/ajax";
 import { type PunchRow as PunchRowType } from "@/common/types";
 
 export const useDisplay = function (params?: URLSearchParams) {

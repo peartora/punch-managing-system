@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useBringProductList } from "@/common/hooks";
 
-import { request } from "@/common/Service";
+import { useBringProductList } from "@/common/hooks";
+import { request } from "@/common/utils/ajax";
 import { NavBar } from "@/common/components/NavBar";
 
 import { ScrappedPunchList } from "./components/ScrappedPunchList";

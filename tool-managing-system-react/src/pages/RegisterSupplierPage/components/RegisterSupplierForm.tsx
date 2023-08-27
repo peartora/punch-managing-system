@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { request } from "@/common/Service";
+import { request } from "@/common/utils/ajax";
 
 export function RegisterSupplierForm() {
   const [supplier, setSupplier] = useState(``);

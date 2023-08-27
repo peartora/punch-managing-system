@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-import { request } from "@/common/Service";
+import { request } from "@/common/utils/ajax";
+
 import { ChangePassword } from "./components/ChangePassword";
 
 export function CheckIdAndPassword() {

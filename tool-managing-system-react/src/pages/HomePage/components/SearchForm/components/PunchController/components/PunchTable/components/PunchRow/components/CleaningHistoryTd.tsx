@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { request } from "@/common/Service";
 
 import dayjs from "dayjs";
+
+import { request } from "@/common/utils/ajax";
 
 let _uniqueId = 1;
 

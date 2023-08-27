@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { Link } from "react-router-dom";
 
-import { request } from "@/common/Service";
+import { request } from "@/common/utils/ajax";
 import { useAuth } from "@/common/contexts/auth";
 
 export const LoginFormPage = () => {

@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-import { request } from "@/common/Service";
+import { request } from "@/common/utils/ajax";
 import { usePunchRows } from "@/common/contexts/punch-rows-context";
 
 export function InspectionHistoryForm() {

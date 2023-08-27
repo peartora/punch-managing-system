@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { request } from "@/common/Service";
+
+import { request } from "@/common/utils/ajax";
 
 type PunchListType = {
   "punch-number": string;

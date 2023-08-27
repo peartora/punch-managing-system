@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import dayjs from "dayjs";
 
-import { request } from "@/common/Service";
+import { request } from "@/common/utils/ajax";
 import { usePunchRows } from "@/common/contexts/punch-rows-context";
 import { useAuth } from "@/common/contexts/auth";
 

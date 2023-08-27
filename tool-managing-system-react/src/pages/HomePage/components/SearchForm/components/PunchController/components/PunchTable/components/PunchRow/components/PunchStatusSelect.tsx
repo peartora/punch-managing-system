@@ -1,5 +1,5 @@
 import { type PunchStatus } from "@/common/types";
-import { request } from "../../../../common/Service";
+import { request } from "@/common/utils/ajax";
 
 type Props = {
   punchStatus: PunchStatus;

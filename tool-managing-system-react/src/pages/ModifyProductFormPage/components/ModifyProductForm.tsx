@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { useBringProductList } from "@/common/hooks";
-import { request } from "@/common/Service";
+import { request } from "@/common/utils/ajax";
 
 export function ModifyProductForm() {
   const [productName, setProductName] = useState("");

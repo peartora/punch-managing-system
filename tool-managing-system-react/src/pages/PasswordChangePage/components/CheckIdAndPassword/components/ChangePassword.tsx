@@ -1,7 +1,8 @@
 import { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 
-import { request } from "@/common/Service";
+import { request } from "@/common/utils/ajax";
 
 type Data = {
   result: string;
