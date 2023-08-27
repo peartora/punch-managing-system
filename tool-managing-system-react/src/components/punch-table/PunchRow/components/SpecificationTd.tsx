@@ -2,7 +2,7 @@ type Props = {
   specification: string;
 };
 
-function SpecificationTd({ specification }: Props) {
+export function SpecificationTd({ specification }: Props) {
   const pdfName = specification.substring(specification.lastIndexOf("\\") + 1);
 
   const fullPath = `/resources/pdf/specification/${pdfName}`;
@@ -15,5 +15,3 @@ function SpecificationTd({ specification }: Props) {
     </td>
   );
 }
-
-export default SpecificationTd;

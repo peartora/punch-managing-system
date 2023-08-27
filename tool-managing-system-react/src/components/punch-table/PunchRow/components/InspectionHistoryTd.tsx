@@ -4,7 +4,7 @@ type Props = {
   punchId: string;
 };
 
-function InspectionHistoryTd({
+export function InspectionHistoryTd({
   latestInspectionDate,
   inspectionFilePath,
 }: Props) {

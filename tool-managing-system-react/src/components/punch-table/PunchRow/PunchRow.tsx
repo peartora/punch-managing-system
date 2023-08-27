@@ -1,17 +1,12 @@
-import PunchIdTd from "../../tdElements/PunchIdTd";
-import SupplierTd from "../../tdElements/SupplierTd";
-import InspectionHistoryTd from "../../tdElements/InspectionHistoryTd";
-import PunchStorageLocationTd from "../../tdElements/PunchStorageLocationTd";
-import ProductTd from "../../tdElements/ProductTd";
-import ProductTypeTd from "../../tdElements/ProductTypeTd";
-import { CleaningHistoryTd } from "../../tdElements/CleaningHistoryTd";
 import { type PunchRow } from "@/common/types";
 import { CheckBox } from "@/components/CheckBox";
-import SpecificationTd from "../../tdElements/SpecificationTd";
 
 import style from "./PunchRow.module.css";
 
 import { PunchStatusSelect } from "./components/PunchStatusSelect";
+import { CleaningHistoryTd } from "./components/CleaningHistoryTd";
+import { InspectionHistoryTd } from "./components/InspectionHistoryTd";
+import { SpecificationTd } from "./components/SpecificationTd";
 
 type Props = {
   row: PunchRow;
@@ -49,8 +44,8 @@ export function PunchRow({
           checked={chekced}
         />
       </td>
-      <PunchIdTd punchId={row.punchId} />
-      <SupplierTd supplier={row.supplier} />
+      <td>{row.punchId}</td>
+      <td>{row.supplier}</td>
       <SpecificationTd specification={row.specification} />
 
       <InspectionHistoryTd
@@ -67,9 +62,9 @@ export function PunchRow({
           refetch={refetch}
         />
       </td>
-      <PunchStorageLocationTd punchStorageLocation={row.punchStorageLocation} />
-      <ProductTd product={row.product} />
-      <ProductTypeTd productType={row.productType} />
+      <td>{row.punchStorageLocation}</td>
+      <td>{row.product}</td>
+      <td>{row.productType}</td>
       <CleaningHistoryTd
         latestCleaningHistory={row.latestCleaningHistory}
         punchId={row.punchId}
