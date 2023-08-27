@@ -15,6 +15,10 @@ import { MyPage } from "./pages/MyPage";
 
 const routerAfterLogin = createHashRouter([
   {
+    path: "*",
+    element: <Navigate replace to="/" />,
+  },
+  {
     path: "/",
     element: <Overview />,
   },

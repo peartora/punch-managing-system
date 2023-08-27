@@ -16,7 +16,9 @@ export function ChangePassword({ result, username }: Data) {
 
   const navigate = useNavigate();
 
-  const submitHandler = function () {
+  const submitHandler = function (event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
     if (newPassword && newPasswordForConfirmation) {
       if (newPassword === newPasswordForConfirmation) {
         const body = {
@@ -35,7 +37,7 @@ export function ChangePassword({ result, username }: Data) {
           .then((result) => {
             if (result === "OK") {
               alert(`${username}의 비밀번호가 변경 되었습니다.`);
-              navigate(`http://localhost:5173/#/sign-in`);
+              navigate(`/sign-in`);
             } else if (result === "NOK") {
               alert(`${username}의 비밀번호 변경 중 error가 발생 하였습니다.`);
             }

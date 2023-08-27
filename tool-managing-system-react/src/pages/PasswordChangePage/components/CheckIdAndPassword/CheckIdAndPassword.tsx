@@ -9,7 +9,11 @@ export function CheckIdAndPassword() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [resultForId, setResultForId] = useState("");
 
-  const checkUserNameHandler = function () {
+  const checkUserNameHandler = function (
+    event: React.FormEvent<HTMLFormElement>
+  ) {
+    event.preventDefault();
+
     const body = {
       username,
       password: currentPassword,
