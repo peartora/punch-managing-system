@@ -49,11 +49,12 @@ export const LoginFormPage = () => {
 
   return (
     <div>
-      {/* <NavBarForId /> */}
       <form onSubmit={handleSubmit}>
         <div>
           id:{" "}
           <input
+            style={{ width: "300px" }}
+            className="form-control"
             name="username"
             type="text"
             value={username}
@@ -64,6 +65,8 @@ export const LoginFormPage = () => {
         <div>
           password:{" "}
           <input
+            style={{ width: "300px" }}
+            className="form-control"
             name="password"
             type="text"
             value={password}
@@ -72,12 +75,20 @@ export const LoginFormPage = () => {
           />
         </div>
         <div>
-          <button type="submit">로그인</button>
+          <button
+            className="btn btn-primary"
+            type="submit"
+            style={{ marginTop: "30px", marginBottom: "30px" }}
+          >
+            로그인
+          </button>
         </div>
       </form>
 
-      <Link to="/find-password">비밀번호 변경</Link>
-      <a href="">id 등록</a>
+      <Link to="/find-password" style={{ marginRight: "20px" }}>
+        비밀번호 변경
+      </Link>
+      <Link to="/create-id">회원가입</Link>
 
       {!isLogIned && isIdExists && (
         <h5>비밀번호가 다릅니다. 다시 확인 하세요</h5>

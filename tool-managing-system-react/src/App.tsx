@@ -16,7 +16,7 @@ import Overview from "./pages/Overview";
 // import PrintCleanHistory from "./pages/PrintCleanHistory";
 import PunchDeleteHistory from "./pages/PunchDeleteHistory";
 import { LoginPage } from "./pages/LoginPage";
-import PasswordChange from "./pages/PasswordChange";
+import PasswordChange from "./pages/PasswordChangePage";
 import { MyPage } from "./pages/MyPage";
 
 const routerAfterLogin = createHashRouter([
