@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { formatDate } from "@/common/Service";
+
+import dayjs from "dayjs";
 
 type Props = {
   setParams: (params: URLSearchParams) => void;
@@ -55,7 +56,7 @@ export function Filter(props: Props) {
       }
 
       if (value instanceof Date) {
-        const formatedValue = formatDate(value);
+        const formatedValue = dayjs(value).format("YYYY-MM-DD");
         newParams.append(key, formatedValue);
       } else {
         newParams.append(key, value.toString());
