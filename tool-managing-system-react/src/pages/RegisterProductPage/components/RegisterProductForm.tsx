@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { request } from "./../../common/Service";
 
-function RegisterProductForm() {
+import { request } from "@/common/Service";
+
+export function RegisterProductForm() {
   const [productName, setProductName] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -87,5 +88,3 @@ function RegisterProductForm() {
     </form>
   );
 }
-
-export default RegisterProductForm;
