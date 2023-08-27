@@ -1,15 +1,16 @@
-import PunchIdTd from "../tdElements/PunchIdTd";
-import SupplierTd from "../tdElements/SupplierTd";
-import InspectionHistoryTd from "../tdElements/InspectionHistoryTd";
-import PunchStorageLocationTd from "../tdElements/PunchStorageLocationTd";
-import ProductTd from "../tdElements/ProductTd";
-import ProductTypeTd from "../tdElements/ProductTypeTd";
-import { CleaningHistoryTd } from "../tdElements/CleaningHistoryTd";
+import PunchIdTd from "../../tdElements/PunchIdTd";
+import SupplierTd from "../../tdElements/SupplierTd";
+import InspectionHistoryTd from "../../tdElements/InspectionHistoryTd";
+import PunchStorageLocationTd from "../../tdElements/PunchStorageLocationTd";
+import ProductTd from "../../tdElements/ProductTd";
+import ProductTypeTd from "../../tdElements/ProductTypeTd";
+import { CleaningHistoryTd } from "../../tdElements/CleaningHistoryTd";
 import { type PunchRow } from "@/common/types";
-import PunchStatusSelect from "../selectElement/PunchStatusSelect";
+import PunchStatusSelect from "../../selectElement/PunchStatusSelect";
 import { CheckBox } from "@/components/CheckBox";
-import "@/css/punchRow.css";
-import SpecificationTd from "../tdElements/SpecificationTd";
+import SpecificationTd from "../../tdElements/SpecificationTd";
+
+import style from "./PunchRow.module.css";
 
 type Props = {
   row: PunchRow;
@@ -21,7 +22,12 @@ type Props = {
   refetch: () => void;
 };
 
-function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
+export function PunchRow({
+  row,
+  chekced,
+  handlerChangeForSingleBox,
+  refetch,
+}: Props) {
   console.log("row");
   console.log(row);
 
@@ -30,7 +36,7 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
   let checkResult = "";
 
   if (row.punchStatus === "사용대기") {
-    checkResult = "orange";
+    checkResult = style.orange;
   }
 
   return (
@@ -70,5 +76,3 @@ function PunchRow({ row, chekced, handlerChangeForSingleBox, refetch }: Props) {
     </tr>
   );
 }
-
-export default PunchRow;

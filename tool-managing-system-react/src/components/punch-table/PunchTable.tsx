@@ -1,7 +1,7 @@
 import { usePunchRows } from "@/context/punch-rows-context";
 
 import TableHeader from "./TableHeader";
-import PunchRow from "./PunchRow";
+import { PunchRow } from "./PunchRow";
 
 function PunchTable() {
   const { rows, refetch, selection, toggle } = usePunchRows();
