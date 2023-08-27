@@ -1,5 +1,5 @@
 import { type PunchStatus } from "@/common/types";
-import { request } from "./../../common/Service";
+import { request } from "../../../../common/Service";
 
 type Props = {
   punchStatus: PunchStatus;
@@ -23,7 +23,12 @@ type DataForDelete = {
 
 const options = ["사용대기", "사용가능", "사용중", "폐기"] as const;
 
-function PunchStatusSelect({ punchStatus, punchId, product, refetch }: Props) {
+export function PunchStatusSelect({
+  punchStatus,
+  punchId,
+  product,
+  refetch,
+}: Props) {
   const results = options.map((option) => {
     const disabledOption = (
       <option key={option} value={option} disabled>
@@ -115,5 +120,3 @@ function PunchStatusSelect({ punchStatus, punchId, product, refetch }: Props) {
     </select>
   );
 }
-
-export default PunchStatusSelect;
