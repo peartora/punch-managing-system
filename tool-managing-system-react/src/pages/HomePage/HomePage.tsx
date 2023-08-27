@@ -1,8 +1,9 @@
 import { useAuth } from "@/common/auth";
 import NavBar from "@/components/NavBar";
-import SearchForm from "@/components/formElement/SearchForm";
 
-export default function HomePage() {
+import { SearchForm } from "./components/SearchForm";
+
+export function HomePage() {
   const { user, logout } = useAuth();
 
   return (

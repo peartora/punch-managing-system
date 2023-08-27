@@ -4,8 +4,7 @@ import FilterController from "@/components/punch-table/FilterController";
 import PunchController from "@/components/punch-table/PunchController";
 import { PunchRowsProvider } from "@/context/punch-rows-context";
 
-function SearchForm() {
-
+export function SearchForm() {
   const [params, setParams] = useState<URLSearchParams>(
     () => new URLSearchParams()
   );
@@ -24,5 +23,3 @@ function SearchForm() {
     </>
   );
 }
-
-export default SearchForm;

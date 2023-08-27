@@ -2,7 +2,7 @@ import { createHashRouter, Navigate, RouterProvider } from "react-router-dom";
 
 import { AuthProvider } from "./common/auth";
 
-import HomePage from "./pages/HomePage";
+import { HomePage } from "./pages/HomePage";
 import RegisterProductPage from "./pages/RegisterProductPage";
 import RegisterPunchPage from "./pages/RegisterPunchPage";
 import ModifyProductFormPage from "./pages/ModifyProductFormPage";
