@@ -9,7 +9,7 @@ import {
 } from "react";
 
 import { PunchRow } from "@/common/types";
-import { useDisplay } from "@/common/hooks";
+import { useDisplay } from "@/common/hooks/useDisplay";
 
 type PunchRowsContextValue = {
   isLoading: boolean;

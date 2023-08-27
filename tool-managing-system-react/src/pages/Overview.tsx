@@ -1,4 +1,4 @@
-import { useDisplay } from "@/common/hooks";
+import { useDisplay } from "@/common/hooks/useDisplay";
 import { NavBar } from "@/common/components/NavBar";
 
 const OverViewList = () => {
@@ -112,7 +112,7 @@ const OverViewList = () => {
   );
 };
 
-export default function Overview() {
+export function Overview() {
   return (
     <div>
       <NavBar />
