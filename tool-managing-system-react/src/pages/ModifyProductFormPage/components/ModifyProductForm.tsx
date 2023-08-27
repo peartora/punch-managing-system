@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useBringProductList } from "@/common/hooks";
-import { request } from "./../../common/Service";
 
-function ModifyProductForm() {
+import { useBringProductList } from "@/common/hooks";
+import { request } from "@/common/Service";
+
+export function ModifyProductForm() {
   const [productName, setProductName] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -87,5 +88,3 @@ function ModifyProductForm() {
     </form>
   );
 }
-
-export default ModifyProductForm;
