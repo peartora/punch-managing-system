@@ -18,7 +18,7 @@ type FormData = {
   ptype: string;
 };
 
-export default function Filter(props: Props) {
+export function Filter(props: Props) {
   const [formData, setFormData] = useState<FormData>({
     startDate: "",
     endDate: "",

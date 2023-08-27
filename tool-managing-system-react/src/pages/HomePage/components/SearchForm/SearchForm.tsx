@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import FilterController from "@/components/punch-table/FilterController";
 import { PunchRowsProvider } from "@/context/punch-rows-context";
 
+import { FilterController } from "./components/FilterController";
 import { PunchController } from "./components/PunchController";
 
 export function SearchForm() {
