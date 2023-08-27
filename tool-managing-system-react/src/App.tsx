@@ -6,7 +6,7 @@ import { HomePage } from "./pages/HomePage";
 import RegisterProductPage from "./pages/RegisterProductPage";
 import RegisterPunchPage from "./pages/RegisterPunchPage";
 import ModifyProductFormPage from "./pages/ModifyProductFormPage";
-import RegisterSupplierPage from "@/pages/RegisterSupplierPage";
+import { RegisterSupplierPage } from "@/pages/RegisterSupplierPage";
 import Overview from "./pages/Overview";
 import { PunchDeleteHistory } from "@/pages/PunchDeleteHistory";
 import { LoginPage } from "./pages/LoginPage";

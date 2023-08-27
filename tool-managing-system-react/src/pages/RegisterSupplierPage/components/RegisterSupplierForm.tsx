@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { request } from "./../../common/Service";
 
-function RegisterSupplierForm() {
+import { request } from "@/common/Service";
+
+export function RegisterSupplierForm() {
   const [supplier, setSupplier] = useState(``);
 
   function handleSubmit(event: any) {
