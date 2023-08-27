@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useBringProductList } from "@/common/hooks";
 
 import { request } from "@/common/Service";
-import ScrappedPunchList from "@/components/delete-punch/ScrappedPunchList";
 import NavBar from "@/components/NavBar";
 
-function PunchDeleteHistory() {
+import { ScrappedPunchList } from "./components/ScrappedPunchList";
+
+export function PunchDeleteHistory() {
   const [scrappedPunchList, setScrappedPunchList] = useState([]);
 
   let selectedProduct = "";
@@ -73,5 +74,3 @@ function PunchDeleteHistory() {
     </>
   );
 }
-
-export default PunchDeleteHistory;

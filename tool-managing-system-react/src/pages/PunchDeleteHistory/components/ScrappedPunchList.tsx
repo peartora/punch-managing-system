@@ -18,7 +18,7 @@ type DataForDelete = {
   punchId: string;
 };
 
-function ScrappedPunchList({
+export function ScrappedPunchList({
   punchList,
   setScrappedPunchList,
 }: {
@@ -108,5 +108,3 @@ function ScrappedPunchList({
     </table>
   );
 }
-
-export default ScrappedPunchList;

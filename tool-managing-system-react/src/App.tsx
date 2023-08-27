@@ -1,9 +1,4 @@
-import {
-  createHashRouter,
-  Navigate,
-  RouterProvider,
-  useLoaderData,
-} from "react-router-dom";
+import { createHashRouter, Navigate, RouterProvider } from "react-router-dom";
 
 import { AuthProvider } from "./common/auth";
 
@@ -13,8 +8,7 @@ import RegisterPunchPage from "./pages/RegisterPunchPage";
 import ModifyProductFormPage from "./pages/ModifyProductFormPage";
 import RegisterSupplierPage from "@/pages/RegisterSupplierPage";
 import Overview from "./pages/Overview";
-// import PrintCleanHistory from "./pages/PrintCleanHistory";
-import PunchDeleteHistory from "./pages/PunchDeleteHistory";
+import { PunchDeleteHistory } from "@/pages/PunchDeleteHistory";
 import { LoginPage } from "./pages/LoginPage";
 import PasswordChange from "./pages/PasswordChangePage";
 import { MyPage } from "./pages/MyPage";
