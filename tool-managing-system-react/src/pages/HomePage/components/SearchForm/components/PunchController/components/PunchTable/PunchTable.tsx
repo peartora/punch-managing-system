@@ -2,7 +2,7 @@ import { usePunchRows } from "@/context/punch-rows-context";
 
 import { TableHeader } from "@/components/TableHeader";
 
-import { PunchRow } from "../../../../../../../components/punch-table/PunchRow";
+import { PunchRow } from "./components/PunchRow";
 
 export function PunchTable() {
   const { rows, refetch, selection, toggle } = usePunchRows();
