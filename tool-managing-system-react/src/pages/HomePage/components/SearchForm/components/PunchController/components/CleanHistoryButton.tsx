@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 
 import { request } from "@/common/Service";
 import { usePunchRows } from "@/common/contexts/punch-rows-context";
-import { useAuth } from "@/common/auth";
+import { useAuth } from "@/common/contexts/auth";
 
 export function CleanHistoryButton() {
   const { user } = useAuth<true>();

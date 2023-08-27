@@ -1,4 +1,4 @@
-import { useAuth } from "@/common/auth";
+import { useAuth } from "@/common/contexts/auth";
 
 import { MyPage } from "./MyPage";
 import { LoginFormPage } from "./LoginFormPage";

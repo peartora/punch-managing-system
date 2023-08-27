@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { request } from "@/common/Service";
-import { useAuth } from "@/common/auth";
+import { useAuth } from "@/common/contexts/auth";
 
 export const LoginFormPage = () => {
   const { login } = useAuth();

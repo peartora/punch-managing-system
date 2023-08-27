@@ -1,6 +1,6 @@
 import { createHashRouter, Navigate, RouterProvider } from "react-router-dom";
 
-import { AuthProvider } from "./common/auth";
+import { AuthProvider } from "./common/contexts/auth";
 
 import { HomePage } from "./pages/HomePage";
 import { RegisterProductPage } from "./pages/RegisterProductPage";

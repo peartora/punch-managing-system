@@ -1,4 +1,4 @@
-import { useAuth } from "@/common/auth";
+import { useAuth } from "@/common/contexts/auth";
 import { NavBar } from "@/common/components/NavBar";
 
 import { SearchForm } from "./components/SearchForm";
