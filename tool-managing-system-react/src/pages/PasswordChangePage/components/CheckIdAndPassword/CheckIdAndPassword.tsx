@@ -1,9 +1,9 @@
 import { useState } from "react";
 
 import { request } from "@/common/Service";
-import ChangePassword from "./ChangePassword";
+import { ChangePassword } from "./components/ChangePassword";
 
-export default function PasswordChange() {
+export function CheckIdAndPassword() {
   const [username, setUsername] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [resultForId, setResultForId] = useState("");

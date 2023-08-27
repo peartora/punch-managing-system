@@ -8,7 +8,7 @@ type Data = {
   username: string;
 };
 
-export default function ChangePassword({ result, username }: Data) {
+export function ChangePassword({ result, username }: Data) {
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordForConfirmation, setNewPasswordForConfirmation] =
     useState("");

@@ -1,7 +1,8 @@
 import NavBar from "@/components/NavBar";
-import CheckIdAndPassword from "@/components/formElement/CheckIdAndPassword";
 
-export default function PasswordChangePage() {
+import { CheckIdAndPassword } from "@/components/formElement/CheckIdAndPassword";
+
+export function PasswordChangePage() {
   return (
     <main>
       <NavBar />

@@ -10,7 +10,7 @@ import RegisterSupplierPage from "@/pages/RegisterSupplierPage";
 import Overview from "./pages/Overview";
 import { PunchDeleteHistory } from "@/pages/PunchDeleteHistory";
 import { LoginPage } from "./pages/LoginPage";
-import PasswordChange from "./pages/PasswordChangePage";
+import { PasswordChangePage } from "./pages/PasswordChangePage";
 import { MyPage } from "./pages/MyPage";
 
 const routerAfterLogin = createHashRouter([
@@ -59,7 +59,7 @@ const routerBeforeLogin = createHashRouter([
   },
   {
     path: "/find-password",
-    element: <PasswordChange />,
+    element: <PasswordChangePage />,
   },
 ]);
 
