@@ -1,8 +1,9 @@
 import { useState } from "react";
 
 import FilterController from "@/components/punch-table/FilterController";
-import PunchController from "@/components/punch-table/PunchController";
 import { PunchRowsProvider } from "@/context/punch-rows-context";
+
+import { PunchController } from "./components/PunchController";
 
 export function SearchForm() {
   const [params, setParams] = useState<URLSearchParams>(

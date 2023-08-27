@@ -3,7 +3,7 @@ import { usePunchRows } from "@/context/punch-rows-context";
 
 const options = ["사용가능", "사용중"] as const;
 
-export default function PunchStatusChangeForm() {
+export function PunchStatusChangeForm() {
   const { selectedIds, punchRowsById, refetch } = usePunchRows();
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

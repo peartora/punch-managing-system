@@ -1,7 +1,7 @@
 import { CheckBox } from "@/components/CheckBox";
 import { usePunchRows } from "@/context/punch-rows-context";
 
-function TableHeader() {
+export function TableHeader() {
   const { selectedIds, isAllSelected, toggleAll } = usePunchRows();
 
   return (
@@ -28,5 +28,3 @@ function TableHeader() {
     </thead>
   );
 }
-
-export default TableHeader;

@@ -1,12 +1,13 @@
 import { usePunchRows } from "@/context/punch-rows-context";
 
-import PunchTable from "./PunchTable";
-import TableHeader from "./TableHeader";
-import CleanHistoryButton from "./CleanHistoryButton";
-import InspectionHistoryForm from "./InspectionHistoryForm";
-import PunchStatusChangeForm from "./PunchStatusChangeForm";
+import { TableHeader } from "@/components/TableHeader";
 
-export default function PunchController() {
+import { CleanHistoryButton } from "./components/CleanHistoryButton";
+import { InspectionHistoryForm } from "./components/InspectionHistoryForm";
+import { PunchStatusChangeForm } from "./components/PunchStatusChangeForm";
+import { PunchTable } from "./components/PunchTable";
+
+export function PunchController() {
   const { isLoading } = usePunchRows();
 
   if (isLoading) {

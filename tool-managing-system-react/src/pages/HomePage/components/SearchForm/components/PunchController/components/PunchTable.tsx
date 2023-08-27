@@ -1,9 +1,10 @@
 import { usePunchRows } from "@/context/punch-rows-context";
 
-import TableHeader from "./TableHeader";
-import { PunchRow } from "./PunchRow";
+import { TableHeader } from "@/components/TableHeader";
 
-function PunchTable() {
+import { PunchRow } from "../../../../../../../components/punch-table/PunchRow";
+
+export function PunchTable() {
   const { rows, refetch, selection, toggle } = usePunchRows();
 
   return (
@@ -23,5 +24,3 @@ function PunchTable() {
     </>
   );
 }
-
-export default PunchTable;

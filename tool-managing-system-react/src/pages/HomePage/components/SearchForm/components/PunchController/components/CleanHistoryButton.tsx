@@ -6,7 +6,7 @@ import { request } from "@/common/Service";
 import { usePunchRows } from "@/context/punch-rows-context";
 import { useAuth } from "@/common/auth";
 
-export default function CleanHistoryButton() {
+export function CleanHistoryButton() {
   const { user } = useAuth<true>();
 
   const { punchRowsById, selectedIds, refetch } = usePunchRows();

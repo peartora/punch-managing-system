@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
+
 import { request } from "@/common/Service";
 import { usePunchRows } from "@/context/punch-rows-context";
 
-export default function InspectionHistoryForm() {
+export function InspectionHistoryForm() {
   const { selectedIds, punchRowsById, refetch } = usePunchRows();
 
   const formRef = useRef<HTMLFormElement>(
