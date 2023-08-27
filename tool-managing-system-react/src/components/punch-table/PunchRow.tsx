@@ -7,7 +7,7 @@ import ProductTypeTd from "../tdElements/ProductTypeTd";
 import { CleaningHistoryTd } from "../tdElements/CleaningHistoryTd";
 import { type PunchRow } from "@/common/types";
 import PunchStatusSelect from "../selectElement/PunchStatusSelect";
-import CheckBox from "../checkBox/CheckBox";
+import { CheckBox } from "@/components/CheckBox";
 import "@/css/punchRow.css";
 import SpecificationTd from "../tdElements/SpecificationTd";
 

@@ -7,13 +7,13 @@ type Prop = {
   indeterminate?: boolean;
 };
 
-function CheckBox({ onChange, punchId, checked, indeterminate }: Prop) {
-  const ref = useRef<HTMLInputElement>(
-    undefined as unknown as HTMLInputElement
-  );
+export function CheckBox({ onChange, punchId, checked, indeterminate }: Prop) {
+  const ref = useRef<HTMLInputElement>(null);
 
   useLayoutEffect(() => {
-    ref.current.indeterminate = indeterminate ?? false;
+    if (ref.current) {
+      ref.current.indeterminate = indeterminate ?? false;
+    }
   }, [indeterminate]);
 
   return (
@@ -24,8 +24,6 @@ function CheckBox({ onChange, punchId, checked, indeterminate }: Prop) {
       type="checkbox"
       onChange={onChange}
       checked={checked}
-    ></input>
+    />
   );
 }
-
-export default CheckBox;
