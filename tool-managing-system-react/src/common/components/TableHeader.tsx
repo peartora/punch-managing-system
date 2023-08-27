@@ -1,4 +1,4 @@
-import { CheckBox } from "@/components/CheckBox";
+import { CheckBox } from "@/common/components/CheckBox";
 import { usePunchRows } from "@/context/punch-rows-context";
 
 export function TableHeader() {

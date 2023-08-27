@@ -1,5 +1,5 @@
 import { type PunchRow } from "@/common/types";
-import { CheckBox } from "@/components/CheckBox";
+import { CheckBox } from "@/common/components/CheckBox";
 
 import style from "./PunchRow.module.css";
 

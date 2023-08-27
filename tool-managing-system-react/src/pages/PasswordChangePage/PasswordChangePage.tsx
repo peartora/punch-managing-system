@@ -1,4 +1,4 @@
-import { NavBar } from "@/components/NavBar";
+import { NavBar } from "@/common/components/NavBar";
 
 import { CheckIdAndPassword } from "./components/CheckIdAndPassword";
 

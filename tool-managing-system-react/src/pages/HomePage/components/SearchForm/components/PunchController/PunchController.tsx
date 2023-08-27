@@ -1,6 +1,6 @@
 import { usePunchRows } from "@/context/punch-rows-context";
 
-import { TableHeader } from "@/components/TableHeader";
+import { TableHeader } from "@/common/components/TableHeader";
 
 import { CleanHistoryButton } from "./components/CleanHistoryButton";
 import { InspectionHistoryForm } from "./components/InspectionHistoryForm";

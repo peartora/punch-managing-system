@@ -1,5 +1,5 @@
 import { useAuth } from "@/common/auth";
-import { NavBar } from "@/components/NavBar";
+import { NavBar } from "@/common/components/NavBar";
 
 import { SearchForm } from "./components/SearchForm";
 
