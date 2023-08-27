@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useBringProductList } from "@/common/hooks";
 import { useBringSupplierList } from "@/common/hooks";
 
-import { request } from "./../../common/Service";
+import { request } from "@/common/Service";
 
 const options = ["상부", "하부", "다이"];
 const productTypeoptions = ["BB", "B", "D"];
@@ -18,7 +18,7 @@ type Data = {
   productType: string;
 };
 
-function RegisterPunchForm() {
+export function RegisterPunchForm() {
   const [startNumber, setStartNumber] = useState<number>(0);
   const [endNumber, setEndNumber] = useState<number>(0);
   const [registerDate, setRegisterDate] = useState(
@@ -281,5 +281,3 @@ function RegisterPunchForm() {
     </form>
   );
 }
-
-export default RegisterPunchForm;
