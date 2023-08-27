@@ -4,7 +4,7 @@ import InspectionHistoryTd from "../tdElements/InspectionHistoryTd";
 import PunchStorageLocationTd from "../tdElements/PunchStorageLocationTd";
 import ProductTd from "../tdElements/ProductTd";
 import ProductTypeTd from "../tdElements/ProductTypeTd";
-import CleaningHistoryTd from "../tdElements/CleaningHistoryTd";
+import { CleaningHistoryTd } from "../tdElements/CleaningHistoryTd";
 import { type PunchRow } from "@/common/types";
 import PunchStatusSelect from "../selectElement/PunchStatusSelect";
 import CheckBox from "../checkBox/CheckBox";

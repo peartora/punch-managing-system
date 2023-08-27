@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { request } from "@/common/Service";
-import OpenFileButton from "../buttonElement/OpenFileButton";
 
 import dayjs from "dayjs";
 
@@ -11,7 +10,7 @@ type Props = {
   latestCleaningHistory: string;
 };
 
-function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
+export function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
   const [uniqueId] = useState(() => _uniqueId++);
   const [cleanHistory, setCleanHistory] = useState<object[]>([]);
 
@@ -63,13 +62,13 @@ function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
   return (
     <td>
       {latestCleaningHistory}
-      <OpenFileButton
+      <button
         data-bs-toggle="modal"
         data-bs-target={`#myModalForClean-${uniqueId}`}
         onClick={clickHandler}
       >
         이력 확인
-      </OpenFileButton>
+      </button>
 
       <div id={`myModalForClean-${uniqueId}`} className="modal" tabIndex={-1}>
         <div className="modal-dialog modal-lg">
@@ -117,5 +116,3 @@ function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
     </td>
   );
 }
-
-export default CleaningHistoryTd;
