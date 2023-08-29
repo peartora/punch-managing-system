@@ -338,4 +338,14 @@ public class PunchDao
     {
         return this.template.update("UPDATE `employee` SET `password` = :newPassword WHERE `username` = :username", params);
     }
+
+    public int createId(Map<String, Object> params)
+    {
+        return this.template.update("insert into `employee` (`username`, `password`) values (:id, :password)", params);
+    }
+
+    public int checkDuplicateId(Map<String, Object> params)
+    {
+        return this.template.queryForObject("select count(*) from `employee` where `username` = :id", params, Integer.class);
+    }
 }

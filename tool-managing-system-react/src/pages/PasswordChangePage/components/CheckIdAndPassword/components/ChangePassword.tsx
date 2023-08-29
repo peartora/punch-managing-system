@@ -49,40 +49,38 @@ export function ChangePassword({ result, username }: Data) {
     }
   };
 
-  if (result) {
-    return (
-      <form onSubmit={submitHandler}>
-        <div>
-          <label>
-            {username}의 변경할 비밀번호를 입력 하세요.
-            <input
-              className="form-control"
-              type="text"
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </label>
-        </div>
+  return result ? (
+    <form style={{ marginTop: "30px" }} onSubmit={submitHandler}>
+      <div>
+        <label>
+          {username}의 변경할 비밀번호를 입력 하세요.
+          <input
+            className="form-control"
+            type="text"
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+        </label>
+      </div>
 
-        <div>
-          <label>
-            비밀번호를 한번 더 입력 하세요.
-            <input
-              className="form-control"
-              type="text"
-              onChange={(e) => setNewPasswordForConfirmation(e.target.value)}
-            />
-          </label>
-        </div>
-        <button
-          className="btn btn-primary"
-          style={{ marginTop: "30px" }}
-          type="submit"
-        >
-          password 변경
-        </button>
-      </form>
-    );
-  }
-
-  return <div>xxx</div>;
+      <div>
+        <label>
+          비밀번호를 한번 더 입력 하세요.
+          <input
+            className="form-control"
+            type="text"
+            onChange={(e) => setNewPasswordForConfirmation(e.target.value)}
+          />
+        </label>
+      </div>
+      <button
+        className="btn btn-primary"
+        style={{ marginTop: "30px" }}
+        type="submit"
+      >
+        password 변경
+      </button>
+    </form>
+  ) : (
+    <div>id에 맞는 비밀번호를 입력 하면 비밀번호 변경 창으로 변경 됩니다.</div>
+  );
 }

@@ -12,6 +12,7 @@ import { PunchDeleteHistory } from "@/pages/PunchDeleteHistory";
 import { LoginPage } from "./pages/LoginPage";
 import { PasswordChangePage } from "./pages/PasswordChangePage";
 import { MyPage } from "./pages/MyPage";
+import { CreateId } from "./pages/CreateId";
 
 const routerAfterLogin = createHashRouter([
   {
@@ -62,8 +63,12 @@ const routerBeforeLogin = createHashRouter([
     element: <LoginPage />,
   },
   {
-    path: "/find-password",
+    path: "/password-change",
     element: <PasswordChangePage />,
+  },
+  {
+    path: "/create-id",
+    element: <CreateId />,
   },
 ]);
 

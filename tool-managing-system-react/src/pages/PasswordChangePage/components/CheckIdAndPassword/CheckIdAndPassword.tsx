@@ -66,7 +66,13 @@ export function CheckIdAndPassword() {
           </label>
         </div>
 
-        <button type="submit">userId, password 확인</button>
+        <button
+          type="submit"
+          className="btn btn-primary"
+          style={{ marginTop: "30px", marginBottom: "30px" }}
+        >
+          userId, password 확인
+        </button>
       </form>
 
       <ChangePassword result={resultForId} username={username} />

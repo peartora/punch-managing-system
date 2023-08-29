@@ -268,6 +268,41 @@ public class ApiController
         }
     }
 
+    @PostMapping("/create_id")
+    public String createId (@RequestBody Map<String, Object> params)
+    {
+        System.out.println("createId");
+        System.out.println(params);
+
+        int effectedRow = dao.createId(params);
+
+        if (effectedRow == 1)
+        {
+            return "OK";
+        }
+        else
+        {
+            return "NOK";
+        }
+    }
+
+    @PostMapping("/duplicate_username")
+    public String returnCheckResultForUsername(@RequestBody Map<String, Object> params)
+    {
+        System.out.println("returnCheckResultForUsername");
+        System.out.println(params);
+
+        int count = this.dao.checkDuplicateId(params);
+
+        if (count == 0)
+        {
+            return "OK";
+        }
+        else
+        {
+            return "NOK";
+        }
+    }
 
     private String saveSpecificationFile(MultipartFile specificationFile)
     {

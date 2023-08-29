@@ -15,11 +15,6 @@ export const MyPage = () => {
           로그아웃
         </button>
       </div>
-
-      <div>
-        <h3>비밀번호 변경</h3>
-        <form action="#">어쩌구</form>
-      </div>
     </div>
   );
 };
