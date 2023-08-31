@@ -100,7 +100,7 @@ export function CreateId() {
         style={{ marginTop: "30px" }}
         type="submit"
       >
-        회원가입
+        계정등록
       </button>
     </form>
   );

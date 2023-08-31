@@ -88,7 +88,7 @@ export const LoginFormPage = () => {
       <Link to="/password-change" style={{ marginRight: "20px" }}>
         비밀번호 변경
       </Link>
-      <Link to="/create-id">회원가입</Link>
+      <Link to="/create-id">계정등록</Link>
 
       {!isLogIned && isIdExists && (
         <h5>비밀번호가 다릅니다. 다시 확인 하세요</h5>
