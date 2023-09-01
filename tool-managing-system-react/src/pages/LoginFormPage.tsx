@@ -10,9 +10,6 @@ export const LoginFormPage = () => {
 
   const [username, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [isLogIned, setIsLogIned] = useState<boolean>(true);
-  const [isIdExists, setIsIdExists] = useState<boolean>(true);
-  const [isIdLocked, setIsIdLocked] = useState<boolean>(false);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
