@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { request } from "@/common/utils/ajax";
 import { useAuth } from "@/common/contexts/auth";
 
+import dayjs from "dayjs";
+
 export const LoginFormPage = () => {
   const { login } = useAuth();
 
@@ -28,7 +30,35 @@ export const LoginFormPage = () => {
       })
       .then((result) => {
         if (result === "OK") {
-          login(username);
+          const query = new URLSearchParams();
+          query.append("username", username);
+
+          request
+            .get(`/api/tool-managing-system/created-date?${query}`)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(
+                  `비밀번호 최근 변경 이력 조회 중 network error 발생 하였습니다.`
+                );
+              }
+              return response.text();
+            })
+            .then((result) => {
+              const today = dayjs();
+              const initialDate = dayjs(result);
+
+              const isWithinTwoMonths = initialDate.isAfter(
+                today.subtract(9, "month")
+              );
+
+              if (isWithinTwoMonths) {
+                login(username);
+              } else {
+                alert(
+                  `id 최초 가입 혹은 가장 최근 비밀번호 변경일로 부터 2달이 지났습니다. 비밀번호 변경을 먼저 하세요`
+                );
+              }
+            });
         } else {
           if (result === "NoId") {
             alert(`${username} 계정은 등록 되지 않은 계정 입니다.`);

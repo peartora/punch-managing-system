@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Component
@@ -362,5 +363,11 @@ public class PunchDao
     public int checkDuplicateId(Map<String, Object> params)
     {
         return this.template.queryForObject("select count(*) from `employee` where `username` = :id", params, Integer.class);
+    }
+
+    public String returnCreatedDate(Map<String, Object> params)
+    {
+        LocalDate createdDate = this.template.queryForObject("select `created_date` from `employee` where `username` = :username", params, LocalDate.class);
+        return createdDate.toString();
     }
 }

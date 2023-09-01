@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -348,6 +349,15 @@ public class ApiController
         {
             return "NOK";
         }
+    }
+
+    @GetMapping("/created-date")
+    public String returnCreatedDate(@RequestParam Map<String, Object> params)
+    {
+        System.out.println("returnCreatedDate");
+        System.out.println(params);
+
+        return dao.returnCreatedDate(params);
     }
 
     private String saveSpecificationFile(MultipartFile specificationFile)
