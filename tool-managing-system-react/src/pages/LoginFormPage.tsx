@@ -48,7 +48,7 @@ export const LoginFormPage = () => {
               const initialDate = dayjs(result);
 
               const isWithinTwoMonths = initialDate.isAfter(
-                today.subtract(9, "month")
+                today.subtract(8, "month")
               );
 
               if (isWithinTwoMonths) {
