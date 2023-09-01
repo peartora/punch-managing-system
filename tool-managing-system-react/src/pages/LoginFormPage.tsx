@@ -30,22 +30,17 @@ export const LoginFormPage = () => {
         if (result === "OK") {
           login(username);
         } else {
-          setIsLogIned(false);
-
           if (result === "NoId") {
             alert(`${username} 계정은 등록 되지 않은 계정 입니다.`);
-            setIsIdExists(false);
           } else {
             if (result === "NOK") {
               alert(
                 `${username} 계정의 비밀번호가 다릅니다.(5회 이상 틀리면 계정이 잠금으로 바뀝니다.)`
               );
-              setIsIdExists(true);
             } else {
               alert(
                 `${username} 계정의 비밀번호가 5회 틀렸습니다. 계정이 잠겼습니다. 관리자에게 문의 하세요`
               );
-              setIsIdLocked(true);
             }
           }
         }
