@@ -12,6 +12,7 @@ export const LoginFormPage = () => {
   const [password, setPassword] = useState<string>("");
   const [isLogIned, setIsLogIned] = useState<boolean>(true);
   const [isIdExists, setIsIdExists] = useState<boolean>(true);
+  const [isIdLocked, setIsIdLocked] = useState<boolean>(false);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -30,15 +31,25 @@ export const LoginFormPage = () => {
       })
       .then((result) => {
         if (result === "OK") {
-          console.log(`result is ok`);
           login(username);
         } else {
           setIsLogIned(false);
 
           if (result === "NoId") {
+            alert(`${username} 계정은 등록 되지 않은 계정 입니다.`);
             setIsIdExists(false);
-          } else if (result === "NOK") {
-            setIsIdExists(true);
+          } else {
+            if (result === "NOK") {
+              alert(
+                `${username} 계정의 비밀번호가 다릅니다.(5회 이상 틀리면 계정이 잠금으로 바뀝니다.)`
+              );
+              setIsIdExists(true);
+            } else {
+              alert(
+                `${username} 계정의 비밀번호가 5회 틀렸습니다. 계정이 잠겼습니다. 관리자에게 문의 하세요`
+              );
+              setIsIdLocked(true);
+            }
           }
         }
       })
@@ -90,12 +101,18 @@ export const LoginFormPage = () => {
       </Link>
       <Link to="/create-id">계정등록</Link>
 
-      {!isLogIned && isIdExists && (
+      {/* {!isLogIned && isIdExists && (
         <h5>비밀번호가 다릅니다. 다시 확인 하세요</h5>
       )}
       {!isIdExists && !isIdExists && (
         <h5>id를 찾을 수 없습니다. 다시 확인 하세요</h5>
       )}
+      {isIdLocked && (
+        <h5>
+          id가 비밀번호 오류 횟 수 초과로 잠금상태가 되었습니다. 관리자에게 문의
+          하세요
+        </h5>
+      )} */}
     </div>
   );
 };

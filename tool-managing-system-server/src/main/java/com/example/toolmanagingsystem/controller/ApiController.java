@@ -7,6 +7,7 @@ import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -245,8 +246,53 @@ public class ApiController
         System.out.println("checkUserId");
         System.out.println(params);
 
-        System.out.println(dao.checkUserIdAndPassword(params));
-        return dao.checkUserIdAndPassword(params);
+        boolean isLocked = this.dao.getLockStatus(params);
+
+        if (isLocked)
+        {
+            return "Locked";
+        }
+        else
+        {
+            String returnedPassword = "";
+
+            try
+            {
+                returnedPassword = this.dao.checkUserIdAndPassword(params);
+            }
+            catch (EmptyResultDataAccessException e)
+            {
+                return "NoId";
+            }
+
+            if (Objects.equals(params.get("password"), returnedPassword))
+            {
+                params.put("trialCount", 0);
+                this.dao.changeTrialCount(params);
+
+                return "OK";
+            }
+            else
+            {
+                int trialCount = this.dao.getTrialCount(params);
+                int trialCountPlusOne = trialCount + 1;
+                params.put("trialCount", trialCountPlusOne);
+
+                this.dao.changeTrialCount(params);
+
+                if (trialCountPlusOne >= 5)
+                {
+                    params.put("lockStatus", true);
+                    this.dao.lockId(params);
+
+                    return "Locked";
+                }
+                else
+                {
+                    return "NOK";
+                }
+            }
+        }
     }
 
     @PostMapping("/password_change")

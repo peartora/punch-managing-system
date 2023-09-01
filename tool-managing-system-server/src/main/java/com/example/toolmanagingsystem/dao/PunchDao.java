@@ -313,25 +313,40 @@ public class PunchDao
 
     public String checkUserIdAndPassword(Map<String, Object> params)
     {
-        String returnedPassword;
+        return this.template.queryForObject("select `password` from `employee` where `username` = :username", params, String.class);
 
-        try
-        {
-            returnedPassword = this.template.queryForObject("select `password` from `employee` where `username` = :username", params, String.class);
-        }
-        catch (EmptyResultDataAccessException e)
-        {
-            return "NoId";
-        }
+//        String returnedPassword;
+//
+//        try
+//        {
+//            returnedPassword = this.template.queryForObject("select `password` from `employee` where `username` = :username", params, String.class);
+//        }
+//        catch (EmptyResultDataAccessException e)
+//        {
+//            return "NoId";
+//        }
+//
 
-        if (Objects.equals(params.get("password"), returnedPassword))
-        {
-            return "OK";
-        }
-        else
-        {
-            return "NOK";
-        }
+    }
+
+    public int getTrialCount(Map<String, Object> params)
+    {
+        return this.template.queryForObject( "select `trial_count` from `employee` where `username` = :username", params, Integer.class);
+    }
+
+    public int changeTrialCount(Map<String, Object> params)
+    {
+        return this.template.update("UPDATE `employee` SET `trial_count` = :trialCount WHERE `username` = :username", params);
+    }
+
+    public int lockId(Map<String, Object> params)
+    {
+        return this.template.update("UPDATE `employee` SET `is_locked` = :lockStatus WHERE `username` = :username", params);
+    }
+
+    public Boolean getLockStatus(Map<String, Object> params)
+    {
+        return this.template.queryForObject( "select `is_locked` from `employee` where `username` = :username", params, Boolean.class);
     }
 
     public int changePassword(Map<String, Object> params)
