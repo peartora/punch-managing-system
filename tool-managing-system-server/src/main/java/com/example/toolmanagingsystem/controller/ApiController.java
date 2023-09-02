@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tool-managing-system")
@@ -247,7 +248,16 @@ public class ApiController
         System.out.println("checkUserId");
         System.out.println(params);
 
-        boolean isLocked = this.dao.getLockStatus(params);
+        boolean isLocked;
+
+        try
+        {
+            isLocked = this.dao.getLockStatus(params);
+        }
+        catch (EmptyResultDataAccessException e)
+        {
+            return "NoId";
+        }
 
         if (isLocked)
         {
@@ -367,6 +377,41 @@ public class ApiController
         System.out.println(params);
 
         return this.dao.returnAuthority(params);
+    }
+
+    @GetMapping("/idList")
+    public List<String> returnIdList()
+    {
+        System.out.println("returnIdList");
+
+        Map<String, Boolean> params = new HashMap<>();
+        params.put("lockStatus", true);
+
+        List<Map<String, Object>> idList = this.dao.returnIdList(params);
+
+        List<String> usernames = idList.stream()
+                .map(map -> (String) map.get("username"))
+                .collect(Collectors.toList());
+
+        return usernames;
+    }
+
+    @PostMapping("/resetId")
+    public String resetId(@RequestBody Map<String, Object> params)
+    {
+        System.out.println("resetId");
+        System.out.println(params);
+
+        int effectedRow = this.dao.resetId(params);
+
+        if (effectedRow == 1)
+        {
+            return "OK";
+        }
+        else
+        {
+            return "NOK";
+        }
     }
 
     private String saveSpecificationFile(MultipartFile specificationFile)

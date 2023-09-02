@@ -375,4 +375,14 @@ public class PunchDao
     {
         return this.template.queryForObject("select `role` from `employee` where `username` = :username", params, String.class);
     }
+
+    public List<Map<String, Object>> returnIdList(Map<String, Boolean> params)
+    {
+        return this.template.queryForList( "select `username` from `employee` where `is_locked` = :lockStatus", params);
+    }
+
+    public int resetId(Map<String, Object> params)
+    {
+        return this.template.update("UPDATE `employee` SET `is_locked` = :isLocked, `trial_count` = :trialCount WHERE `username` = :username", params);
+    }
 }
