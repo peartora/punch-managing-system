@@ -370,4 +370,9 @@ public class PunchDao
         LocalDate createdDate = this.template.queryForObject("select `created_date` from `employee` where `username` = :username", params, LocalDate.class);
         return createdDate.toString();
     }
+
+    public String returnAuthority(Map<String, Object> params)
+    {
+        return this.template.queryForObject("select `role` from `employee` where `username` = :username", params, String.class);
+    }
 }

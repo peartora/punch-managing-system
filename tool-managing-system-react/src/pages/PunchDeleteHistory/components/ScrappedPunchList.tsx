@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useAuth } from "@/common/contexts/auth";
 
 import { request } from "@/common/utils/ajax";
 
@@ -26,47 +26,69 @@ export function ScrappedPunchList({
   punchList: PunchListType[];
   setScrappedPunchList: any;
 }) {
-  const [key, setKey] = useState(() => Date.now());
+  const userObject = useAuth();
+  const username = userObject["user"];
 
   const clickHandler = function (punch: any) {
-    const data: Data = {
-      punchId: punch["punch-number"],
-      newStatus: punch.previous_status,
+    const body = {
+      username,
     };
 
     request
-      .post(`/api/tool-managing-system/recover`, data)
+      .post(`/api/tool-managing-system/authority`, body)
       .then((response) => {
-        if (!response.ok)
-          new Error(`새로운 펀치 상태 변경 중 error가 발생 하였습니다.`);
+        if (!response.ok) {
+          throw new Error(
+            `${username} 계정의 권한 확인 중 network error가 발생 하였습니다.`
+          );
+        }
         return response.text();
       })
       .then((result) => {
-        if (result === "1") {
-          const dataForDelete: DataForDelete = {
+        if (result === "supervisor" || result === "admin") {
+          const data: Data = {
             punchId: punch["punch-number"],
+            newStatus: punch.previous_status,
           };
+
           request
-            .post(`/api/tool-managing-system/delete`, dataForDelete)
+            .post(`/api/tool-managing-system/recover`, data)
             .then((response) => {
-              if (!response.ok) {
-                throw new Error(`Error happened`);
-              }
+              if (!response.ok)
+                new Error(`새로운 펀치 상태 변경 중 error가 발생 하였습니다.`);
               return response.text();
             })
             .then((result) => {
               if (result === "1") {
-                const filteredPunchList = punchList.filter(
-                  (p) => p["punch-number"] !== dataForDelete["punchId"]
-                );
-                setScrappedPunchList(filteredPunchList);
+                const dataForDelete: DataForDelete = {
+                  punchId: punch["punch-number"],
+                };
+                request
+                  .post(`/api/tool-managing-system/delete`, dataForDelete)
+                  .then((response) => {
+                    if (!response.ok) {
+                      throw new Error(`Error happened`);
+                    }
+                    return response.text();
+                  })
+                  .then((result) => {
+                    if (result === "1") {
+                      const filteredPunchList = punchList.filter(
+                        (p) => p["punch-number"] !== dataForDelete["punchId"]
+                      );
+                      setScrappedPunchList(filteredPunchList);
 
-                alert(`펀치가 복구 되었습니다.`);
+                      alert(`펀치가 복구 되었습니다.`);
+                    }
+                  });
               }
-            });
+            })
+            .catch((error) => console.error(error));
+        } else {
+          alert(`${username} 계정은 펀치 복구의 권한이 없습니다.`);
+          return;
         }
-      })
-      .catch((error) => console.error(error));
+      });
   };
 
   return (

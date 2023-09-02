@@ -360,6 +360,15 @@ public class ApiController
         return dao.returnCreatedDate(params);
     }
 
+    @PostMapping("/authority")
+    public String returnAuthority(@RequestBody Map<String, Object> params)
+    {
+        System.out.println("returnAuthority");
+        System.out.println(params);
+
+        return this.dao.returnAuthority(params);
+    }
+
     private String saveSpecificationFile(MultipartFile specificationFile)
     {
         String fileName = specificationFile.getOriginalFilename();

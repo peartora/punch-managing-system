@@ -11,8 +11,6 @@ export function PunchDeleteHistory() {
 
   let selectedProduct = "";
 
-  const result: any = [];
-
   const { productList } = useBringProductList();
 
   function changeHandler(event: React.ChangeEvent<HTMLSelectElement>) {
