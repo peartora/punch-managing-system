@@ -8,6 +8,7 @@ export function CreateId() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [role, setRole] = useState("");
 
   const navigate = useNavigate();
 
@@ -33,6 +34,7 @@ export function CreateId() {
               const body = {
                 id,
                 password,
+                role,
               };
 
               request
@@ -68,7 +70,7 @@ export function CreateId() {
 
   return (
     <form onSubmit={submitHandler}>
-      <div>
+      <div style={{ marginTop: "20px" }}>
         <label>
           생성할 ID 입력:
           <input
@@ -79,7 +81,7 @@ export function CreateId() {
         </label>
       </div>
 
-      <div>
+      <div style={{ marginTop: "20px" }}>
         <label>
           비밀번호 입력:
           <input
@@ -90,7 +92,7 @@ export function CreateId() {
         </label>
       </div>
 
-      <div>
+      <div style={{ marginTop: "20px" }}>
         <label>
           비밀번호 재입력:
           <input
@@ -98,6 +100,23 @@ export function CreateId() {
             className="form-control"
             onChange={(e) => setPasswordConfirmation(e.target.value)}
           />
+        </label>
+      </div>
+
+      <div style={{ marginTop: "20px" }}>
+        <label>
+          역할:
+          <select
+            className="form-select"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="" disabled>
+              아래 list에서 역할을 선택 하세요
+            </option>
+            <option value="operator">operator</option>
+            <option value="supervisor">supervisor</option>
+          </select>
         </label>
       </div>
 

@@ -357,7 +357,7 @@ public class PunchDao
 
     public int createId(Map<String, Object> params)
     {
-        return this.template.update("insert into `employee` (`username`, `password`) values (:id, :password)", params);
+        return this.template.update("insert into `employee` (`username`, `password`, `role`, `is_locked`, `trial_count`, `created_date`) values (:id, :password, :role, 0, 0, now())", params);
     }
 
     public int checkDuplicateId(Map<String, Object> params)
