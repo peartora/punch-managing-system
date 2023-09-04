@@ -4,9 +4,19 @@ import { useAuth } from "@/common/contexts/auth";
 import { NavBar } from "@/common/components/NavBar";
 import { request } from "@/common/utils/ajax";
 
+import { DisplayId } from "@/pages/DisplayId";
+import { DisplayAdminId } from "./DisplayAdminId";
+
+type Id = {
+  username: string;
+  role: string;
+  is_locked: boolean;
+  is_approved: boolean;
+};
+
 export const MyPage = () => {
   const [isAdmin, setIsAdmin] = useState(false);
-  const [lockedIdList, setLockedIdList] = useState([]);
+  const [idList, setIdList] = useState<Id[]>([]);
 
   const { user, logout } = useAuth();
 
@@ -40,7 +50,10 @@ export const MyPage = () => {
               return response.json();
             })
             .then((result) => {
-              setLockedIdList(result);
+              console.log("result");
+              console.log(result);
+
+              setIdList(result);
             })
             .catch((error) => console.error(error));
         } else {
@@ -49,41 +62,6 @@ export const MyPage = () => {
       })
       .catch((error) => console.error(error));
   }, [user]);
-
-  const changeHandler = function (e: React.ChangeEvent<HTMLSelectElement>) {
-    const resetId = e.target.value;
-
-    const body = {
-      username: resetId,
-      isLocked: false,
-      trialCount: 0,
-    };
-
-    request
-      .post(`/api/tool-managing-system/resetId`, body)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(
-            `${resetId} 계정의 잠금상태 초기화 중 error 발생 하였습니다.`
-          );
-        }
-        return response.text();
-      })
-      .then((result) => {
-        if (result === "OK") {
-          const changedLockedIdList = lockedIdList.filter(
-            (id) => id !== resetId
-          );
-          setLockedIdList(changedLockedIdList);
-          alert(`${resetId} 계정의 잠금상태가 초기화 되었습니다.`);
-        } else {
-          alert(
-            `${resetId} 계정의 잠금상태 초기화 중 error가 발생 하였습니다.`
-          );
-        }
-      })
-      .catch((error) => console.error(error));
-  };
 
   return (
     <div>
@@ -96,26 +74,33 @@ export const MyPage = () => {
       </div>
 
       {isAdmin && (
-        <div>
-          <h3>admin 권한 계정으로 login 되었습니다.</h3>
-          <select
-            className="form-select"
-            onChange={changeHandler}
-            value=""
-            required
-          >
-            <option value="" disabled>
-              비밀번호를 초기화 할 계정을 선택 하세요.
-            </option>
-            {lockedIdList.map((id) => {
-              return (
-                <option key={id} value={id}>
-                  {id}
-                </option>
-              );
-            })}
-          </select>
-        </div>
+        <table className="table table-striped table-bordered table-hover custom-table-width">
+          <thead>
+            <tr>
+              <th>계정</th>
+              <th>역할</th>
+              <th>활성화 상태</th>
+              <th>활성화 처리</th>
+              <th>승인 상태</th>
+              <th>승인 처리</th>
+              <th>계정 삭제</th>
+            </tr>
+          </thead>
+          <tbody>
+            {idList.map((id: Id) =>
+              id.role === "admin" ? (
+                <DisplayAdminId key={id.username} id={id} />
+              ) : (
+                <DisplayId
+                  key={id.username}
+                  id={id}
+                  idList={idList}
+                  setIdList={setIdList}
+                />
+              )
+            )}
+          </tbody>
+        </table>
       )}
     </div>
   );

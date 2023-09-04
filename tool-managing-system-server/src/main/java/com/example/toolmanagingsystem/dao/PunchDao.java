@@ -378,11 +378,27 @@ public class PunchDao
 
     public List<Map<String, Object>> returnIdList(Map<String, Boolean> params)
     {
-        return this.template.queryForList( "select `username` from `employee` where `is_locked` = :lockStatus", params);
+        return this.template.queryForList( "select `username`, `role`, `is_locked`, `is_approved` from `employee`", params);
     }
 
     public int resetId(Map<String, Object> params)
     {
         return this.template.update("UPDATE `employee` SET `is_locked` = :isLocked, `trial_count` = :trialCount WHERE `username` = :username", params);
     }
+
+    public int approveId(Map<String, Object> params)
+    {
+        return this.template.update("UPDATE `employee` SET `is_approved` = :isApprove WHERE `username` = :username", params);
+    }
+
+    public int resetPassword(Map<String, Object> params)
+    {
+        return this.template.update("UPDATE `employee` SET `is_locked` = :isLocked, `trial_count` = :trialCount, `password` = :password WHERE `username` = :username", params);
+    }
+
+    public int deleteUser(Map<String, Object> params)
+    {
+        return this.template.update("DELETE FROM `employee` WHERE `username` = :username", params);
+    }
+
 }

@@ -380,20 +380,14 @@ public class ApiController
     }
 
     @GetMapping("/idList")
-    public List<String> returnIdList()
+    public List<Map<String, Object>> returnIdList()
     {
         System.out.println("returnIdList");
 
         Map<String, Boolean> params = new HashMap<>();
         params.put("lockStatus", true);
 
-        List<Map<String, Object>> idList = this.dao.returnIdList(params);
-
-        List<String> usernames = idList.stream()
-                .map(map -> (String) map.get("username"))
-                .collect(Collectors.toList());
-
-        return usernames;
+        return this.dao.returnIdList(params);
     }
 
     @PostMapping("/resetId")
@@ -403,6 +397,60 @@ public class ApiController
         System.out.println(params);
 
         int effectedRow = this.dao.resetId(params);
+
+        if (effectedRow == 1)
+        {
+            return "OK";
+        }
+        else
+        {
+            return "NOK";
+        }
+    }
+
+    @PostMapping("/approveId")
+    public String approveId(@RequestBody Map<String, Object> params)
+    {
+        System.out.println("approveId");
+        System.out.println(params);
+
+        int effectedRow = this.dao.approveId(params);
+
+        if (effectedRow == 1)
+        {
+            return "OK";
+        }
+        else
+        {
+            return "NOK";
+        }
+    }
+
+    @PostMapping("/resetPassword")
+    public String resetPassword(@RequestBody Map<String, Object> params)
+    {
+        System.out.println("resetPassword");
+        System.out.println(params);
+
+        int effectedRow = this.dao.resetPassword(params);
+
+        if (effectedRow == 1)
+        {
+            return "OK";
+        }
+        else
+        {
+            return "NOK";
+        }
+    }
+
+    @PostMapping("/delete_user")
+    public String deleteUser(@RequestBody Map<String, Object> params)
+    {
+        System.out.println("deleteUser");
+        System.out.println(params);
+
+        int effectedRow = this.dao.deleteUser(params);
 
         if (effectedRow == 1)
         {
