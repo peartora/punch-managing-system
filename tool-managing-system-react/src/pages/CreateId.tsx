@@ -110,6 +110,7 @@ export function CreateId() {
             className="form-select"
             value={role}
             onChange={(e) => setRole(e.target.value)}
+            required
           >
             <option value="" disabled>
               아래 list에서 역할을 선택 하세요
