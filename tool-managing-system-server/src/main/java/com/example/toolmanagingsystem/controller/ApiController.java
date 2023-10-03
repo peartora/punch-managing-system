@@ -1,6 +1,7 @@
 package com.example.toolmanagingsystem.controller;
 
 import com.example.toolmanagingsystem.dao.PunchDao;
+import com.example.toolmanagingsystem.dto.Punch;
 import com.example.toolmanagingsystem.dto.PunchRegister;
 import com.example.toolmanagingsystem.dto.PunchScrapDao;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
@@ -47,8 +48,20 @@ public class ApiController
     {
         System.out.println("params");
         System.out.println(params);
+        System.out.println(this.dao.getUsingPunchList(params));
 
-        return this.dao.getUsingPunchList(params);
+        List<HashMap<String, Object>> resultSet = this.dao.getUsingPunchList(params);
+
+        Collections.sort(resultSet, Comparator.comparing(result -> {
+            String[] parts = ((Map<String, Object>) result).get("punchId").toString().split("-");
+            return parts[4];
+        }).thenComparing(result -> {
+            String[] parts = ((Map<String, Object>) result).get("punchId").toString().split("-");
+            LocalDate registerDate = LocalDate.of(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Integer.parseInt(parts[3]));
+            return registerDate;
+        }));
+
+        return resultSet;
     }
 
     @GetMapping("/duplicate")
