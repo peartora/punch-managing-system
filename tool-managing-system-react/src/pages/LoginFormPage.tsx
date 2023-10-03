@@ -122,19 +122,6 @@ export const LoginFormPage = () => {
         비밀번호 변경
       </Link>
       <Link to="/create-id">계정등록</Link>
-
-      {/* {!isLogIned && isIdExists && (
-        <h5>비밀번호가 다릅니다. 다시 확인 하세요</h5>
-      )}
-      {!isIdExists && !isIdExists && (
-        <h5>id를 찾을 수 없습니다. 다시 확인 하세요</h5>
-      )}
-      {isIdLocked && (
-        <h5>
-          id가 비밀번호 오류 횟 수 초과로 잠금상태가 되었습니다. 관리자에게 문의
-          하세요
-        </h5>
-      )} */}
     </div>
   );
 };
