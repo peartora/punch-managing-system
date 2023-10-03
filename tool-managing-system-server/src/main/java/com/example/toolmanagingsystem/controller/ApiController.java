@@ -261,59 +261,77 @@ public class ApiController
         System.out.println("checkUserId");
         System.out.println(params);
 
-        boolean isLocked;
+        boolean isApproved;
 
         try
         {
-            isLocked = this.dao.getLockStatus(params);
+            isApproved = this.dao.getApproveStatus(params);
         }
         catch (EmptyResultDataAccessException e)
         {
             return "NoId";
         }
 
-        if (isLocked)
+        if (!isApproved)
         {
-            return "Locked";
+            return ("NotYetApproved");
         }
         else
         {
-            String returnedPassword = "";
+            boolean isLocked;
 
             try
             {
-                returnedPassword = this.dao.checkUserIdAndPassword(params);
+                isLocked = this.dao.getLockStatus(params);
             }
             catch (EmptyResultDataAccessException e)
             {
                 return "NoId";
             }
 
-            if (Objects.equals(params.get("password"), returnedPassword))
+            if (isLocked)
             {
-                params.put("trialCount", 0);
-                this.dao.changeTrialCount(params);
-
-                return "OK";
+                return "Locked";
             }
             else
             {
-                int trialCount = this.dao.getTrialCount(params);
-                int trialCountPlusOne = trialCount + 1;
-                params.put("trialCount", trialCountPlusOne);
+                String returnedPassword = "";
 
-                this.dao.changeTrialCount(params);
-
-                if (trialCountPlusOne >= 5)
+                try
                 {
-                    params.put("lockStatus", true);
-                    this.dao.lockId(params);
+                    returnedPassword = this.dao.checkUserIdAndPassword(params);
+                }
+                catch (EmptyResultDataAccessException e)
+                {
+                    return "NoId";
+                }
 
-                    return "Locked";
+                if (Objects.equals(params.get("password"), returnedPassword))
+                {
+                    params.put("trialCount", 0);
+                    this.dao.changeTrialCount(params);
+
+                    return "OK";
                 }
                 else
                 {
-                    return "NOK";
+                    int trialCount = this.dao.getTrialCount(params);
+                    int trialCountPlusOne = trialCount + 1;
+                    params.put("trialCount", trialCountPlusOne);
+
+                    this.dao.changeTrialCount(params);
+
+                    if (trialCountPlusOne >= 5)
+                    {
+                        params.put("lockStatus", true);
+                        this.dao.lockId(params);
+
+                        return "Locked";
+                    }
+                    else
+                    {
+                        return "NOK";
+                    }
                 }
             }
         }

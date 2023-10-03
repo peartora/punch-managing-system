@@ -62,6 +62,8 @@ export const LoginFormPage = () => {
         } else {
           if (result === "NoId") {
             alert(`${username} 계정은 등록 되지 않은 계정 입니다.`);
+          } else if (result === "NotYetApproved") {
+            alert(`${username} 계정은 승인 대기중 입니다.`);
           } else {
             if (result === "NOK") {
               alert(

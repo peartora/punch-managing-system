@@ -350,6 +350,11 @@ public class PunchDao
         return this.template.queryForObject( "select `is_locked` from `employee` where `username` = :username", params, Boolean.class);
     }
 
+    public Boolean getApproveStatus(Map<String, Object> params)
+    {
+        return this.template.queryForObject( "select `is_approved` from `employee` where `username` = :username", params, Boolean.class);
+    }
+
     public int changePassword(Map<String, Object> params)
     {
         return this.template.update("UPDATE `employee` SET `password` = :newPassword WHERE `username` = :username", params);
