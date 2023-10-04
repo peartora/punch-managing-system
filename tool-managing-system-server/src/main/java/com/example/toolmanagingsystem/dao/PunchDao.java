@@ -63,7 +63,7 @@ public class PunchDao
         String sql =
             "SELECT " +
                 "p.*, " +
-                "c.`when-cleaned` AS `latestCleanDate`, " +
+                "MAX(c.`when-cleaned`) AS `latestCleanDate`, " +
                 "i.`when-inspected` AS `latestInspectionDate`," +
                 "i1.`file-path` AS `inspectionFilePath`" +
 
