@@ -79,7 +79,11 @@ export function CheckIdAndPassword() {
         </button>
       </form>
 
-      <ChangePassword result={resultForId} username={username} />
+      <ChangePassword
+        result={resultForId}
+        username={username}
+        currentPassword={currentPassword}
+      />
     </div>
   );
 }
