@@ -85,7 +85,7 @@ const OverViewList = () => {
     >
       <thead>
         <tr>
-          <th>제품</th>
+          <th>제품(폐기 상태의 펀치는 집계 되지 않습니다.)</th>
           <th>펀치 등록날짜</th>
           <th>상부 펀치 등록 개수</th>
           <th>하부 펀치 등록 개수</th>
