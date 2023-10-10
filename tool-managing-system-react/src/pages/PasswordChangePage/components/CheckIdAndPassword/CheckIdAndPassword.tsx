@@ -31,6 +31,10 @@ export function CheckIdAndPassword() {
       .then((result) => {
         if (result === "NoId") {
           alert(`${username} id가 존재 하지 않습니다.`);
+        } else if (result === "NotYetApproved") {
+          alert(
+            `${username} id는 승인대기 상태 이며, 승인 후 비밀번호 변경 가능 합니다.`
+          );
         } else if (result === "OK") {
           alert(`${username} id의 비밀번호 변경 화면으로 이동 합니다.`);
           setResultForId("OK");

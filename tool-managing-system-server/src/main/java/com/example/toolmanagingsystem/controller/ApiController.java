@@ -33,7 +33,7 @@ public class ApiController
     @PostMapping("/register")
     public int[] registerPunch(@RequestBody List<PunchRegister> punchIdArrays)
     {
-        System.out.println("registerPunch");
+        System.out.println("registerPunch!!!");
         System.out.println(punchIdArrays);
 
         for (PunchRegister data : punchIdArrays) {
