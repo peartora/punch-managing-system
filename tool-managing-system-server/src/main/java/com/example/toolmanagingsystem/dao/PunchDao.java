@@ -94,7 +94,11 @@ public class PunchDao
                     startDate = value;
                     continue;
                 }
-                continue;
+                else
+                {
+                    startDate = "2001-01-01";
+                    continue;
+                }
             }
             else if(Objects.equals(key, "endDate"))
             {
@@ -103,8 +107,11 @@ public class PunchDao
                     endDate = value;
                     continue;
                 }
-                continue;
-            }
+                else
+                {
+                    startDate = "2099-12-31";
+                    continue;
+                }            }
 
             System.out.println("key:" + key);
             System.out.println("value:" + value);
