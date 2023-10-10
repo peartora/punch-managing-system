@@ -357,7 +357,7 @@ public class PunchDao
 
     public int changePassword(Map<String, Object> params)
     {
-        return this.template.update("UPDATE `employee` SET `password` = :newPassword WHERE `username` = :username", params);
+        return this.template.update("UPDATE `employee` SET `password` = :newPassword, `created_date` = now() WHERE `username` = :username", params);
     }
 
     public int createId(Map<String, Object> params)

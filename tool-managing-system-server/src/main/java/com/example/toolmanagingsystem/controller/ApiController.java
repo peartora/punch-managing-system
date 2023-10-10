@@ -343,7 +343,6 @@ public class ApiController
         System.out.println("changePassword");
         System.out.println(params);
 
-        System.out.println(dao.checkUserIdAndPassword(params));
         int effectedRow = dao.changePassword(params);
 
         if (effectedRow == 1)

@@ -48,14 +48,14 @@ export const LoginFormPage = () => {
               const initialDate = dayjs(result);
 
               const isWithinTwoMonths = initialDate.isAfter(
-                today.subtract(8, "month")
+                today.subtract(6, "month")
               );
 
               if (isWithinTwoMonths) {
                 login(username);
               } else {
                 alert(
-                  `id 최초 가입 혹은 가장 최근 비밀번호 변경일로 부터 2달이 지났습니다. 비밀번호 변경을 먼저 하세요`
+                  `id 최초 가입 혹은 가장 최근 비밀번호 변경일로 부터 6개월이 지났습니다. 비밀번호 변경을 먼저 하세요`
                 );
               }
             });
