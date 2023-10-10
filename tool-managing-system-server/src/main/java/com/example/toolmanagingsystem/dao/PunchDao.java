@@ -398,7 +398,7 @@ public class PunchDao
 
     public int resetPassword(Map<String, Object> params)
     {
-        return this.template.update("UPDATE `employee` SET `is_locked` = :isLocked, `trial_count` = :trialCount, `password` = :password WHERE `username` = :username", params);
+        return this.template.update("UPDATE `employee` SET `is_locked` = :isLocked, `trial_count` = :trialCount, `password` = :password, `created_date` = now() WHERE `username` = :username", params);
     }
 
     public int deleteUser(Map<String, Object> params)
