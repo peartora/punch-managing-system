@@ -64,7 +64,7 @@ export function CheckIdAndPassword() {
             현재 비밀번호:
             <input
               className="form-control"
-              type="text"
+              type="password"
               onChange={(e) => setCurrentPassword(e.target.value)}
             />
           </label>

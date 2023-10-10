@@ -126,7 +126,7 @@ export function DisplayId({ id, idList, setIdList }: IdProps) {
           <form onSubmit={submitHandler}>
             <label>
               초기화 시킬 비밀번호를 입력 하세요:
-              <input type="text" onChange={changeHandler} />
+              <input type="password" onChange={changeHandler} />
             </label>
             <button type="submit">초기화!</button>
           </form>

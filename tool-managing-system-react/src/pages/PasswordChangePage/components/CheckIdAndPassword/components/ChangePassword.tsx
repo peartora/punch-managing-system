@@ -71,7 +71,7 @@ export function ChangePassword({ result, username, currentPassword }: Data) {
           {username}의 변경할 비밀번호를 입력 하세요.
           <input
             className="form-control"
-            type="text"
+            type="password"
             onChange={(e) => setNewPassword(e.target.value)}
           />
         </label>
@@ -82,7 +82,7 @@ export function ChangePassword({ result, username, currentPassword }: Data) {
           비밀번호를 한번 더 입력 하세요.
           <input
             className="form-control"
-            type="text"
+            type="password"
             onChange={(e) => setNewPasswordForConfirmation(e.target.value)}
           />
         </label>

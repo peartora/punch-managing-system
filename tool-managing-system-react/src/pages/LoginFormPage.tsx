@@ -106,7 +106,7 @@ export const LoginFormPage = () => {
             style={{ width: "300px" }}
             className="form-control"
             name="password"
-            type="text"
+            type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             required

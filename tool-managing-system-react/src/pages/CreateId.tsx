@@ -86,7 +86,7 @@ export function CreateId() {
           비밀번호 입력:
           <input
             className="form-control"
-            type="string"
+            type="password"
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
@@ -96,7 +96,7 @@ export function CreateId() {
         <label>
           비밀번호 재입력:
           <input
-            type="string"
+            type="password"
             className="form-control"
             onChange={(e) => setPasswordConfirmation(e.target.value)}
           />
