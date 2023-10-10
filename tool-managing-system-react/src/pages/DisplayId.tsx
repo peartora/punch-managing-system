@@ -31,34 +31,38 @@ export function DisplayId({ id, idList, setIdList }: IdProps) {
   const submitHandler = function (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const resetId = id.username;
+    if (newPassword.length >= 4) {
+      const resetId = id.username;
 
-    const body = {
-      username: resetId,
-      password: newPassword,
-      isLocked: false,
-      trialCount: 0,
-    };
+      const body = {
+        username: resetId,
+        password: newPassword,
+        isLocked: false,
+        trialCount: 0,
+      };
 
-    request
-      .post(`/api/tool-managing-system/resetPassword`, body)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(
-            `${resetId} 계정의 잠금상태 초기화 중 error 발생 하였습니다.`
-          );
-        }
-        return response.text();
-      })
-      .then((result) => {
-        if (result === "OK") {
-          setIsLocked(false);
-          alert(`${resetId} 계정의 초기화가 완료 되었습니다.`);
-        } else {
-          alert(`${resetId} 계정의 초기화 중 error가 발생 하였습니다.`);
-        }
-      })
-      .catch((error) => console.error(error));
+      request
+        .post(`/api/tool-managing-system/resetPassword`, body)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(
+              `${resetId} 계정의 잠금상태 초기화 중 error 발생 하였습니다.`
+            );
+          }
+          return response.text();
+        })
+        .then((result) => {
+          if (result === "OK") {
+            setIsLocked(false);
+            alert(`${resetId} 계정의 초기화가 완료 되었습니다.`);
+          } else {
+            alert(`${resetId} 계정의 초기화 중 error가 발생 하였습니다.`);
+          }
+        })
+        .catch((error) => console.error(error));
+    } else {
+      alert(`password의 길이는 최소 4자리 이상 입니다.`);
+    }
   };
 
   const clickHandler = function (e: React.MouseEvent<HTMLButtonElement>) {
