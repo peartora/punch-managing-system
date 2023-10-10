@@ -330,7 +330,7 @@ public class ApiController
                     }
                     else
                     {
-                        return "NOK";
+                        return "NOK," + trialCountPlusOne;
                     }
                 }
             }

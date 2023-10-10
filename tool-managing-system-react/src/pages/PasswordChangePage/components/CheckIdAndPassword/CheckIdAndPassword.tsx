@@ -38,7 +38,7 @@ export function CheckIdAndPassword() {
         } else if (result === "OK") {
           alert(`${username} id의 비밀번호 변경 화면으로 이동 합니다.`);
           setResultForId("OK");
-        } else if (result === "NOK") {
+        } else if (result.startsWith("NOK")) {
           alert(`입력 하신 비밀번호가 일치 하지 않습니다.`);
         }
       })

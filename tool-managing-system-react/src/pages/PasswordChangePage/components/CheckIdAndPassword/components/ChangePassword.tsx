@@ -23,30 +23,36 @@ export function ChangePassword({ result, username, currentPassword }: Data) {
     if (newPassword && newPasswordForConfirmation) {
       if (newPassword === newPasswordForConfirmation) {
         if (newPassword !== currentPassword) {
-          const body = {
-            username,
-            newPassword,
-          };
+          if (newPassword.length >= 4) {
+            const body = {
+              username,
+              newPassword,
+            };
 
-          request
-            .post(`/api/tool-managing-system/password_change`, body)
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error(`비밀번호 변경 중 통신 error 발생 하였습니다.`);
-              }
-              return response.text();
-            })
-            .then((result) => {
-              if (result === "OK") {
-                alert(`${username}의 비밀번호가 변경 되었습니다.`);
-                navigate(`/sign-in`);
-              } else if (result === "NOK") {
-                alert(
-                  `${username}의 비밀번호 변경 중 error가 발생 하였습니다.`
-                );
-              }
-            })
-            .catch((error) => console.error(error));
+            request
+              .post(`/api/tool-managing-system/password_change`, body)
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error(
+                    `비밀번호 변경 중 통신 error 발생 하였습니다.`
+                  );
+                }
+                return response.text();
+              })
+              .then((result) => {
+                if (result === "OK") {
+                  alert(`${username}의 비밀번호가 변경 되었습니다.`);
+                  navigate(`/sign-in`);
+                } else if (result.startsWith("NOK")) {
+                  alert(
+                    `${username}의 비밀번호 변경 중 error가 발생 하였습니다.`
+                  );
+                }
+              })
+              .catch((error) => console.error(error));
+          } else {
+            alert(`password의 길이는 최소 4자리 이상 입니다.`);
+          }
         } else {
           alert(
             `입력하신 신규 비밀번호가 과거 비밀번호와 동일 합니다. 신규 비밀번호를 변경 하세요`

@@ -65,13 +65,16 @@ export const LoginFormPage = () => {
           } else if (result === "NotYetApproved") {
             alert(`${username} 계정은 승인 대기중 입니다.`);
           } else {
-            if (result === "NOK") {
+            if (result.startsWith("NOK")) {
+              const resultArray = result.split(",");
+              const trialCount = resultArray[1];
+
               alert(
-                `${username} 계정의 비밀번호가 다릅니다.(5회 이상 틀리면 계정이 잠금으로 바뀝니다.)`
+                `${username} 계정의 비밀번호가 ${trialCount}회 틀렸습니다.(5회 이상 틀리면 계정이 잠금으로 바뀝니다.)`
               );
             } else {
               alert(
-                `${username} 계정의 비밀번호가 5회 틀렸습니다. 계정이 잠겼습니다. 관리자에게 문의 하세요`
+                `${username} 계정의 비밀번호가 5회 틀렸습니다. 계정이 잠겼습니다.(관리자에게 문의 하세요)`
               );
             }
           }
