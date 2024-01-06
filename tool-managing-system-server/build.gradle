@@ -21,12 +21,12 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
 	compileOnly 'org.projectlombok:lombok'
+
 	runtimeOnly 'com.mysql:mysql-connector-j:8.0.33'
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
+
 	annotationProcessor 'org.projectlombok:lombok'
 }
 
