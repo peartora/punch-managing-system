@@ -55,6 +55,10 @@ export function DisplayId({ id, idList, setIdList }: IdProps) {
           if (result === "OK") {
             setIsLocked(false);
             alert(`${resetId} 계정의 초기화가 완료 되었습니다.`);
+          } else if (result === "NOK_PasswordSame") {
+            alert(
+              `${resetId} 계정의 입력 된 비밀번호가 과거 비밀번호와 동일 합니다.`
+            );
           } else {
             alert(`${resetId} 계정의 초기화 중 error가 발생 하였습니다.`);
           }

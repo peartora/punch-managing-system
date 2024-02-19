@@ -322,19 +322,6 @@ public class PunchDao
     public String checkUserIdAndPassword(Map<String, Object> params)
     {
         return this.template.queryForObject("select `password` from `employee` where `username` = :username", params, String.class);
-
-//        String returnedPassword;
-//
-//        try
-//        {
-//            returnedPassword = this.template.queryForObject("select `password` from `employee` where `username` = :username", params, String.class);
-//        }
-//        catch (EmptyResultDataAccessException e)
-//        {
-//            return "NoId";
-//        }
-//
-
     }
 
     public int getTrialCount(Map<String, Object> params)

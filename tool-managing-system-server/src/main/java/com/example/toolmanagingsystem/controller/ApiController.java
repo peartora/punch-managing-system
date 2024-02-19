@@ -462,6 +462,16 @@ public class ApiController
         System.out.println("resetPassword");
         System.out.println(params);
 
+        String currentPassword = this.dao.checkUserIdAndPassword(params);
+
+        System.out.println("currentPassword");
+        System.out.println(currentPassword);
+
+        if (currentPassword.equals(params.get("password"))) {
+            System.out.println("NOK_PasswordSame");
+            return "NOK_PasswordSame";
+        }
+
         int effectedRow = this.dao.resetPassword(params);
 
         if (effectedRow == 1)
