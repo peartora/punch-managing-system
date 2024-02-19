@@ -31,7 +31,7 @@ export function DisplayId({ id, idList, setIdList }: IdProps) {
   const submitHandler = function (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (newPassword.length >= 4) {
+    if (newPassword.length >= 6) {
       const resetId = id.username;
 
       const body = {
@@ -61,7 +61,7 @@ export function DisplayId({ id, idList, setIdList }: IdProps) {
         })
         .catch((error) => console.error(error));
     } else {
-      alert(`password의 길이는 최소 4자리 이상 입니다.`);
+      alert(`password의 길이는 최소 6자리 이상 입니다.`);
     }
   };
 

@@ -16,7 +16,7 @@ export function CreateId() {
     e.preventDefault();
 
     if (password === passwordConfirmation) {
-      if (password.length >= 4) {
+      if (password.length >= 6) {
         const body = {
           id,
         };
@@ -61,7 +61,7 @@ export function CreateId() {
             }
           });
       } else {
-        alert(`password의 길이는 최소 4자리 이상 입니다.`);
+        alert(`password의 길이는 최소 6자리 이상 입니다.`);
       }
     } else {
       alert(`입력한 2개의 비밀번호가 일치 하지 않습니다.`);

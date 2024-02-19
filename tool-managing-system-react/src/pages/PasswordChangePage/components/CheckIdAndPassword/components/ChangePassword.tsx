@@ -23,7 +23,7 @@ export function ChangePassword({ result, username, currentPassword }: Data) {
     if (newPassword && newPasswordForConfirmation) {
       if (newPassword === newPasswordForConfirmation) {
         if (newPassword !== currentPassword) {
-          if (newPassword.length >= 4) {
+          if (newPassword.length >= 6) {
             const body = {
               username,
               newPassword,
@@ -51,7 +51,7 @@ export function ChangePassword({ result, username, currentPassword }: Data) {
               })
               .catch((error) => console.error(error));
           } else {
-            alert(`password의 길이는 최소 4자리 이상 입니다.`);
+            alert(`password의 길이는 최소 6자리 이상 입니다.`);
           }
         } else {
           alert(
