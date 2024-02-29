@@ -3,7 +3,9 @@ package com.example.toolmanagingsystem.controller;
 import com.example.toolmanagingsystem.dao.PunchDao;
 import com.example.toolmanagingsystem.dto.PunchRegister;
 import com.example.toolmanagingsystem.dto.PunchScrapDao;
+import com.example.toolmanagingsystem.entity.Product;
 import com.example.toolmanagingsystem.entity.Punch;
+import com.example.toolmanagingsystem.repository.ProductRepository;
 import com.example.toolmanagingsystem.repository.PunchRepository;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,6 +33,8 @@ public class ApiController
 {
     @Autowired
     PunchRepository punchRepository;
+    @Autowired
+    ProductRepository productRepository;
 
 
     @Value("${TOOL_MANAGING_SYSTEM_STATIC_PATH}")
@@ -37,9 +42,9 @@ public class ApiController
 
     private final PunchDao dao;
     @PostMapping("/register")
-    public int[] registerPunch(@RequestBody List<Punch> punchIdArrays)
+    public int registerPunch(@RequestBody List<Punch> punchIdArrays)
     {
-        System.out.println("registerPunch!!!");
+        System.out.println("registerPunch");
         System.out.println(punchIdArrays);
 
         Iterable<Punch> punchIterable = this.punchRepository.saveAll(punchIdArrays);
@@ -52,14 +57,6 @@ public class ApiController
         }
 
         return count;
-
-
-
-//        for (PunchRegister data : punchIdArrays) {
-//            System.out.println(data.getDate());
-//        }
-//
-//        return this.dao.registerPunch(punchIdArrays);
     }
 
     @GetMapping("/display")
@@ -211,18 +208,20 @@ public class ApiController
     }
 
     @PostMapping("/addProduct")
-    public int addProduct(
-            @RequestParam("product") String productName,
-            @RequestParam("specificationFile") MultipartFile specificationFile
-    )
+    public int addProduct(@RequestParam("product") String productName, @RequestParam("specificationFile") MultipartFile specificationFile)
     {
-        String strFilePath = saveSpecificationFile(specificationFile);
+        String strFilePath = this.saveSpecificationFile(specificationFile);
+        Product product = new Product(productName, LocalDateTime.now(), strFilePath);
 
-        HashMap<String, Object> mapParams = new HashMap<>();
-        mapParams.put("product", productName);
-        mapParams.put("specificationFilePath", strFilePath);
-
-        return this.dao.addProduct(mapParams);
+        try
+        {
+            this.productRepository.save(product);
+            return 1;
+        }
+        catch (Exception e)
+        {
+            return 0;
+        }
     }
     @PostMapping("updateInspectionResult")
     public void updateInspectionResult(MultipartHttpServletRequest params)
