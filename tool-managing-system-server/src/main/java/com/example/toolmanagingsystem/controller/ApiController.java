@@ -1,12 +1,14 @@
 package com.example.toolmanagingsystem.controller;
 
 import com.example.toolmanagingsystem.dao.PunchDao;
-import com.example.toolmanagingsystem.dto.Punch;
 import com.example.toolmanagingsystem.dto.PunchRegister;
 import com.example.toolmanagingsystem.dto.PunchScrapDao;
+import com.example.toolmanagingsystem.entity.Punch;
+import com.example.toolmanagingsystem.repository.PunchRepository;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.web.bind.annotation.*;
@@ -26,21 +28,38 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ApiController
 {
+    @Autowired
+    PunchRepository punchRepository;
+
+
     @Value("${TOOL_MANAGING_SYSTEM_STATIC_PATH}")
     private String staticPath;
 
     private final PunchDao dao;
     @PostMapping("/register")
-    public int[] registerPunch(@RequestBody List<PunchRegister> punchIdArrays)
+    public int[] registerPunch(@RequestBody List<Punch> punchIdArrays)
     {
         System.out.println("registerPunch!!!");
         System.out.println(punchIdArrays);
 
-        for (PunchRegister data : punchIdArrays) {
-            System.out.println(data.getDate());
+        Iterable<Punch> punchIterable = this.punchRepository.saveAll(punchIdArrays);
+
+        int count = 0;
+
+        for (Punch punch: punchIterable)
+        {
+            count++;
         }
 
-        return this.dao.registerPunch(punchIdArrays);
+        return count;
+
+
+
+//        for (PunchRegister data : punchIdArrays) {
+//            System.out.println(data.getDate());
+//        }
+//
+//        return this.dao.registerPunch(punchIdArrays);
     }
 
     @GetMapping("/display")
