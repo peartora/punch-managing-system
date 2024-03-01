@@ -98,6 +98,7 @@ export function RegisterPunchForm() {
         );
 
         if (!response.ok) {
+          console.log(response);
           throw new Error(`펀치 id 등록중 error가 발생 하였습니다.`);
         }
 

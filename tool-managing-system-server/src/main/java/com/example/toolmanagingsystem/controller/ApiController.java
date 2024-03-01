@@ -42,19 +42,21 @@ public class ApiController
 
     private final PunchDao dao;
     @PostMapping("/register")
-    public int registerPunch(@RequestBody List<Punch> punchIdArrays)
+    public int registerPunch(@RequestBody List<PunchRegister> punchList)
     {
         System.out.println("registerPunch");
-        System.out.println(punchIdArrays);
 
-        Iterable<Punch> punchIterable = this.punchRepository.saveAll(punchIdArrays);
+        for (PunchRegister punch: punchList)
+        {
+            String productName = punch.getProduct();
+            Product product = this.productRepository.findByProduct(productName);
+            Punch punchEntity = new Punch(punch, product);
+            this.punchRepository.save(punchEntity);
+
+            System.out.println(punch);
+        }
 
         int count = 0;
-
-        for (Punch punch: punchIterable)
-        {
-            count++;
-        }
 
         return count;
     }
