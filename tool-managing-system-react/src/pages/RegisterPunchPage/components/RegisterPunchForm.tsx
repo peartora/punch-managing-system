@@ -105,6 +105,8 @@ export function RegisterPunchForm() {
         const result = await response.json();
         if (result === punchIdArrays.length) {
           alert(`펀치 ${result}개가 성공적으로 등록되었습니다.`);
+        } else if (result == 0) {
+          alert(`펀치 등록에 실패 하였습니다.`);
         }
       } catch (error) {
         console.error(error);
