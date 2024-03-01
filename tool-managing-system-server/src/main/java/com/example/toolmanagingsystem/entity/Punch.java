@@ -21,8 +21,9 @@ public class Punch
     @Column(name = "register-date")
     private LocalDate registerDate;
     private String type;
-    private String manufacturer;
-
+    @ManyToOne
+    @JoinColumn(name = "supplier_id")
+    private PunchSupplier supplier;
     @Enumerated(EnumType.STRING)
     private PunchStatus status = PunchStatus.사용대기;
     private String location;
@@ -38,7 +39,7 @@ public class Punch
                 ", number='" + number + '\'' +
                 ", registerDate=" + registerDate +
                 ", type='" + type + '\'' +
-                ", manufacturer='" + manufacturer + '\'' +
+                ", manufacturer='" + supplier + '\'' +
                 ", status=" + status +
                 ", location='" + location + '\'' +
                 ", product=" + product +
@@ -46,15 +47,14 @@ public class Punch
                 '}';
     }
 
-    public Punch(PunchRegister registerObject, Product product) {
+    public Punch(PunchRegister registerObject, PunchSupplier punchSupplier, Product product) {
         this.number = registerObject.getNumber();
         this.registerDate = registerObject.getDate();
         this.type = registerObject.getType();
-        this.manufacturer = registerObject.getManufacturer();
+        this.supplier = punchSupplier;
         this.location = registerObject.getLocation();
         this.product = product;
         this.ptype = registerObject.getProductType();
     }
-
     public Punch() {}
 }

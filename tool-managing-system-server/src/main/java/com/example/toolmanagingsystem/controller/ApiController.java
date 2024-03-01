@@ -5,8 +5,10 @@ import com.example.toolmanagingsystem.dto.PunchRegister;
 import com.example.toolmanagingsystem.dto.PunchScrapDao;
 import com.example.toolmanagingsystem.entity.Product;
 import com.example.toolmanagingsystem.entity.Punch;
+import com.example.toolmanagingsystem.entity.PunchSupplier;
 import com.example.toolmanagingsystem.repository.ProductRepository;
 import com.example.toolmanagingsystem.repository.PunchRepository;
+import com.example.toolmanagingsystem.repository.PunchSupplierRepository;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,8 @@ public class ApiController
     PunchRepository punchRepository;
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    PunchSupplierRepository punchSupplierRepository;
 
 
     @Value("${TOOL_MANAGING_SYSTEM_STATIC_PATH}")
@@ -50,9 +54,13 @@ public class ApiController
 
         for (PunchRegister punch: punchRegisterList)
         {
+            String supplier = punch.getManufacturer();
+            PunchSupplier punchSupplier = this.punchSupplierRepository.findBySupplier(supplier);
+
             String productName = punch.getProduct();
             Product product = this.productRepository.findByProduct(productName);
-            Punch punchEntity = new Punch(punch, product);
+
+            Punch punchEntity = new Punch(punch, punchSupplier, product);
             punchList.add(punchEntity);
         }
 
@@ -262,9 +270,20 @@ public class ApiController
     }
 
     @PostMapping("/addSupplier")
-    public int addSupplier(@RequestBody HashMap<String, Object> params)
+    public int addSupplier(@RequestBody PunchSupplier punchSupplier)
     {
-        return this.dao.addSupplier(params);
+        System.out.println("addSupplier");
+        System.out.println(punchSupplier.getSupplier());
+
+        try
+        {
+            this.punchSupplierRepository.save(punchSupplier);
+            return 1;
+        }
+        catch (Exception e)
+        {
+            return 0;
+        }
     }
 
     @GetMapping("/duplicateSupplier")
