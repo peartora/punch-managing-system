@@ -23,36 +23,6 @@ public class PunchDao
         this.template = new NamedParameterJdbcTemplate(dataSource);
     }
 
-    public int[] registerPunch(List<PunchRegister> punchIdArrays)
-    {
-        Map<String, Object> registerInformation = punchIdArrays.get(0).returnMapCollection();
-        String sql = "SELECT `specification-path` FROM `size-control` WHERE `product` = :product";
-        String specificationPath = this.template.queryForObject(sql, registerInformation, String.class);
-
-        System.out.println(specificationPath);
-
-        MapSqlParameterSource[] batchParams = new MapSqlParameterSource[punchIdArrays.size()];
-
-        for (int i = 0; i < punchIdArrays.size(); i++) {
-            PunchRegister punch = punchIdArrays.get(i);
-            MapSqlParameterSource paramSource = new MapSqlParameterSource()
-                    .addValue("number", punch.getNumber())
-                    .addValue("date", punch.getDate())
-                    .addValue("type", punch.getType())
-                    .addValue("manufacturer", punch.getManufacturer())
-                    .addValue("specification", specificationPath)
-                    .addValue("status", PunchStatus.사용대기.toString())
-                    .addValue("location", punch.getLocation())
-                    .addValue("product", punch.getProduct())
-                    .addValue("ptype", punch.getProductType());
-            batchParams[i] = paramSource;
-        }
-
-        String sqlForBatchUpdate = "insert into `punch-list` (`number`, `register-date`, `type`, `manufacturer`, `specification`, `status`, `location`, `product`, `ptype`) values (:number, :date, :type, :manufacturer, :specification, :status, :location, :product, :ptype)";
-
-        return this.template.batchUpdate(sqlForBatchUpdate, batchParams);
-    }
-
     public List<HashMap<String, Object>> getUsingPunchList(Map<String, Object> params)
     {
         String whereClauses = "WHERE p.status NOT LIKE '폐기'";
@@ -260,13 +230,6 @@ public class PunchDao
         return this.template.queryForList( "select `product` from `size-control`", paramMap, String.class);
     }
 
-    public int updateSizeInformation(Map<String, Object> mapParams)
-    {
-        String sql = "update `size-control` set `specification-path` = :specificationFilePath where `product` = :product";
-
-        return this.template.update(sql, mapParams);
-    }
-
     public int checkDuplicateForProduct(String product)
     {
         Map<String, String> idMap = new HashMap<>();
@@ -275,21 +238,9 @@ public class PunchDao
         return this.template.queryForObject("select count(*) from `size-control` where `product` = :product", idMap, Integer.class);
     }
 
-    public int addProduct(Map<String, Object> mapParams)
-    {
-        return this.template.update(
-        "insert into `size-control` (`product`, `specification-path`, `date`) " +
-            "values (:product, :specificationFilePath, now())", mapParams);
-    }
-
     public int updateInspectionResult(Map<String, Object> mapParamsWithPdfFile)
     {
         return this.template.update("insert into `inspection-history` (`punch-number`, `when-inspected`, `file-path`) values (:punchId, now(), :filePath)", mapParamsWithPdfFile);
-    }
-
-    public int addSupplier(HashMap<String, Object> params)
-    {
-        return this.template.update("insert into `manufacturer` (`supplier`) values (:supplier)", params);
     }
 
     public int checkDuplicateSupplier(String supplier)
@@ -399,5 +350,4 @@ public class PunchDao
     {
         return this.template.update("DELETE FROM `employee` WHERE `username` = :username", params);
     }
-
 }

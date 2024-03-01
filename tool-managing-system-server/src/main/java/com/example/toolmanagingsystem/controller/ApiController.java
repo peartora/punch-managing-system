@@ -214,14 +214,20 @@ public class ApiController
             @RequestParam(value = "specificationFile", required = false) MultipartFile specificationFile
     )
     {
-        HashMap<String, Object> mapParams = new HashMap<>();
-
         String strFilePath = saveSpecificationFile(specificationFile);
 
-        mapParams.put("product", productName);
-        mapParams.put("specificationFilePath", strFilePath);
+        Product productBeforeUpdate = this.productRepository.findByProduct(productName);
+        productBeforeUpdate.setSpecificationPath(strFilePath);
 
-        return this.dao.updateSizeInformation(mapParams);
+        try
+        {
+            this.productRepository.save(productBeforeUpdate);
+            return 1;
+        }
+        catch (Exception e)
+        {
+            return 0;
+        }
     }
 
     @GetMapping("/duplicateProduct")

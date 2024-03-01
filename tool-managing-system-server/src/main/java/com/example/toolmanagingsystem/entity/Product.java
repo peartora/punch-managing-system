@@ -4,12 +4,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import lombok.Data;
 
 import javax.annotation.processing.Generated;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity(name = "size-control")
+@Data
 public class Product
 {
     @Id
