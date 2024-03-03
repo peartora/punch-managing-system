@@ -487,13 +487,14 @@ public class ApiController
         System.out.println("approveId");
         System.out.println(params);
 
-        int effectedRow = this.dao.approveId(params);
-
-        if (effectedRow == 1)
+        User user = this.userRepository.findByUsername(params.get("username").toString());
+        user.setApproved(true);
+        try
         {
+            this.userRepository.save(user);
             return "OK";
         }
-        else
+        catch (Exception e)
         {
             return "NOK";
         }
