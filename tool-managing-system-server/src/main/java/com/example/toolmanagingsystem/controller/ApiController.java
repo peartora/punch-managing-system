@@ -505,23 +505,23 @@ public class ApiController
         System.out.println("resetPassword");
         System.out.println(params);
 
-        String currentPassword = this.dao.checkUserIdAndPassword(params);
-
-        System.out.println("currentPassword");
-        System.out.println(currentPassword);
+        User user = this.userRepository.findByUsername(params.get("username").toString());
+        String currentPassword = user.getPassword();
 
         if (currentPassword.equals(params.get("password"))) {
             System.out.println("NOK_PasswordSame");
             return "NOK_PasswordSame";
         }
 
-        int effectedRow = this.dao.resetPassword(params);
+        user.setPassword(params.get("password").toString());
+        user.setLocked(false);
 
-        if (effectedRow == 1)
+        try
         {
+            this.userRepository.save(user);
             return "OK";
         }
-        else
+        catch (Exception e)
         {
             return "NOK";
         }
