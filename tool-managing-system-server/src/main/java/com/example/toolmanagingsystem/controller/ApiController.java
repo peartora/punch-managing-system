@@ -449,7 +449,8 @@ public class ApiController
         System.out.println("returnAuthority");
         System.out.println(params);
 
-        return this.dao.returnAuthority(params);
+        User user = this.userRepository.findByUsername(params.get("username").toString());
+        return user.getUserRole().toString();
     }
 
     @GetMapping("/idList")
@@ -457,10 +458,20 @@ public class ApiController
     {
         System.out.println("returnIdList");
 
-        Map<String, Boolean> params = new HashMap<>();
-        params.put("lockStatus", true);
+        List<Map<String, Object>> idList = new ArrayList<>();
+        Iterable<User> userIterableList = this.userRepository.findAll();
 
-        return this.dao.returnIdList(params);
+        for (User user: userIterableList)
+        {
+            Map<String, Object> idMap = new HashMap<>();
+            idMap.put("username", user.getUsername());
+            idMap.put("is_locked", user.isLocked());
+            idMap.put("is_approved", user.isApproved());
+            idMap.put("role", user.getUserRole());
+            idList.add(idMap);
+        }
+
+        return idList;
     }
 
     @PostMapping("/resetId")

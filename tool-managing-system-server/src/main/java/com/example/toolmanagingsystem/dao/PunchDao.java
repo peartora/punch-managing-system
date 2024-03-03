@@ -286,11 +286,6 @@ public class PunchDao
         return createdDate.toString();
     }
 
-    public String returnAuthority(Map<String, Object> params)
-    {
-        return this.template.queryForObject("select `role` from `employee` where `username` = :username", params, String.class);
-    }
-
     public List<Map<String, Object>> returnIdList(Map<String, Boolean> params)
     {
         return this.template.queryForList( "select `username`, `role`, `is_locked`, `is_approved` from `employee`", params);
@@ -299,20 +294,5 @@ public class PunchDao
     public int resetId(Map<String, Object> params)
     {
         return this.template.update("UPDATE `employee` SET `is_locked` = :isLocked, `trial_count` = :trialCount WHERE `username` = :username", params);
-    }
-
-    public int approveId(Map<String, Object> params)
-    {
-        return this.template.update("UPDATE `employee` SET `is_approved` = :isApprove WHERE `username` = :username", params);
-    }
-
-    public int resetPassword(Map<String, Object> params)
-    {
-        return this.template.update("UPDATE `employee` SET `is_locked` = :isLocked, `trial_count` = :trialCount, `password` = :password, `created_date` = now() WHERE `username` = :username", params);
-    }
-
-    public int deleteUser(Map<String, Object> params)
-    {
-        return this.template.update("DELETE FROM `employee` WHERE `username` = :username", params);
     }
 }
