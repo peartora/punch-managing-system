@@ -534,13 +534,13 @@ public class ApiController
         System.out.println("deleteUser");
         System.out.println(params);
 
-        int effectedRow = this.dao.deleteUser(params);
-
-        if (effectedRow == 1)
+        User user = this.userRepository.findByUsername(params.get("username").toString());
+        try
         {
+            this.userRepository.delete(user);
             return "OK";
         }
-        else
+        catch (Exception e)
         {
             return "NOK";
         }
