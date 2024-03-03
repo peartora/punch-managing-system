@@ -275,44 +275,9 @@ public class PunchDao
         return this.template.queryForObject("select `password` from `employee` where `username` = :username", params, String.class);
     }
 
-    public int getTrialCount(Map<String, Object> params)
-    {
-        return this.template.queryForObject( "select `trial_count` from `employee` where `username` = :username", params, Integer.class);
-    }
-
-    public int changeTrialCount(Map<String, Object> params)
-    {
-        return this.template.update("UPDATE `employee` SET `trial_count` = :trialCount WHERE `username` = :username", params);
-    }
-
-    public int lockId(Map<String, Object> params)
-    {
-        return this.template.update("UPDATE `employee` SET `is_locked` = :lockStatus WHERE `username` = :username", params);
-    }
-
-    public Boolean getLockStatus(Map<String, Object> params)
-    {
-        return this.template.queryForObject( "select `is_locked` from `employee` where `username` = :username", params, Boolean.class);
-    }
-
-    public Boolean getApproveStatus(Map<String, Object> params)
-    {
-        return this.template.queryForObject( "select `is_approved` from `employee` where `username` = :username", params, Boolean.class);
-    }
-
     public int changePassword(Map<String, Object> params)
     {
         return this.template.update("UPDATE `employee` SET `password` = :newPassword, `created_date` = now() WHERE `username` = :username", params);
-    }
-
-    public int createId(Map<String, Object> params)
-    {
-        return this.template.update("insert into `employee` (`username`, `password`, `role`, `is_locked`, `trial_count`, `created_date`) values (:id, :password, :role, 0, 0, now())", params);
-    }
-
-    public int checkDuplicateId(Map<String, Object> params)
-    {
-        return this.template.queryForObject("select count(*) from `employee` where `username` = :id", params, Integer.class);
     }
 
     public String returnCreatedDate(Map<String, Object> params)
