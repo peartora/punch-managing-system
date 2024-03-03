@@ -324,71 +324,50 @@ public class ApiController
         System.out.println("checkUserId");
         System.out.println(params);
 
-        boolean isApproved;
+        User user = null;
 
         try
         {
-            isApproved = this.dao.getApproveStatus(params);
+            user = this.userRepository.findByUsername(params.get("username").toString());
         }
         catch (EmptyResultDataAccessException e)
         {
             return "NoId";
         }
 
+        boolean isApproved = user.isApproved();
+        boolean isLocked = user.isLocked();
+        String currentPassword = user.getPassword();
+        int trialCount = user.getTrialCount();
+
         if (!isApproved)
         {
             return ("NotYetApproved");
         }
-        else
+        else // approved
         {
-            boolean isLocked;
-
-            try
-            {
-                isLocked = this.dao.getLockStatus(params);
-            }
-            catch (EmptyResultDataAccessException e)
-            {
-                return "NoId";
-            }
-
             if (isLocked)
             {
                 return "Locked";
             }
-            else
+            else // approved & unLocked
             {
-                String returnedPassword = "";
-
-                try
+                if (Objects.equals(params.get("password"), currentPassword))
                 {
-                    returnedPassword = this.dao.checkUserIdAndPassword(params);
-                }
-                catch (EmptyResultDataAccessException e)
-                {
-                    return "NoId";
-                }
-
-                if (Objects.equals(params.get("password"), returnedPassword))
-                {
-                    params.put("trialCount", 0);
-                    this.dao.changeTrialCount(params);
-
+                    user.setTrialCount(0);
+                    this.userRepository.save(user);
                     return "OK";
                 }
-                else
+                else // password is not correct
                 {
-                    int trialCount = this.dao.getTrialCount(params);
                     int trialCountPlusOne = trialCount + 1;
-                    params.put("trialCount", trialCountPlusOne);
-
-                    this.dao.changeTrialCount(params);
+                    user.setTrialCount(trialCountPlusOne);
+                    this.userRepository.save(user);
 
                     if (trialCountPlusOne >= 5)
                     {
-                        params.put("lockStatus", true);
-                        this.dao.lockId(params);
-
+                        user.setLocked(true);
+                        this.userRepository.save(user);
                         return "Locked";
                     }
                     else

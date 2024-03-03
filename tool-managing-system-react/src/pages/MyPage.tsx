@@ -36,7 +36,7 @@ export const MyPage = () => {
         return response.text();
       })
       .then((result) => {
-        if (result === "admin") {
+        if (result === "ADMIN") {
           setIsAdmin(true);
 
           request
