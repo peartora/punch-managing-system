@@ -286,11 +286,6 @@ public class PunchDao
         return createdDate.toString();
     }
 
-    public List<Map<String, Object>> returnIdList(Map<String, Boolean> params)
-    {
-        return this.template.queryForList( "select `username`, `role`, `is_locked`, `is_approved` from `employee`", params);
-    }
-
     public int resetId(Map<String, Object> params)
     {
         return this.template.update("UPDATE `employee` SET `is_locked` = :isLocked, `trial_count` = :trialCount WHERE `username` = :username", params);
