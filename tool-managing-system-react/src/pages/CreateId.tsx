@@ -115,8 +115,8 @@ export function CreateId() {
             <option value="" disabled>
               아래 list에서 역할을 선택 하세요
             </option>
-            <option value="operator">operator</option>
-            <option value="supervisor">supervisor</option>
+            <option value="USER">USER</option>
+            <option value="MANAGER">MANAGER</option>
           </select>
         </label>
       </div>

@@ -3,12 +3,15 @@ package com.example.toolmanagingsystem.controller;
 import com.example.toolmanagingsystem.dao.PunchDao;
 import com.example.toolmanagingsystem.dto.PunchRegister;
 import com.example.toolmanagingsystem.dto.PunchScrapDao;
+import com.example.toolmanagingsystem.dto.UserDto;
 import com.example.toolmanagingsystem.entity.Product;
 import com.example.toolmanagingsystem.entity.Punch;
 import com.example.toolmanagingsystem.entity.PunchSupplier;
+import com.example.toolmanagingsystem.entity.User;
 import com.example.toolmanagingsystem.repository.ProductRepository;
 import com.example.toolmanagingsystem.repository.PunchRepository;
 import com.example.toolmanagingsystem.repository.PunchSupplierRepository;
+import com.example.toolmanagingsystem.repository.UserRepository;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +42,8 @@ public class ApiController
     ProductRepository productRepository;
     @Autowired
     PunchSupplierRepository punchSupplierRepository;
+    @Autowired
+    UserRepository userRepository;
 
 
     @Value("${TOOL_MANAGING_SYSTEM_STATIC_PATH}")
@@ -414,18 +419,18 @@ public class ApiController
     }
 
     @PostMapping("/create_id")
-    public String createId (@RequestBody Map<String, Object> params)
+    public String createId (@RequestBody UserDto userDto)
     {
         System.out.println("createId");
-        System.out.println(params);
+        System.out.println(userDto);
 
-        int effectedRow = dao.createId(params);
-
-        if (effectedRow == 1)
+        User user = new User(userDto);
+        try
         {
+            this.userRepository.save(user);
             return "OK";
         }
-        else
+        catch (Exception e)
         {
             return "NOK";
         }
@@ -437,7 +442,8 @@ public class ApiController
         System.out.println("returnCheckResultForUsername");
         System.out.println(params);
 
-        int count = this.dao.checkDuplicateId(params);
+        String username = (String) params.get("id");
+        int count = this.userRepository.countByUsername(username);
 
         if (count == 0)
         {
