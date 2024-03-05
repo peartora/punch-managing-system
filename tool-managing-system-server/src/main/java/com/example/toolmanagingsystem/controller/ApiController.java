@@ -4,14 +4,8 @@ import com.example.toolmanagingsystem.dao.PunchDao;
 import com.example.toolmanagingsystem.dto.PunchRegister;
 import com.example.toolmanagingsystem.dto.PunchScrapDao;
 import com.example.toolmanagingsystem.dto.UserDto;
-import com.example.toolmanagingsystem.entity.Product;
-import com.example.toolmanagingsystem.entity.Punch;
-import com.example.toolmanagingsystem.entity.PunchSupplier;
-import com.example.toolmanagingsystem.entity.User;
-import com.example.toolmanagingsystem.repository.ProductRepository;
-import com.example.toolmanagingsystem.repository.PunchRepository;
-import com.example.toolmanagingsystem.repository.PunchSupplierRepository;
-import com.example.toolmanagingsystem.repository.UserRepository;
+import com.example.toolmanagingsystem.entity.*;
+import com.example.toolmanagingsystem.repository.*;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +38,8 @@ public class ApiController
     PunchSupplierRepository punchSupplierRepository;
     @Autowired
     UserRepository userRepository;
-
+    @Autowired
+    LoggingRepository loggingRepository;
 
     @Value("${TOOL_MANAGING_SYSTEM_STATIC_PATH}")
     private String staticPath;
@@ -92,8 +87,25 @@ public class ApiController
     {
         System.out.println("params");
         System.out.println(params);
-        System.out.println(this.dao.getUsingPunchList(params));
 
+        List<Punch> punchList = this.punchRepository.findByRegisterDateBetweenAndTypeAndSupplierAndStatusAndLocationAndProductAndPtype(
+            params.get("startDate").toString(),
+            params.get("endDate").toString(),
+            params.get("type").toString(),
+            params.get("manufacturer").toString(),
+            params.get("status").toString(),
+            params.get("storageLocation").toString(),
+            params.get("product").toString(),
+            params.get("ptype").toString()
+        );
+
+        for (Punch punch: punchList) {
+            System.out.println(punch);
+        }
+
+
+
+        System.out.println(this.dao.getUsingPunchList(params));
         List<HashMap<String, Object>> resultSet = this.dao.getUsingPunchList(params);
 
         Collections.sort(resultSet, Comparator.comparing(result -> {
@@ -324,55 +336,74 @@ public class ApiController
         System.out.println("checkUserId");
         System.out.println(params);
 
-        User user = null;
-
-        try
+        User user = this.userRepository.findByUsername(params.get("username").toString());
+        if (user == null)
         {
-            user = this.userRepository.findByUsername(params.get("username").toString());
-        }
-        catch (EmptyResultDataAccessException e)
-        {
+            this.logging("unknown", LogActivity.LOGIN_FAIL_PASSWORD_UNREGISTERED_ID);
+            System.out.println("NoId");
             return "NoId";
         }
 
+        String username = user.getUsername();
         boolean isApproved = user.isApproved();
         boolean isLocked = user.isLocked();
         String currentPassword = user.getPassword();
         int trialCount = user.getTrialCount();
+        LocalDate createdDate = user.getCreatedDate();
+
+        this.logging(username, LogActivity.LOGIN_TRIAL);
 
         if (!isApproved)
         {
+            this.logging(username, LogActivity.LOGIN_FAIL_NOT_APPROVED_ID);
+            System.out.println("NotYetApproved");
             return ("NotYetApproved");
         }
         else // approved
         {
             if (isLocked)
             {
+                this.logging(username, LogActivity.LOGIN_FAIL_LOCKED_ID);
+                System.out.println("Locked");
                 return "Locked";
             }
-            else // approved & unLocked
+            else // unlocked
             {
-                if (Objects.equals(params.get("password"), currentPassword))
+                if (LocalDate.now().isAfter(createdDate.plusMonths(6)))
                 {
-                    user.setTrialCount(0);
-                    this.userRepository.save(user);
-                    return "OK";
+                    this.logging(username, LogActivity.LOGIN_FAIL_PASSWORD_EXPIRED);
+                    System.out.println("password is expired");
+                    return "Expired";
                 }
-                else // password is not correct
+                else // password is not expired
                 {
-                    int trialCountPlusOne = trialCount + 1;
-                    user.setTrialCount(trialCountPlusOne);
-                    this.userRepository.save(user);
-
-                    if (trialCountPlusOne >= 5)
+                    if (Objects.equals(params.get("password"), currentPassword))
                     {
-                        user.setLocked(true);
+                        this.logging(username, LogActivity.LOGIN);
+                        user.setTrialCount(0);
                         this.userRepository.save(user);
-                        return "Locked";
+                        System.out.println("LOGINED AS " + username);
+                        return "OK";
                     }
-                    else
+                    else // password is not correct
                     {
-                        return "NOK," + trialCountPlusOne;
+                        this.logging(username, LogActivity.LOGIN_FAIL_PASSWORD_INCORRECT);
+                        int trialCountPlusOne = trialCount + 1;
+                        user.setTrialCount(trialCountPlusOne);
+                        this.userRepository.save(user);
+
+                        if (trialCountPlusOne >= 5)
+                        {
+                            user.setLocked(true);
+                            this.userRepository.save(user);
+                            System.out.println("It`s newly locked");
+                            return "Locked";
+                        }
+                        else
+                        {
+                            System.out.println("password is wrong," + trialCountPlusOne);
+                            return "NOK," + trialCountPlusOne;
+                        }
                     }
                 }
             }
@@ -591,5 +622,11 @@ public class ApiController
         {
             e.printStackTrace();
         }
+    }
+
+    private void logging(String username, LogActivity activity)
+    {
+        Logging logging = new Logging(username, activity, LocalDateTime.now());
+        this.loggingRepository.save(logging);
     }
 }

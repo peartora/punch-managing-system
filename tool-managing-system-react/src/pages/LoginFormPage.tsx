@@ -30,45 +30,18 @@ export const LoginFormPage = () => {
       })
       .then((result) => {
         if (result === "OK") {
-          const query = new URLSearchParams();
-          query.append("username", username);
-
-          request
-            .get(`/api/tool-managing-system/created-date?${query}`)
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error(
-                  `비밀번호 최근 변경 이력 조회 중 network error 발생 하였습니다.`
-                );
-              }
-              return response.text();
-            })
-            .then((result) => {
-              const today = dayjs();
-              const initialDate = dayjs(result);
-
-              const isWithinTwoMonths = initialDate.isAfter(
-                today.subtract(6, "month")
-              );
-
-              if (isWithinTwoMonths) {
-                login(username);
-              } else {
-                alert(
-                  `id 최초 가입 혹은 가장 최근 비밀번호 변경일로 부터 6개월이 지났습니다. 비밀번호 변경을 먼저 하세요`
-                );
-              }
-            });
+          login(username);
         } else {
           if (result === "NoId") {
             alert(`${username} 계정은 등록 되지 않은 계정 입니다.`);
           } else if (result === "NotYetApproved") {
             alert(`${username} 계정은 승인 대기중 입니다.`);
+          } else if (result === "Expired") {
+            alert(`${username} 계정의 비밀번호는 만료 되었습니다.`);
           } else {
             if (result.startsWith("NOK")) {
               const resultArray = result.split(",");
               const trialCount = resultArray[1];
-
               alert(
                 `${username} 계정의 비밀번호가 ${trialCount}회 틀렸습니다.(5회 이상 틀리면 계정이 잠금으로 바뀝니다.)`
               );
