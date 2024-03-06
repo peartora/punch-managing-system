@@ -41,7 +41,7 @@ export function ChangePassword({ result, username, currentPassword }: Data) {
               })
               .then((result) => {
                 if (result === "OK") {
-                  alert(`${username}의 비밀번호가 변경 되었습니다.`);
+                  alert(`ID: ${username}의 비밀번호가 변경 되었습니다.`);
                   navigate(`/sign-in`);
                 } else if (result.startsWith("NOK")) {
                   alert(

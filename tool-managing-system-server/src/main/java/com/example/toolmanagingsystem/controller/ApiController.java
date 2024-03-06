@@ -416,13 +416,17 @@ public class ApiController
         System.out.println("changePassword");
         System.out.println(params);
 
-        int effectedRow = dao.changePassword(params);
+        String username = params.get("username").toString();
+        User user = this.userRepository.findByUsername(username);
+        user.setPassword(params.get("newPassword").toString());
 
-        if (effectedRow == 1)
+        try
         {
+            this.userRepository.save(user);
+            this.logging(username, LogActivity.PASSWORD_CHANGE);
             return "OK";
         }
-        else
+        catch (Exception e)
         {
             return "NOK";
         }
