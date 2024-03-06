@@ -2,10 +2,9 @@ import { useState } from "react";
 
 import { Link } from "react-router-dom";
 
-import { request } from "@/common/utils/ajax";
 import { useAuth } from "@/common/contexts/auth";
 
-import dayjs from "dayjs";
+import { checkUser } from "@/common/utils/checkUser";
 
 export const LoginFormPage = () => {
   const { login } = useAuth();
@@ -21,34 +20,27 @@ export const LoginFormPage = () => {
       password,
     };
 
-    request
-      .post(`/api/tool-managing-system/usercheck`, body)
-      .then((response) => {
-        if (!response.ok)
-          throw new Error(`유저 정보를 확인 하는 중 error가 발생 하였습니다.`);
-        return response.text();
-      })
+    checkUser(body)
       .then((result) => {
         if (result === "OK") {
           login(username);
         } else {
           if (result === "NoId") {
-            alert(`${username} 계정은 등록 되지 않은 계정 입니다.`);
+            alert(`ID: ${username}은(는) 등록 되지 않았습니다.`);
           } else if (result === "NotYetApproved") {
-            alert(`${username} 계정은 승인 대기중 입니다.`);
+            alert(`ID: ${username}은(는) 미승인 상태 입니다.`);
+          } else if (result === "Locked") {
+            alert(`ID: ${username}은(는) 잠금 상태 입니다.`);
           } else if (result === "Expired") {
-            alert(`${username} 계정의 비밀번호는 만료 되었습니다.`);
-          } else {
-            if (result.startsWith("NOK")) {
-              const resultArray = result.split(",");
-              const trialCount = resultArray[1];
-              alert(
-                `${username} 계정의 비밀번호가 ${trialCount}회 틀렸습니다.(5회 이상 틀리면 계정이 잠금으로 바뀝니다.)`
-              );
+            alert(`ID: ${username}의 비밀번호가 만료 되었습니다.`);
+          } else if (result.startsWith("NOK")) {
+            const resultArray = result.split(",");
+            const trialCount = parseInt(resultArray[1], 10);
+
+            if (trialCount >= 5) {
+              `${username} 계정의 비밀번호가 5회 틀렸습니다. 계정이 잠겼습니다.(관리자에게 문의 하세요)`;
             } else {
-              alert(
-                `${username} 계정의 비밀번호가 5회 틀렸습니다. 계정이 잠겼습니다.(관리자에게 문의 하세요)`
-              );
+              `${username} 계정의 비밀번호가 ${trialCount}회 틀렸습니다.(5회 이상 틀리면 계정이 잠금으로 바뀝니다.)`;
             }
           }
         }
