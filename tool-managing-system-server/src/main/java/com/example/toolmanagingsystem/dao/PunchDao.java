@@ -270,16 +270,6 @@ public class PunchDao
         }
     }
 
-    public String checkUserIdAndPassword(Map<String, Object> params)
-    {
-        return this.template.queryForObject("select `password` from `employee` where `username` = :username", params, String.class);
-    }
-
-    public int changePassword(Map<String, Object> params)
-    {
-        return this.template.update("UPDATE `employee` SET `password` = :newPassword, `created_date` = now() WHERE `username` = :username", params);
-    }
-
     public String returnCreatedDate(Map<String, Object> params)
     {
         LocalDate createdDate = this.template.queryForObject("select `created_date` from `employee` where `username` = :username", params, LocalDate.class);
