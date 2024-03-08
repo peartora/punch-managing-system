@@ -20,34 +20,21 @@ export const LoginFormPage = () => {
       password,
     };
 
-    checkUser(body)
-      .then((result) => {
-        if (result === "OK") {
-          login(username);
+    checkUser(body, {
+      OK: () => {
+        login(username);
+      },
+      NOK: (params) => {
+        const trialCount = parseInt(params[0], 10);
+        if (trialCount >= 5) {
+          `${username} 계정의 비밀번호가 5회 틀렸습니다. 계정이 잠겼습니다.(관리자에게 문의 하세요)`;
         } else {
-          if (result === "NoId") {
-            alert(`ID: ${username}은(는) 등록 되지 않았습니다.`);
-          } else if (result === "NotYetApproved") {
-            alert(`ID: ${username}은(는) 미승인 상태 입니다.`);
-          } else if (result === "Locked") {
-            alert(`ID: ${username}은(는) 잠금 상태 입니다.`);
-          } else if (result === "Expired") {
-            alert(`ID: ${username}의 비밀번호가 만료 되었습니다.`);
-          } else if (result.startsWith("NOK")) {
-            const resultArray = result.split(",");
-            const trialCount = parseInt(resultArray[1], 10);
-
-            if (trialCount >= 5) {
-              `${username} 계정의 비밀번호가 5회 틀렸습니다. 계정이 잠겼습니다.(관리자에게 문의 하세요)`;
-            } else {
-              `${username} 계정의 비밀번호가 ${trialCount}회 틀렸습니다.(5회 이상 틀리면 계정이 잠금으로 바뀝니다.)`;
-            }
-          }
+          `${username} 계정의 비밀번호가 ${trialCount}회 틀렸습니다.(5회 이상 틀리면 계정이 잠금으로 바뀝니다.)`;
         }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+      },
+    }).catch((error) => {
+      console.error(error);
+    });
   };
 
   return (

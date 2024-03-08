@@ -88,15 +88,17 @@ public class ApiController
         System.out.println("params");
         System.out.println(params);
 
-        List<Punch> punchList = this.punchRepository.findByRegisterDateBetweenAndTypeAndSupplierAndStatusAndLocationAndProductAndPtype(
-            params.get("startDate").toString(),
-            params.get("endDate").toString(),
-            params.get("type").toString(),
-            params.get("manufacturer").toString(),
-            params.get("status").toString(),
-            params.get("storageLocation").toString(),
-            params.get("product").toString(),
-            params.get("ptype").toString()
+        List<Punch> punchList = this.punchRepository.findAll(
+            PunchRepository.filter(
+                params.get("startDate").toString(),
+                params.get("endDate").toString(),
+                params.get("type").toString(),
+                params.get("manufacturer").toString(),
+                params.get("status").toString(),
+                params.get("storageLocation").toString(),
+                params.get("product").toString(),
+                params.get("ptype").toString()
+            )
         );
 
         for (Punch punch: punchList) {
@@ -343,6 +345,7 @@ public class ApiController
             System.out.println("NoId");
             return "NoId";
         }
+        // User entity, Teacher entity
 
         String username = user.getUsername();
         boolean isApproved = user.isApproved();

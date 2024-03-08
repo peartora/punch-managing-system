@@ -17,24 +17,15 @@ export function CheckIdAndPassword() {
       password: currentPassword,
     };
 
-    checkUser(body)
-      .then((result) => {
-        if (result === "NoId") {
-          alert(`ID: ${username}은(는) 등록 되지 않았습니다.`);
-        } else if (result === "NotYetApproved") {
-          alert(`ID: ${username}은(는) 미승인 상태 입니다.`);
-        } else if (result === "Locked") {
-          alert(`ID: ${username}은(는) 잠금 상태 입니다.`);
-        } else if (result === "Expired") {
-          alert(`ID: ${username}의 비밀번호가 만료 되었습니다.`);
-        } else if (result.startsWith("NOK")) {
-          alert(`입력 된 비밀번호가 틀렸습니다.`);
-        } else if (result === "OK") {
-          alert(`${username} id의 비밀번호 변경 화면으로 이동 합니다.`);
-          setResultForId("OK");
-        }
-      })
-      .catch((error) => console.error(error));
+    checkUser(body, {
+      OK: () => {
+        alert(`${username} id의 비밀번호 변경 화면으로 이동 합니다.`);
+        setResultForId("OK");
+      },
+      NOK: () => {
+        alert(`입력 된 비밀번호가 틀렸습니다.`);
+      },
+    }).catch((error) => console.error(error));
   };
 
   return (
