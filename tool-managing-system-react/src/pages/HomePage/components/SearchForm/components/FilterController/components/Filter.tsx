@@ -49,7 +49,7 @@ export function Filter(props: Props) {
 
       if (key == "endDate") {
         if (value == "") {
-          const formatedValue = dayjs(new Date()).format("YYYY-MM-DD");
+          const formatedValue = dayjs().format("YYYY-MM-DD");
           newParams.append(key, formatedValue);
           continue;
         }

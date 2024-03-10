@@ -626,37 +626,103 @@ public class ApiController
 
     private boolean filterPunch(Punch punch, HashMap<String, Object> params)
     {
+
         String strStartDate = (String) params.get("startDate");
         LocalDate startDate = LocalDate.parse(strStartDate);
+        System.out.println("startDate:");
+        System.out.println(startDate);
 
-        String strEndDate = (String) params.get("startDate");
+
+        String strEndDate = (String) params.get("endDate");
         LocalDate endDate = LocalDate.parse(strEndDate);
+        System.out.println("endDate:");
+        System.out.println(endDate);
 
         String type = (String) params.get("type");
-        String manufacturer = (String) params.get("manufacturer");
-        PunchStatus status = (PunchStatus) params.get("status");
-        String storageLocation = (String) params.get("storageLocation");
-        String product = (String) params.get("product");
-        String pType = (String) params.get("ptype");
+        System.out.println("type:");
+        System.out.println(type);
 
-        if (punch.getRegisterDate().isBefore(startDate)) {
-            return false;
-        } else if (punch.getRegisterDate().isAfter(endDate)) {
-            return false;
-        } else if (!Objects.equals(punch.getType(), type)) {
-            return false;
-        } else if (!Objects.equals(punch.getSupplier(), manufacturer)) {
-            return false;
-        } else if (punch.getPunchStatus() != status) {
-            return false;
-        } else if (!Objects.equals(punch.getPunchStorageLocation(), storageLocation)) {
-            return false;
-        } else if (!Objects.equals(punch.getProductType(), product)) {
-            return false;
-        } else if (!Objects.equals(punch.getPtype(), pType)) {
-            return false;
-        } else {
-            return true;
+        String manufacturer = (String) params.get("manufacturer");
+        System.out.println("manufacturer:");
+        System.out.println(manufacturer);
+
+        String strStatus = (String) params.get("status");
+        System.out.println("strStatus:");
+        System.out.println(strStatus);
+
+        PunchStatus status = null;
+
+        if (!Objects.equals(strStatus, "All")) {
+            status = PunchStatus.valueOf(strStatus);
+            System.out.println("status:");
+            System.out.println(status);
         }
+
+        String storageLocation = (String) params.get("storageLocation");
+        System.out.println("storageLocation:");
+        System.out.println(storageLocation);
+
+        String product = (String) params.get("product");
+        System.out.println("product:");
+        System.out.println(product);
+
+        String pType = (String) params.get("ptype");
+        System.out.println("pType:");
+        System.out.println(pType);
+
+        System.out.println("===========================================================");
+
+        if (punch.getRegisterDate().isBefore(startDate) || punch.getRegisterDate().isAfter(endDate))
+        {
+            return false;
+        }
+
+        if (!Objects.equals(type, "All"))
+        {
+            if (!Objects.equals(punch.getType(), type))
+            {
+                return false;
+            }
+        }
+
+        if (!Objects.equals(manufacturer, "All"))
+        {
+            if (!Objects.equals(punch.getSupplier().getSupplier(), manufacturer))
+            {
+                return false;
+            }
+        }
+
+        if (!Objects.equals(strStatus, "All"))
+        {
+            if (!Objects.equals(punch.getPunchStatus().toString(), status.toString()))
+            {
+                return false;
+            }
+        }
+
+
+        if (!Objects.equals(punch.getPunchStorageLocation(), storageLocation))
+        {
+            return false;
+        }
+
+        if (!Objects.equals(product, "All"))
+        {
+            if (!Objects.equals(punch.getProductType().getProduct(), product))
+            {
+                return false;
+            }
+        }
+
+        if (!Objects.equals(pType, "All"))
+        {
+            if (!Objects.equals(punch.getPtype(), pType))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
