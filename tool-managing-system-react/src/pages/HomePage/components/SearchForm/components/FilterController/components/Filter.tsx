@@ -15,7 +15,7 @@ type FormData = {
   manufacturer: string;
   status: string;
   storageLocation: string;
-  "p.product": string;
+  product: string;
   ptype: string;
 };
 
@@ -27,7 +27,7 @@ export function Filter(props: Props) {
     manufacturer: "",
     status: "",
     storageLocation: "",
-    "p.product": "",
+    product: "",
     ptype: "",
   });
 
@@ -39,18 +39,18 @@ export function Filter(props: Props) {
     for (const key in formData) {
       const value = formData[key as keyof FormData];
 
-      if (
-        key == "type" ||
-        key == "manufacturer" ||
-        key == "status" ||
-        key == "p.product" ||
-        key == "ptype"
-      ) {
-        if (value == "All") {
+      if (key == "startDate") {
+        if (value == "") {
+          const formatedValue = dayjs("1990-01-01").format("YYYY-MM-DD");
+          newParams.append(key, formatedValue);
           continue;
         }
-      } else {
+      }
+
+      if (key == "endDate") {
         if (value == "") {
+          const formatedValue = dayjs(new Date()).format("YYYY-MM-DD");
+          newParams.append(key, formatedValue);
           continue;
         }
       }
@@ -215,11 +215,11 @@ export function Filter(props: Props) {
             required
             id="productName"
             className="form-select"
-            value={formData["p.product"]}
+            value={formData["product"]}
             onChange={(event) => {
               setFormData((prevState) => ({
                 ...prevState,
-                "p.product": event.target.value,
+                product: event.target.value,
               }));
             }}
           >

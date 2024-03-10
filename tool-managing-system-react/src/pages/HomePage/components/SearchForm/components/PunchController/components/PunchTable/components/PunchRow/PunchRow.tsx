@@ -24,10 +24,9 @@ export function PunchRow({
   handlerChangeForSingleBox,
   refetch,
 }: Props) {
+  console.log("PunchRow");
   console.log("row");
   console.log(row);
-
-  const punchId = row.punchId;
 
   let checkResult = "";
 
@@ -40,31 +39,31 @@ export function PunchRow({
       <td>
         <CheckBox
           onChange={(event) => handlerChangeForSingleBox(event, row.punchId)}
-          punchId={punchId}
+          punchId={row.punchId}
           checked={chekced}
         />
       </td>
       <td>{row.punchId}</td>
-      <td>{row.supplier}</td>
+      <td>{row.supplier.supplier}</td>
       <SpecificationTd specification={row.specification} />
 
       <InspectionHistoryTd
         latestInspectionDate={row.latestInspectionDate}
         inspectionFilePath={row.inspectionFilePath}
-        punchId={punchId}
+        punchId={row.punchId}
       />
       <td>
         <PunchStatusSelect
           punchStatus={row.punchStatus}
           count={row.totalUsageNumber}
           punchId={row.punchId}
-          product={row.product}
+          product={row.productType.product}
           refetch={refetch}
         />
       </td>
       <td>{row.punchStorageLocation}</td>
-      <td>{row.product}</td>
-      <td>{row.productType}</td>
+      <td>{row.productType.product}</td>
+      <td>{row.ptype}</td>
       <CleaningHistoryTd
         latestCleaningHistory={row.latestCleaningHistory}
         punchId={row.punchId}

@@ -1,10 +1,9 @@
 package com.example.toolmanagingsystem.controller;
 
 import com.example.toolmanagingsystem.dao.PunchDao;
-import com.example.toolmanagingsystem.dto.PunchRegister;
-import com.example.toolmanagingsystem.dto.PunchScrapDao;
-import com.example.toolmanagingsystem.dto.UserDto;
+import com.example.toolmanagingsystem.dto.*;
 import com.example.toolmanagingsystem.entity.*;
+import com.example.toolmanagingsystem.entity.Punch;
 import com.example.toolmanagingsystem.repository.*;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -83,43 +82,31 @@ public class ApiController
     }
 
     @GetMapping("/display")
-    public List<HashMap<String, Object>> returnPunchList(@RequestParam Map<String, Object> params)
+    public List<Punch> returnPunchList(@RequestParam HashMap<String, Object> params)
     {
         System.out.println("params");
         System.out.println(params);
 
-        List<Punch> punchList = this.punchRepository.findAll(
-            PunchRepository.filter(
-                params.get("startDate").toString(),
-                params.get("endDate").toString(),
-                params.get("type").toString(),
-                params.get("manufacturer").toString(),
-                params.get("status").toString(),
-                params.get("storageLocation").toString(),
-                params.get("product").toString(),
-                params.get("ptype").toString()
-            )
-        );
+        List<Punch> punchList = new ArrayList<>();
+        List<Punch> filteredPunchList = new ArrayList<>();
 
-        for (Punch punch: punchList) {
-            System.out.println(punch);
+        Iterable<Punch> punchIterable = this.punchRepository.findAll();
+        for (Punch punch: punchIterable)
+        {
+            punchList.add(punch);
         }
 
-
-
-        System.out.println(this.dao.getUsingPunchList(params));
-        List<HashMap<String, Object>> resultSet = this.dao.getUsingPunchList(params);
-
-        Collections.sort(resultSet, Comparator.comparing(result -> {
-            String[] parts = ((Map<String, Object>) result).get("punchId").toString().split("-");
-            return parts[4];
-        }).thenComparing(result -> {
-            String[] parts = ((Map<String, Object>) result).get("punchId").toString().split("-");
-            LocalDate registerDate = LocalDate.of(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Integer.parseInt(parts[3]));
-            return registerDate;
-        }));
-
-        return resultSet;
+        if (params.isEmpty()) {
+            return punchList;
+        } else {
+            for (Punch punch: punchList)
+            {
+                if (this.filterPunch(punch, params)) {
+                    filteredPunchList.add(punch);
+                }
+            }
+            return filteredPunchList;
+        }
     }
 
     @GetMapping("/duplicate")
@@ -635,5 +622,41 @@ public class ApiController
     {
         Logging logging = new Logging(username, activity, LocalDateTime.now());
         this.loggingRepository.save(logging);
+    }
+
+    private boolean filterPunch(Punch punch, HashMap<String, Object> params)
+    {
+        String strStartDate = (String) params.get("startDate");
+        LocalDate startDate = LocalDate.parse(strStartDate);
+
+        String strEndDate = (String) params.get("startDate");
+        LocalDate endDate = LocalDate.parse(strEndDate);
+
+        String type = (String) params.get("type");
+        String manufacturer = (String) params.get("manufacturer");
+        PunchStatus status = (PunchStatus) params.get("status");
+        String storageLocation = (String) params.get("storageLocation");
+        String product = (String) params.get("product");
+        String pType = (String) params.get("ptype");
+
+        if (punch.getRegisterDate().isBefore(startDate)) {
+            return false;
+        } else if (punch.getRegisterDate().isAfter(endDate)) {
+            return false;
+        } else if (!Objects.equals(punch.getType(), type)) {
+            return false;
+        } else if (!Objects.equals(punch.getSupplier(), manufacturer)) {
+            return false;
+        } else if (punch.getPunchStatus() != status) {
+            return false;
+        } else if (!Objects.equals(punch.getPunchStorageLocation(), storageLocation)) {
+            return false;
+        } else if (!Objects.equals(punch.getProductType(), product)) {
+            return false;
+        } else if (!Objects.equals(punch.getPtype(), pType)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

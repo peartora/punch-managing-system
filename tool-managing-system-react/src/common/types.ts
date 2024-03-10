@@ -3,14 +3,14 @@ export type PunchStatus = (typeof PUNCH_STATUS)[number];
 
 export type PunchRow = {
   punchId: string;
-  supplier: string;
+  supplier: Record<string, string>;
   specification: string;
   latestInspectionDate: string;
   inspectionFilePath: string;
   punchStatus: PunchStatus;
   punchStorageLocation: string;
-  product: string;
-  productType: string;
+  ptype: string;
+  productType: Record<string, string>;
   punchType: string;
   latestCleaningHistory: string;
   totalUsageNumber: number;

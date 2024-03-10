@@ -14,8 +14,7 @@ const OverViewList = () => {
     const keyArray: string[] = punchId.split("-");
     const registerDate = `${keyArray[1]}-${keyArray[2]}-${keyArray[3]}`;
     const key = `${keyArray[4]}-${registerDate}`;
-
-    const punchType = r.punchType;
+    const punchType = keyArray[5];
 
     if (keys.indexOf(key) === -1) {
       console.log("key");

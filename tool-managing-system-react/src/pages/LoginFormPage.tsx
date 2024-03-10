@@ -27,9 +27,13 @@ export const LoginFormPage = () => {
       NOK: (params) => {
         const trialCount = parseInt(params[0], 10);
         if (trialCount >= 5) {
-          `${username} 계정의 비밀번호가 5회 틀렸습니다. 계정이 잠겼습니다.(관리자에게 문의 하세요)`;
+          alert(
+            `${username} 계정의 비밀번호가 5회 틀렸습니다. 계정이 잠겼습니다.(관리자에게 문의 하세요)`
+          );
         } else {
-          `${username} 계정의 비밀번호가 ${trialCount}회 틀렸습니다.(5회 이상 틀리면 계정이 잠금으로 바뀝니다.)`;
+          alert(
+            `${username} 계정의 비밀번호가 ${trialCount}회 틀렸습니다.(5회 이상 틀리면 계정이 잠금으로 바뀝니다.`
+          );
         }
       },
     }).catch((error) => {

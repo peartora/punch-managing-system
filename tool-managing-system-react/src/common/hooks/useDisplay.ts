@@ -9,6 +9,8 @@ export const useDisplay = function (params?: URLSearchParams) {
   const [isLoading, setLoading] = useState(true);
   const [rows, setRows] = useState<Array<PunchRowType>>([]);
 
+  console.log(`useDisplay called`);
+
   useEffect(() => {
     console.log(`effect happen`);
     if (isFirst) {

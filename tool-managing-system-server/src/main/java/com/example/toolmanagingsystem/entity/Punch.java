@@ -17,7 +17,8 @@ public class Punch
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String number;
+    @Column(name = "number")
+    private String punchId;
     @Column(name = "register-date")
     private LocalDate registerDate;
     private String type;
@@ -25,36 +26,40 @@ public class Punch
     @JoinColumn(name = "supplier_id")
     private PunchSupplier supplier;
     @Enumerated(EnumType.STRING)
-    private PunchStatus status = PunchStatus.사용대기;
-    private String location;
+    @Column(name = "status")
+    private PunchStatus punchStatus = PunchStatus.사용대기;
+    @Column(name = "location")
+    private String punchStorageLocation;
+    private String specification;
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private Product product;
+    private Product productType;
     private String ptype;
 
     @Override
     public String toString() {
         return "Punch{" +
                 "id=" + id +
-                ", number='" + number + '\'' +
+                ", number='" + punchId + '\'' +
                 ", registerDate=" + registerDate +
                 ", type='" + type + '\'' +
                 ", manufacturer='" + supplier + '\'' +
-                ", status=" + status +
-                ", location='" + location + '\'' +
-                ", product=" + product +
+                ", status=" + punchStatus +
+                ", location='" + punchStorageLocation + '\'' +
+                ", product=" + productType +
                 ", ptype='" + ptype + '\'' +
                 '}';
     }
 
     public Punch(PunchRegister registerObject, PunchSupplier punchSupplier, Product product) {
-        this.number = registerObject.getNumber();
+        this.punchId = registerObject.getNumber();
         this.registerDate = registerObject.getDate();
         this.type = registerObject.getType();
         this.supplier = punchSupplier;
-        this.location = registerObject.getLocation();
-        this.product = product;
+        this.punchStorageLocation = registerObject.getLocation();
+        this.productType = product;
         this.ptype = registerObject.getProductType();
+        this.specification = registerObject.getSpecification();
     }
     public Punch() {}
 }
