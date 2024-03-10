@@ -4,19 +4,11 @@ import { useBringProductList } from "@/common/hooks/useBringProductList";
 import { useBringSupplierList } from "@/common/hooks/useBringSupplierList";
 import { request } from "@/common/utils/ajax";
 
+import { Data } from "@/common/types";
+import { Reponse } from "@/common/types";
+
 const options = ["상부", "하부", "다이"];
 const productTypeoptions = ["BB", "B", "D"];
-
-type Data = {
-  number: string;
-  date: string;
-  type: string;
-  manufacturer: string;
-  status: string;
-  location: string;
-  product: string;
-  productType: string;
-};
 
 export function RegisterPunchForm() {
   const [startNumber, setStartNumber] = useState<number>(0);
@@ -51,7 +43,6 @@ export function RegisterPunchForm() {
         query.append("punchId", punchId);
 
         try {
-          // await 키워드를 사용하여 비동기 처리 완료를 기다림
           const response = await request.get(
             `/api/tool-managing-system/duplicate?${query}`
           );
@@ -61,14 +52,13 @@ export function RegisterPunchForm() {
 
           if (result === "0") {
             const data: Data = {
-              number: punchId,
+              punchId: punchId,
               date: registerDate,
-              type: punchType,
-              manufacturer: supplier,
-              status: `사용대기`,
-              location: storageLocation,
-              product: productName,
-              productType: productType,
+              punchPosition: punchType,
+              supplier: supplier,
+              storageLocation: storageLocation,
+              medicine: productName,
+              medicineType: productType,
             };
 
             punchIdArrays.push(data);
@@ -91,7 +81,6 @@ export function RegisterPunchForm() {
       console.log(punchIdArrays);
 
       try {
-        // await 키워드를 사용하여 비동기 처리 완료를 기다림
         const response = await request.post(
           `/api/tool-managing-system/register`,
           punchIdArrays
@@ -102,10 +91,14 @@ export function RegisterPunchForm() {
           throw new Error(`펀치 id 등록중 error가 발생 하였습니다.`);
         }
 
-        const result = await response.json();
-        if (result === punchIdArrays.length) {
-          alert(`펀치 ${result}개가 성공적으로 등록되었습니다.`);
-        } else if (result == 0) {
+        const result: Reponse = await response.json();
+
+        console.log(`result`);
+        console.log(`${result}`);
+
+        if (result.count === punchIdArrays.length) {
+          alert(`펀치 ${result.count}개가 성공적으로 등록되었습니다.`);
+        } else if (result.count == 0) {
           alert(`펀치 등록에 실패 하였습니다.`);
         }
       } catch (error) {
@@ -172,11 +165,11 @@ export function RegisterPunchForm() {
       </div>
 
       <div className="input-group mb-3">
-        <label htmlFor="punchType" className="form-label">
+        <label htmlFor="punchPosition" className="form-label">
           펀치타입:
         </label>
         <select
-          id="punchType"
+          id="punchPosition"
           className="form-select"
           value={punchType}
           onChange={(event) => setPunchType(event.target.value)}

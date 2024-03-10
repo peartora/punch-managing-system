@@ -1,4 +1,4 @@
-package com.example.toolmanagingsystem.entity;
+package com.example.toolmanagingsystem.entity.logging;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -14,11 +14,11 @@ public class Logging
     private long id;
     private String username;
     @Enumerated(EnumType.STRING)
-    private LogActivity activity;
+    private LoggingActivity activity;
     @Column(name = "date_time")
     private LocalDateTime dateTime;
 
-    public Logging(String username, LogActivity activity, LocalDateTime dateTime)
+    public Logging(String username, LoggingActivity activity, LocalDateTime dateTime)
     {
         this.username = username;
         this.activity = activity;

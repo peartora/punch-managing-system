@@ -1,6 +1,6 @@
-package com.example.toolmanagingsystem.entity;
+package com.example.toolmanagingsystem.entity.logging;
 
-public enum LogActivity
+public enum LoggingActivity
 {
     LOGIN_TRIAL,
     LOGIN,

@@ -1,6 +1,6 @@
 package com.example.toolmanagingsystem.repository;
 
-import com.example.toolmanagingsystem.entity.User;
+import com.example.toolmanagingsystem.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

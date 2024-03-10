@@ -7,16 +7,16 @@ import lombok.Data;
 
 @Entity(name = "manufacturer")
 @Data
-public class PunchSupplier
+public class Supplier
 {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
     private String supplier;
 
-    public PunchSupplier(String supplier) {
+    public Supplier(String supplier) {
         this.supplier = supplier;
     }
 
-    public PunchSupplier() {}
+    public Supplier() {}
 }

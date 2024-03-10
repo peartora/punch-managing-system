@@ -1,12 +1,8 @@
 package com.example.toolmanagingsystem.dao;
 
-import com.example.toolmanagingsystem.dto.PunchRegister;
-import com.example.toolmanagingsystem.dto.PunchScrapDao;
-import com.example.toolmanagingsystem.dto.PunchStatus;
+import com.example.toolmanagingsystem.dto.request.PunchScrapDao;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 

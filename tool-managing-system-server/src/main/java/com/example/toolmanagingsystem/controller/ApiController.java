@@ -1,16 +1,21 @@
 package com.example.toolmanagingsystem.controller;
 
 import com.example.toolmanagingsystem.dao.PunchDao;
-import com.example.toolmanagingsystem.dto.*;
+import com.example.toolmanagingsystem.dto.request.PunchRegisterRequestDto;
+import com.example.toolmanagingsystem.dto.request.PunchScrapDao;
+import com.example.toolmanagingsystem.dto.request.UserRegisterDto;
+import com.example.toolmanagingsystem.dto.response.PunchRegisterResponseDto;
 import com.example.toolmanagingsystem.entity.*;
-import com.example.toolmanagingsystem.entity.Punch;
+import com.example.toolmanagingsystem.entity.logging.Logging;
+import com.example.toolmanagingsystem.entity.logging.LoggingActivity;
+import com.example.toolmanagingsystem.entity.punch.Punch;
+import com.example.toolmanagingsystem.entity.punch.PunchStatus;
+import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.repository.*;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -22,7 +27,6 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tool-managing-system")
@@ -45,40 +49,34 @@ public class ApiController
 
     private final PunchDao dao;
     @PostMapping("/register")
-    public int registerPunch(@RequestBody List<PunchRegister> punchRegisterList)
+    public PunchRegisterResponseDto registerPunch(@RequestBody List<PunchRegisterRequestDto> punchRegisterRequestDtoList)
     {
         System.out.println("registerPunch");
+        System.out.println(punchRegisterRequestDtoList);
 
-        List<Punch> punchList = new ArrayList<>();
+        List<Punch> entityList = new ArrayList<>();
 
-        for (PunchRegister punch: punchRegisterList)
+        for (PunchRegisterRequestDto punchRegisterRequestDto : punchRegisterRequestDtoList)
         {
-            String supplier = punch.getManufacturer();
-            PunchSupplier punchSupplier = this.punchSupplierRepository.findBySupplier(supplier);
+            String supplier = punchRegisterRequestDto.getSupplier();
+            Supplier punchSupplier = this.punchSupplierRepository.findBySupplier(supplier);
 
-            String productName = punch.getProduct();
-            Product product = this.productRepository.findByProduct(productName);
+            String medicineName = punchRegisterRequestDto.getMedicine();
+            Medicine medicine = this.productRepository.findByProduct(medicineName);
 
-            Punch punchEntity = new Punch(punch, punchSupplier, product);
-            punchList.add(punchEntity);
+            Punch entity = new Punch(punchRegisterRequestDto, punchSupplier, medicine);
+            entityList.add(entity);
         }
-
-        int count = 0;
 
         try
         {
-            Iterable<Punch> punchIterable = this.punchRepository.saveAll(punchList);
-            for (Punch punch: punchIterable)
-            {
-                count++;
-            }
+            this.punchRepository.saveAll(entityList);
+            return new PunchRegisterResponseDto(entityList.size(), "OK");
         }
         catch (Exception e)
         {
-            return 0;
+            return new PunchRegisterResponseDto(0, "NOK");
         }
-
-        return count;
     }
 
     @GetMapping("/display")
@@ -222,12 +220,12 @@ public class ApiController
     {
         String strFilePath = saveSpecificationFile(specificationFile);
 
-        Product productBeforeUpdate = this.productRepository.findByProduct(productName);
-        productBeforeUpdate.setSpecificationPath(strFilePath);
+        Medicine medicineBeforeUpdate = this.productRepository.findByProduct(productName);
+        medicineBeforeUpdate.setSpecificationPath(strFilePath);
 
         try
         {
-            this.productRepository.save(productBeforeUpdate);
+            this.productRepository.save(medicineBeforeUpdate);
             return 1;
         }
         catch (Exception e)
@@ -246,11 +244,11 @@ public class ApiController
     public int addProduct(@RequestParam("product") String productName, @RequestParam("specificationFile") MultipartFile specificationFile)
     {
         String strFilePath = this.saveSpecificationFile(specificationFile);
-        Product product = new Product(productName, LocalDateTime.now(), strFilePath);
+        Medicine medicine = new Medicine(productName, LocalDateTime.now(), strFilePath);
 
         try
         {
-            this.productRepository.save(product);
+            this.productRepository.save(medicine);
             return 1;
         }
         catch (Exception e)
@@ -282,14 +280,14 @@ public class ApiController
     }
 
     @PostMapping("/addSupplier")
-    public int addSupplier(@RequestBody PunchSupplier punchSupplier)
+    public int addSupplier(@RequestBody Supplier supplier)
     {
         System.out.println("addSupplier");
-        System.out.println(punchSupplier.getSupplier());
+        System.out.println(supplier.getSupplier());
 
         try
         {
-            this.punchSupplierRepository.save(punchSupplier);
+            this.punchSupplierRepository.save(supplier);
             return 1;
         }
         catch (Exception e)
@@ -328,7 +326,7 @@ public class ApiController
         User user = this.userRepository.findByUsername(params.get("username").toString());
         if (user == null)
         {
-            this.logging("unknown", LogActivity.LOGIN_FAIL_PASSWORD_UNREGISTERED_ID);
+            this.logging("unknown", LoggingActivity.LOGIN_FAIL_PASSWORD_UNREGISTERED_ID);
             System.out.println("NoId");
             return "NoId";
         }
@@ -341,11 +339,11 @@ public class ApiController
         int trialCount = user.getTrialCount();
         LocalDate createdDate = user.getCreatedDate();
 
-        this.logging(username, LogActivity.LOGIN_TRIAL);
+        this.logging(username, LoggingActivity.LOGIN_TRIAL);
 
         if (!isApproved)
         {
-            this.logging(username, LogActivity.LOGIN_FAIL_NOT_APPROVED_ID);
+            this.logging(username, LoggingActivity.LOGIN_FAIL_NOT_APPROVED_ID);
             System.out.println("NotYetApproved");
             return ("NotYetApproved");
         }
@@ -353,7 +351,7 @@ public class ApiController
         {
             if (isLocked)
             {
-                this.logging(username, LogActivity.LOGIN_FAIL_LOCKED_ID);
+                this.logging(username, LoggingActivity.LOGIN_FAIL_LOCKED_ID);
                 System.out.println("Locked");
                 return "Locked";
             }
@@ -361,7 +359,7 @@ public class ApiController
             {
                 if (LocalDate.now().isAfter(createdDate.plusMonths(6)))
                 {
-                    this.logging(username, LogActivity.LOGIN_FAIL_PASSWORD_EXPIRED);
+                    this.logging(username, LoggingActivity.LOGIN_FAIL_PASSWORD_EXPIRED);
                     System.out.println("password is expired");
                     return "Expired";
                 }
@@ -369,7 +367,7 @@ public class ApiController
                 {
                     if (Objects.equals(params.get("password"), currentPassword))
                     {
-                        this.logging(username, LogActivity.LOGIN);
+                        this.logging(username, LoggingActivity.LOGIN);
                         user.setTrialCount(0);
                         this.userRepository.save(user);
                         System.out.println("LOGINED AS " + username);
@@ -377,7 +375,7 @@ public class ApiController
                     }
                     else // password is not correct
                     {
-                        this.logging(username, LogActivity.LOGIN_FAIL_PASSWORD_INCORRECT);
+                        this.logging(username, LoggingActivity.LOGIN_FAIL_PASSWORD_INCORRECT);
                         int trialCountPlusOne = trialCount + 1;
                         user.setTrialCount(trialCountPlusOne);
                         this.userRepository.save(user);
@@ -413,7 +411,7 @@ public class ApiController
         try
         {
             this.userRepository.save(user);
-            this.logging(username, LogActivity.PASSWORD_CHANGE);
+            this.logging(username, LoggingActivity.PASSWORD_CHANGE);
             return "OK";
         }
         catch (Exception e)
@@ -423,12 +421,12 @@ public class ApiController
     }
 
     @PostMapping("/create_id")
-    public String createId (@RequestBody UserDto userDto)
+    public String registerUser (@RequestBody UserRegisterDto userRegisterDto)
     {
         System.out.println("createId");
-        System.out.println(userDto);
+        System.out.println(userRegisterDto);
 
-        User user = new User(userDto);
+        User user = new User(userRegisterDto);
         try
         {
             this.userRepository.save(user);
@@ -618,7 +616,7 @@ public class ApiController
         }
     }
 
-    private void logging(String username, LogActivity activity)
+    private void logging(String username, LoggingActivity activity)
     {
         Logging logging = new Logging(username, activity, LocalDateTime.now());
         this.loggingRepository.save(logging);
@@ -638,56 +636,56 @@ public class ApiController
         System.out.println("endDate:");
         System.out.println(endDate);
 
-        String type = (String) params.get("type");
-        System.out.println("type:");
-        System.out.println(type);
+        String punchPosition = (String) params.get("punchPosition");
+        System.out.println("punchPosition:");
+        System.out.println(punchPosition);
 
-        String manufacturer = (String) params.get("manufacturer");
-        System.out.println("manufacturer:");
-        System.out.println(manufacturer);
+        String supplier = (String) params.get("supplier");
+        System.out.println("supplier:");
+        System.out.println(supplier);
 
         String strStatus = (String) params.get("status");
         System.out.println("strStatus:");
         System.out.println(strStatus);
 
-        PunchStatus status = null;
+        PunchStatus punchStatus = null;
 
         if (!Objects.equals(strStatus, "All")) {
-            status = PunchStatus.valueOf(strStatus);
-            System.out.println("status:");
-            System.out.println(status);
+            punchStatus = PunchStatus.valueOf(strStatus);
+            System.out.println("punchStatus:");
+            System.out.println(punchStatus);
         }
 
         String storageLocation = (String) params.get("storageLocation");
         System.out.println("storageLocation:");
         System.out.println(storageLocation);
 
-        String product = (String) params.get("product");
-        System.out.println("product:");
-        System.out.println(product);
+        String medicine = (String) params.get("medicine");
+        System.out.println("medicine:");
+        System.out.println(medicine);
 
-        String pType = (String) params.get("ptype");
-        System.out.println("pType:");
-        System.out.println(pType);
+        String medicineType = (String) params.get("medicineType");
+        System.out.println("medicineType:");
+        System.out.println(medicineType);
 
         System.out.println("===========================================================");
 
-        if (punch.getRegisterDate().isBefore(startDate) || punch.getRegisterDate().isAfter(endDate))
+        if (punch.getDate().isBefore(startDate) || punch.getDate().isAfter(endDate))
         {
             return false;
         }
 
-        if (!Objects.equals(type, "All"))
+        if (!Objects.equals(punchPosition, "All"))
         {
-            if (!Objects.equals(punch.getType(), type))
+            if (!Objects.equals(punch.getPunchPosition(), punchPosition))
             {
                 return false;
             }
         }
 
-        if (!Objects.equals(manufacturer, "All"))
+        if (!Objects.equals(supplier, "All"))
         {
-            if (!Objects.equals(punch.getSupplier().getSupplier(), manufacturer))
+            if (!Objects.equals(punch.getSupplier().getSupplier(), supplier))
             {
                 return false;
             }
@@ -695,29 +693,29 @@ public class ApiController
 
         if (!Objects.equals(strStatus, "All"))
         {
-            if (!Objects.equals(punch.getPunchStatus().toString(), status.toString()))
+            if (!Objects.equals(punch.getPunchStatus().toString(), punchStatus.toString()))
             {
                 return false;
             }
         }
 
 
-        if (!Objects.equals(punch.getPunchStorageLocation(), storageLocation))
+        if (!Objects.equals(punch.getStorageLocation(), storageLocation))
         {
             return false;
         }
 
-        if (!Objects.equals(product, "All"))
+        if (!Objects.equals(medicine, "All"))
         {
-            if (!Objects.equals(punch.getProductType().getProduct(), product))
+            if (!Objects.equals(punch.getMedicine().getProduct(), medicine))
             {
                 return false;
             }
         }
 
-        if (!Objects.equals(pType, "All"))
+        if (!Objects.equals(medicineType, "All"))
         {
-            if (!Objects.equals(punch.getPtype(), pType))
+            if (!Objects.equals(punch.getMedicineType(), medicineType))
             {
                 return false;
             }

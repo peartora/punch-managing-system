@@ -1,11 +1,11 @@
 package com.example.toolmanagingsystem.repository;
 
-import com.example.toolmanagingsystem.entity.PunchSupplier;
+import com.example.toolmanagingsystem.entity.Supplier;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PunchSupplierRepository extends JpaRepository<PunchSupplier, Long>
+public interface PunchSupplierRepository extends JpaRepository<Supplier, Long>
 {
-    PunchSupplier findBySupplier(String supplier);
+    Supplier findBySupplier(String supplier);
 }

@@ -1,4 +1,4 @@
-package com.example.toolmanagingsystem.dto;
+package com.example.toolmanagingsystem.entity.punch;
 
 public enum PunchStatus
 {

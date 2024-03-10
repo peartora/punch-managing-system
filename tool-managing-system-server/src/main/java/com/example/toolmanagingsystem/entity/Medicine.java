@@ -6,13 +6,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.Data;
 
-import javax.annotation.processing.Generated;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity(name = "size-control")
 @Data
-public class Product
+public class Medicine
 {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
@@ -23,12 +21,12 @@ public class Product
     @Column(name = "specification-path")
     private String specificationPath;
 
-    public Product(String product, LocalDateTime date, String specificationPath)
+    public Medicine(String product, LocalDateTime date, String specificationPath)
     {
         this.product = product;
         this.dateTime = date;
         this.specificationPath = specificationPath;
     }
 
-    public Product() {}
+    public Medicine() {}
 }

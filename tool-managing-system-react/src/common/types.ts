@@ -20,13 +20,18 @@ export type PunchRow = {
 };
 
 export type Data = {
-  number: string;
+  punchId: string;
   date: string;
-  type: string;
-  manufacturer: string;
-  specification: string;
-  status: string;
-  location: string;
-  product: string;
-  productType: string;
+  punchPosition: string;
+  supplier: string;
+  storageLocation: string;
+  medicine: string;
+  medicineType: string;
 };
+
+export type Reponse = {
+  count: number;
+  message: string;
+}
+
+

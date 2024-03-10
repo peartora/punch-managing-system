@@ -1,4 +1,4 @@
-package com.example.toolmanagingsystem.entity;
+package com.example.toolmanagingsystem.entity.user;
 
 public enum UserRole
 {

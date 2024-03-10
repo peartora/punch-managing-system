@@ -1,13 +1,4 @@
-type Data = {
-  number: string;
-  date: string;
-  type: string;
-  manufacturer: string;
-  status: string;
-  location: string;
-  product: string;
-  productType: string;
-};
+import { Data } from "../types";
 
 export const request = {
   get(url: string) {

@@ -1,6 +1,6 @@
-package com.example.toolmanagingsystem.entity;
+package com.example.toolmanagingsystem.entity.user;
 
-import com.example.toolmanagingsystem.dto.UserDto;
+import com.example.toolmanagingsystem.dto.request.UserRegisterDto;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -28,10 +28,10 @@ public class User
     @Column(name = "created_date")
     private LocalDate createdDate;
 
-    public User(UserDto userDto) {
-        this.username = userDto.getId();
-        this.password = userDto.getPassword();
-        this.userRole = UserRole.valueOf(userDto.getRole());
+    public User(UserRegisterDto userRegisterDto) {
+        this.username = userRegisterDto.getId();
+        this.password = userRegisterDto.getPassword();
+        this.userRole = UserRole.valueOf(userRegisterDto.getRole());
         this.isLocked = false;
         this.trialCount = 0;
         this.isApproved = false;

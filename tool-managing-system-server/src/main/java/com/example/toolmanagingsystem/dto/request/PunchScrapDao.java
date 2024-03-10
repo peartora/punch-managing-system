@@ -1,6 +1,6 @@
-package com.example.toolmanagingsystem.dto;
+package com.example.toolmanagingsystem.dto.request;
 
-import lombok.Data;
+import com.example.toolmanagingsystem.entity.punch.PunchStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;

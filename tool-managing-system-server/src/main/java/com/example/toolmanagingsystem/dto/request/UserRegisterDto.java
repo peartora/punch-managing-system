@@ -1,10 +1,9 @@
-package com.example.toolmanagingsystem.dto;
+package com.example.toolmanagingsystem.dto.request;
 
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
-public class UserDto
+public class UserRegisterDto
 {
     private String id;
     private String password;
@@ -13,7 +12,7 @@ public class UserDto
     @Override
     public String toString()
     {
-        return "UserDto{" +
+        return "UserRegisterDto{" +
                 "username='" + id + '\'' +
                 ", password='" + password + '\'' +
                 ", userRole='" + role + '\'' +
