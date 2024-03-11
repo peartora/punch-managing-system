@@ -15,15 +15,15 @@ public class Medicine
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
-    private String product;
-    @Column(name = "date")
+    private String medicine;
+    @Column(name = "date_time")
     private LocalDateTime dateTime;
-    @Column(name = "specification-path")
+    @Column(name = "specification_path")
     private String specificationPath;
 
-    public Medicine(String product, LocalDateTime date, String specificationPath)
+    public Medicine(String medicine, LocalDateTime date, String specificationPath)
     {
-        this.product = product;
+        this.medicine = medicine;
         this.dateTime = date;
         this.specificationPath = specificationPath;
     }

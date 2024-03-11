@@ -22,7 +22,7 @@ export function RegisterPunchForm() {
   const [productName, setProductName] = useState("");
   const [productType, setProductType] = useState("");
 
-  const { productList } = useBringProductList();
+  const { medicineNameList } = useBringProductList();
   const { supplierList } = useBringSupplierList();
 
   async function handleSubmit(event: any) {
@@ -92,9 +92,6 @@ export function RegisterPunchForm() {
         }
 
         const result: Reponse = await response.json();
-
-        console.log(`result`);
-        console.log(`${result}`);
 
         if (result.count === punchIdArrays.length) {
           alert(`펀치 ${result.count}개가 성공적으로 등록되었습니다.`);
@@ -239,10 +236,10 @@ export function RegisterPunchForm() {
           <option value="" disabled>
             아래 list 에서 선택 하세요.
           </option>
-          {productList.map((productName) => {
+          {medicineNameList.map((medicineName) => {
             return (
-              <option key={productName} value={productName}>
-                {productName}
+              <option key={medicineName} value={medicineName}>
+                {medicineName}
               </option>
             );
           })}

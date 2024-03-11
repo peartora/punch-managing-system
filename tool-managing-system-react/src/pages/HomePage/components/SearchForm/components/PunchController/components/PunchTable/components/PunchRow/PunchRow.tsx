@@ -57,13 +57,13 @@ export function PunchRow({
           punchStatus={row.punchStatus}
           count={row.totalUsageNumber}
           punchId={row.punchId}
-          product={row.productType.product}
+          product={row.medicine.medicine}
           refetch={refetch}
         />
       </td>
       <td>{row.punchStorageLocation}</td>
-      <td>{row.productType.product}</td>
-      <td>{row.ptype}</td>
+      <td>{row.medicine.medicine}</td>
+      <td>{row.medicineType}</td>
       <CleaningHistoryTd
         latestCleaningHistory={row.latestCleaningHistory}
         punchId={row.punchId}

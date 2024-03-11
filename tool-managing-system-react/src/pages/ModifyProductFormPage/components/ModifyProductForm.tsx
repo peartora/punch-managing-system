@@ -7,7 +7,7 @@ export function ModifyProductForm() {
   const [productName, setProductName] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const { productList, isLoading } = useBringProductList();
+  const { medicineNameList, isLoading } = useBringProductList();
 
   function handleSubmit(event: any) {
     event.preventDefault();
@@ -55,10 +55,10 @@ export function ModifyProductForm() {
           <option value="" disabled>
             아래 list 에서 선택 하세요.
           </option>
-          {productList.map((productName) => {
+          {medicineNameList.map((medicineName) => {
             return (
-              <option key={productName} value={productName}>
-                {productName}
+              <option key={medicineName} value={medicineName}>
+                {medicineName}
               </option>
             );
           })}

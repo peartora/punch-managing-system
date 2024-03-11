@@ -8,7 +8,7 @@ type Props = {
 };
 
 export function FilterController(props: Props) {
-  const { productList, isLoading } = useBringProductList();
+  const { medicineNameList, isLoading } = useBringProductList();
   const { supplierList } = useBringSupplierList();
 
   if (isLoading) {
@@ -17,7 +17,7 @@ export function FilterController(props: Props) {
 
   return (
     <Filter
-      productList={productList}
+      medicineNameList={medicineNameList}
       supplierList={supplierList}
       setParams={props.setParams}
     />

@@ -7,31 +7,31 @@ export function RegisterProductForm() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const query = new URLSearchParams();
-  query.append("product", productName);
+  query.append("medicineName", productName);
 
   function handleSubmit(event: any) {
     event.preventDefault();
 
     request
-      .get(`/api/tool-managing-system/duplicateProduct?${query}`)
+      .get(`/api/tool-managing-system/duplicateMedicine?${query}`)
       .then((response) => {
         if (!response.ok) throw new Error(`duplicate error`);
         return response.text();
       })
       .then((response) => {
-        if (response === "0") {
+        if (response === "OK") {
           const formData = new FormData();
-          formData.append("product", productName);
+          formData.append("medicine", productName);
           if (selectedFile) formData.append("specificationFile", selectedFile);
 
           request
-            .post(`/api/tool-managing-system/addProduct`, formData)
+            .post(`/api/tool-managing-system/registerMedicine`, formData)
             .then((response) => {
               if (!response.ok) throw new Error(`register error`);
               return response.text();
             })
             .then((result) => {
-              if (result === "1") {
+              if (result === "OK") {
                 alert(`${productName}이 정상적으로 등록 되었습니다.`);
               } else {
                 throw new Error(

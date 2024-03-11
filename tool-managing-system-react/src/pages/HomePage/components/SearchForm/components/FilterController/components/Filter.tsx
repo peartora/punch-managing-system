@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 
 type Props = {
   setParams: (params: URLSearchParams) => void;
-  productList: Array<string>;
+  medicineNameList: Array<string>;
   supplierList: Array<string>;
 };
 
@@ -226,10 +226,10 @@ export function Filter(props: Props) {
             <option value="" disabled>
               선택 하세요.
             </option>
-            {props.productList.map((productName) => {
+            {props.medicineNameList.map((medicineName) => {
               return (
-                <option key={productName} value={productName}>
-                  {productName}
+                <option key={medicineName} value={medicineName}>
+                  {medicineName}
                 </option>
               );
             })}

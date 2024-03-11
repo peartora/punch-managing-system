@@ -36,7 +36,7 @@ public class ApiController
     @Autowired
     PunchRepository punchRepository;
     @Autowired
-    ProductRepository productRepository;
+    MedicineRepository medicineRepository;
     @Autowired
     PunchSupplierRepository punchSupplierRepository;
     @Autowired
@@ -62,7 +62,7 @@ public class ApiController
             Supplier punchSupplier = this.punchSupplierRepository.findBySupplier(supplier);
 
             String medicineName = punchRegisterRequestDto.getMedicine();
-            Medicine medicine = this.productRepository.findByProduct(medicineName);
+            Medicine medicine = this.medicineRepository.findByMedicine(medicineName);
 
             Punch entity = new Punch(punchRegisterRequestDto, punchSupplier, medicine);
             entityList.add(entity);
@@ -206,10 +206,18 @@ public class ApiController
         return this.dao.retrievSpecification(punchId);
     }
 
-    @GetMapping("/getProducts")
-    public List<String> returnProducts()
+    @GetMapping("/getMedicine")
+    public List<String> returnMedicine()
     {
-        return this.dao.returnProducts();
+        List<Medicine> medicineList = this.medicineRepository.findAll();
+
+        List<String> medicineNameList = new ArrayList<>();
+
+        for (Medicine medicine: medicineList)
+        {
+            medicineNameList.add(medicine.getMedicine());
+        }
+        return medicineNameList;
     }
 
     @PostMapping("/updateBatchInfor")
@@ -220,12 +228,12 @@ public class ApiController
     {
         String strFilePath = saveSpecificationFile(specificationFile);
 
-        Medicine medicineBeforeUpdate = this.productRepository.findByProduct(productName);
+        Medicine medicineBeforeUpdate = this.medicineRepository.findByMedicine(productName);
         medicineBeforeUpdate.setSpecificationPath(strFilePath);
 
         try
         {
-            this.productRepository.save(medicineBeforeUpdate);
+            this.medicineRepository.save(medicineBeforeUpdate);
             return 1;
         }
         catch (Exception e)
@@ -234,26 +242,34 @@ public class ApiController
         }
     }
 
-    @GetMapping("/duplicateProduct")
-    public int returnCheckResultForProduct(@RequestParam String product)
+    @GetMapping("/duplicateMedicine")
+    public String returnCheckResultForMedicine(@RequestParam String medicineName)
     {
-        return this.dao.checkDuplicateForProduct(product);
+        Medicine medicine = this.medicineRepository.findByMedicine(medicineName);
+        if (medicine == null)
+        {
+            return "OK";
+        }
+        else
+        {
+            return "NOK";
+        }
     }
 
-    @PostMapping("/addProduct")
-    public int addProduct(@RequestParam("product") String productName, @RequestParam("specificationFile") MultipartFile specificationFile)
+    @PostMapping("/registerMedicine")
+    public String registerMedicine(@RequestParam("medicine") String medicineName, @RequestParam("specificationFile") MultipartFile specificationFile)
     {
         String strFilePath = this.saveSpecificationFile(specificationFile);
-        Medicine medicine = new Medicine(productName, LocalDateTime.now(), strFilePath);
+        Medicine medicine = new Medicine(medicineName, LocalDateTime.now(), strFilePath);
 
         try
         {
-            this.productRepository.save(medicine);
-            return 1;
+            this.medicineRepository.save(medicine);
+            return "OK";
         }
         catch (Exception e)
         {
-            return 0;
+            return "NOK";
         }
     }
     @PostMapping("updateInspectionResult")
@@ -423,7 +439,7 @@ public class ApiController
     @PostMapping("/create_id")
     public String registerUser (@RequestBody UserRegisterDto userRegisterDto)
     {
-        System.out.println("createId");
+        System.out.println("registerUser");
         System.out.println(userRegisterDto);
 
         User user = new User(userRegisterDto);
@@ -707,7 +723,7 @@ public class ApiController
 
         if (!Objects.equals(medicine, "All"))
         {
-            if (!Objects.equals(punch.getMedicine().getProduct(), medicine))
+            if (!Objects.equals(punch.getMedicine().getMedicine(), medicine))
             {
                 return false;
             }

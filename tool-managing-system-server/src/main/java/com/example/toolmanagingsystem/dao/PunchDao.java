@@ -226,13 +226,6 @@ public class PunchDao
         return this.template.queryForList( "select `product` from `size-control`", paramMap, String.class);
     }
 
-    public int checkDuplicateForProduct(String product)
-    {
-        Map<String, String> idMap = new HashMap<>();
-        idMap.put("product", product);
-
-        return this.template.queryForObject("select count(*) from `size-control` where `product` = :product", idMap, Integer.class);
-    }
 
     public int updateInspectionResult(Map<String, Object> mapParamsWithPdfFile)
     {

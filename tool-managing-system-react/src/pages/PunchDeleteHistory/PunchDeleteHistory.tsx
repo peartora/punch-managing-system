@@ -11,7 +11,7 @@ export function PunchDeleteHistory() {
 
   let selectedProduct = "";
 
-  const { productList } = useBringProductList();
+  const { medicineNameList } = useBringProductList();
 
   function changeHandler(event: React.ChangeEvent<HTMLSelectElement>) {
     selectedProduct = event.target.value;
@@ -55,10 +55,10 @@ export function PunchDeleteHistory() {
           <option value="" disabled>
             아래 list 에서 선택 하세요.
           </option>
-          {productList.map((productName) => {
+          {medicineNameList.map((medicineName) => {
             return (
-              <option key={productName} value={productName}>
-                {productName}
+              <option key={medicineName} value={medicineName}>
+                {medicineName}
               </option>
             );
           })}

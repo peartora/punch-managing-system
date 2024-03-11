@@ -9,9 +9,9 @@ export type PunchRow = {
   inspectionFilePath: string;
   punchStatus: PunchStatus;
   punchStorageLocation: string;
-  ptype: string;
-  productType: Record<string, string>;
-  punchType: string;
+  medicineType: string;
+  medicine: Record<string, string>;
+  punchPosition: string;
   latestCleaningHistory: string;
   totalUsageNumber: number;
   usageNumber: number;
@@ -32,6 +32,4 @@ export type Data = {
 export type Reponse = {
   count: number;
   message: string;
-}
-
-
+};

@@ -49,10 +49,10 @@ export function CreateId() {
                 })
                 .then((result) => {
                   if (result === "OK") {
-                    alert(`${id}의 회원가입이 완료 되었습니다.`);
+                    alert(`id: ${id}의 회원가입이 완료 되었습니다.`);
                     navigate(`/sign-in`);
                   } else {
-                    alert(`${id}의 회원가입 중 error가 발생 하였습니다.`);
+                    alert(`id: ${id}의 회원가입 중 error가 발생 하였습니다.`);
                   }
                 })
                 .catch((error) => console.error(error));
