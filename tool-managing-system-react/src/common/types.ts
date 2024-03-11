@@ -33,3 +33,14 @@ export type Reponse = {
   count: number;
   message: string;
 };
+
+export type FormData = {
+  startDate: Date | string;
+  endDate: Date | string;
+  punchPosition: string;
+  supplier: string;
+  status: string;
+  storageLocation: string;
+  medicine: string;
+  medicineType: string;
+};

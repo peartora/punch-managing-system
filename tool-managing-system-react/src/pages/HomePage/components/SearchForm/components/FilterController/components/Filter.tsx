@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { FormData } from "@/common/types";
 import dayjs from "dayjs";
 
 type Props = {
@@ -8,27 +8,16 @@ type Props = {
   supplierList: Array<string>;
 };
 
-type FormData = {
-  startDate: Date | string;
-  endDate: Date | string;
-  type: string;
-  manufacturer: string;
-  status: string;
-  storageLocation: string;
-  product: string;
-  ptype: string;
-};
-
 export function Filter(props: Props) {
   const [formData, setFormData] = useState<FormData>({
     startDate: "",
     endDate: "",
-    type: "",
-    manufacturer: "",
+    punchPosition: "",
+    supplier: "",
     status: "",
     storageLocation: "",
-    product: "",
-    ptype: "",
+    medicine: "",
+    medicineType: "",
   });
 
   function handlerSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -108,18 +97,18 @@ export function Filter(props: Props) {
         </div>
 
         <div className="col">
-          <label htmlFor="punchType" className="form-label">
+          <label htmlFor="punchPosition" className="form-label">
             펀치 타입:{" "}
           </label>
           <select
             required
-            id="punchType"
+            id="punchPosition"
             className="form-select"
-            value={formData.type}
+            value={formData.punchPosition}
             onChange={(event) => {
               setFormData((prevState) => ({
                 ...prevState,
-                type: event.target.value,
+                punchPosition: event.target.value,
               }));
             }}
           >
@@ -141,11 +130,11 @@ export function Filter(props: Props) {
             required
             id="supplier"
             className="form-select"
-            value={formData["manufacturer"]}
+            value={formData["supplier"]}
             onChange={(event) => {
               setFormData((prevState) => ({
                 ...prevState,
-                manufacturer: event.target.value,
+                supplier: event.target.value,
               }));
             }}
           >
@@ -208,18 +197,18 @@ export function Filter(props: Props) {
         </div>
 
         <div className="col">
-          <label htmlFor="productName" className="form-label">
+          <label htmlFor="medicine" className="form-label">
             제품:
           </label>
           <select
             required
-            id="productName"
+            id="medicine"
             className="form-select"
-            value={formData["product"]}
+            value={formData["medicine"]}
             onChange={(event) => {
               setFormData((prevState) => ({
                 ...prevState,
-                product: event.target.value,
+                medicine: event.target.value,
               }));
             }}
           >
@@ -238,18 +227,18 @@ export function Filter(props: Props) {
         </div>
 
         <div className="col">
-          <label htmlFor="productType" className="form-label">
+          <label htmlFor="medicineType" className="form-label">
             제품 타입:{" "}
           </label>
           <select
             required
-            id="productType"
+            id="medicineType"
             className="form-select"
-            value={formData.ptype}
+            value={formData.medicineType}
             onChange={(event) => {
               setFormData((prevState) => ({
                 ...prevState,
-                ptype: event.target.value,
+                medicineType: event.target.value,
               }));
             }}
           >
