@@ -63,8 +63,10 @@ public class ApiController
 
             String medicineName = punchRegisterRequestDto.getMedicine();
             Medicine medicine = this.medicineRepository.findByMedicine(medicineName);
+            String specificationPath = medicine.getSpecificationPath();
 
             Punch entity = new Punch(punchRegisterRequestDto, punchSupplier, medicine);
+            entity.setSpecification(specificationPath);
             entityList.add(entity);
         }
 
