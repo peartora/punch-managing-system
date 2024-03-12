@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PunchRepository extends JpaRepository<Punch, Long>, JpaSpecificationExecutor<Punch>
 {
-
+    public Punch findByPunchId(String punchId);
 }

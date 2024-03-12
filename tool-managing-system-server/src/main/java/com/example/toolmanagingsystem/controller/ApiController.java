@@ -3,8 +3,10 @@ package com.example.toolmanagingsystem.controller;
 import com.example.toolmanagingsystem.dao.PunchDao;
 import com.example.toolmanagingsystem.dto.request.PunchRegisterRequestDto;
 import com.example.toolmanagingsystem.dto.request.PunchScrapDao;
+import com.example.toolmanagingsystem.dto.request.PunchStatusUpdateRequestDto;
 import com.example.toolmanagingsystem.dto.request.UserRegisterDto;
 import com.example.toolmanagingsystem.dto.response.PunchRegisterResponseDto;
+import com.example.toolmanagingsystem.dto.response.PunchStatusUpdateResponseDto;
 import com.example.toolmanagingsystem.entity.*;
 import com.example.toolmanagingsystem.entity.logging.Logging;
 import com.example.toolmanagingsystem.entity.logging.LoggingActivity;
@@ -118,25 +120,35 @@ public class ApiController
     }
 
     @PostMapping("/updateStatus")
-    public void updateNewStatus(@RequestBody Map<String, Object> params)
+    public PunchStatusUpdateResponseDto updateNewStatus(@RequestBody List<PunchStatusUpdateRequestDto> punchStatusUpdateRequestDtoList)
     {
-        System.out.println("params as Map");
-        System.out.println(params);
-        System.out.println(params.get("rows"));
+        System.out.println("updateNewStatus");
 
-        if (params.get("rows") == null)
+        List<Punch> punchList = new ArrayList<>();
+
+        for (PunchStatusUpdateRequestDto punchStatusUpdateRequestDto : punchStatusUpdateRequestDtoList)
         {
-            System.out.println("rows is null");
-            this.dao.updateNewStatus(params);
+            String punchId = punchStatusUpdateRequestDto.getPunchId();
+            Punch punch = this.punchRepository.findByPunchId(punchId);
+            punch.setPunchStatus(PunchStatus.valueOf(punchStatusUpdateRequestDto.getNewStatus()));
+            punchList.add(punch);
         }
-        else
+        try
         {
-            List<HashMap<String, Object>> rows = (List<HashMap<String, Object>>) params.get("rows");
-
-            for (HashMap<String, Object> mapParams: rows)
-            {
-                this.dao.updateNewStatus(mapParams);
-            }
+            System.out.println("ok");
+            this.punchRepository.saveAll(punchList);
+            PunchStatusUpdateResponseDto punchStatusUpdateResponseDto = new PunchStatusUpdateResponseDto(
+                    punchList.size(), punchList.get(0).getPunchStatus().toString(), "OK"
+            );
+            return punchStatusUpdateResponseDto;
+        }
+        catch (Exception e)
+        {
+            System.out.println("nok");
+            PunchStatusUpdateResponseDto punchStatusUpdateResponseDto = new PunchStatusUpdateResponseDto(
+                    0, punchList.get(0).getPunchStatus().toString(), "NOK"
+            );
+            return punchStatusUpdateResponseDto;
         }
     }
 

@@ -6,7 +6,11 @@ export const request = {
   },
   post(
     url: string,
-    payload: Data[] | FormData | Record<string, unknown>,
+    payload:
+      | Data[]
+      | FormData
+      | Record<string, unknown>
+      | Record<string, unknown>[],
     headers: Record<string, string> = {}
   ) {
     if (payload instanceof FormData) {

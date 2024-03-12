@@ -52,25 +52,32 @@ export function PunchStatusChangeForm() {
           }
         }
 
-        const targetRows: Record<string, unknown>[] = selectedIds.map((id) => {
-          return {
+        const requestBody: Record<string, unknown>[] = selectedIds.map(
+          (id) => ({
             punchId: id,
             newStatus: newStatus,
-          };
-        });
-
-        const requestBody = {
-          rows: targetRows,
-        };
+          })
+        );
 
         request
           .post(`/api/tool-managing-system/updateStatus`, requestBody)
           .then((response) => {
-            if (!response.ok)
+            if (!response.ok) {
               throw new Error(`펀치 상태 변경 중 error가 발생 하였습니다.`);
-            refetch();
-            e.target.value = `선택 하세요.`;
-            alert(`상태 변경 되었습니다.`);
+            }
+            return response.json();
+          })
+          .then((response) => {
+            if (response.count === selectedIds.length) {
+              alert(
+                `펀치 ${response.count}개가 성공적으로 ${newStatus} 상태로 변경되었습니다.`
+              );
+              refetch();
+            } else {
+              alert(
+                `펀치 ${response.count}개의 상태 변경 중 error가 발생 하였습니다.`
+              );
+            }
           })
           .catch((error) => console.error(error));
       }
