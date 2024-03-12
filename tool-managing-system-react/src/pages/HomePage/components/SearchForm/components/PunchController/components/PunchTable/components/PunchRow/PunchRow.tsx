@@ -61,7 +61,7 @@ export function PunchRow({
           refetch={refetch}
         />
       </td>
-      <td>{row.punchStorageLocation}</td>
+      <td>{row.storageLocation}</td>
       <td>{row.medicine.medicine}</td>
       <td>{row.medicineType}</td>
       <CleaningHistoryTd

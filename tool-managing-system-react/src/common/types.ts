@@ -8,7 +8,7 @@ export type PunchRow = {
   latestInspectionDate: string;
   inspectionFilePath: string;
   punchStatus: PunchStatus;
-  punchStorageLocation: string;
+  storageLocation: string;
   medicineType: string;
   medicine: Record<string, string>;
   punchPosition: string;
