@@ -6,6 +6,7 @@ import com.example.toolmanagingsystem.dto.request.PunchScrapRequestDao;
 import com.example.toolmanagingsystem.dto.request.PunchStatusUpdateRequestDto;
 import com.example.toolmanagingsystem.dto.request.UserRegisterDto;
 import com.example.toolmanagingsystem.dto.response.PunchRegisterResponseDto;
+import com.example.toolmanagingsystem.dto.response.PunchScrapResponseDto;
 import com.example.toolmanagingsystem.dto.response.PunchStatusUpdateResponseDto;
 import com.example.toolmanagingsystem.entity.*;
 import com.example.toolmanagingsystem.entity.logging.Logging;
@@ -204,6 +205,9 @@ public class ApiController
 
         PunchDelete punchDelete = new PunchDelete(punch, medicine, previousStatus, reason, LocalDate.now());
         this.punchDeleteRepository.save(punchDelete);
+
+        // 199열, 207열 2개 transaction 성공 하면, response 생성.
+
     }
     @PostMapping("/addCleanHistory")
     public void addCleanHistory(@RequestBody HashMap<String, Object> params)
