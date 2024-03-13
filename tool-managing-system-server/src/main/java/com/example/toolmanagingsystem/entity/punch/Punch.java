@@ -8,7 +8,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
-@Entity(name = "punch-list")
+@Entity(name = "punch")
 @Data
 public class Punch
 {

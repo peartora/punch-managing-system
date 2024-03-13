@@ -1,6 +1,6 @@
 package com.example.toolmanagingsystem.dao;
 
-import com.example.toolmanagingsystem.dto.request.PunchScrapDao;
+import com.example.toolmanagingsystem.dto.request.PunchScrapRequestDao;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -19,120 +19,6 @@ public class PunchDao
         this.template = new NamedParameterJdbcTemplate(dataSource);
     }
 
-    public List<HashMap<String, Object>> getUsingPunchList(Map<String, Object> params)
-    {
-        String whereClauses = "WHERE p.status NOT LIKE '폐기'";
-
-        String startDate = "";
-        String endDate = "";
-
-        String sql =
-            "SELECT " +
-                "p.*, " +
-                "MAX(c.`when-cleaned`) AS `latestCleanDate`, " +
-                "i.`when-inspected` AS `latestInspectionDate`," +
-                "i1.`file-path` AS `inspectionFilePath`" +
-
-            "FROM " +
-                "`punch-list` AS p " +
-            "LEFT JOIN " +
-                "`clean-history` AS c " +
-                "ON p.`number` = c.`punch-number` " +
-            "LEFT JOIN " +
-                "`inspection-history` AS i " +
-                "ON p.`number` = i.`punch-number` " +
-            "LEFT JOIN " +
-                "`inspection-history` AS i1 " +
-                "ON p.`number` = i1.`punch-number` " +
-
-            whereClauses;
-
-        List<HashMap<String, Object>> rowFromDB = new ArrayList<>();
-
-        for (String key: params.keySet())
-        {
-            String value = (String) params.get(key);
-
-            if (Objects.equals(key, "startDate"))
-            {
-                if (!Objects.equals(value, ""))
-                {
-                    startDate = value;
-                    continue;
-                }
-                else
-                {
-                    startDate = "2001-01-01";
-                    continue;
-                }
-            }
-            else if(Objects.equals(key, "endDate"))
-            {
-                if (!Objects.equals(value, ""))
-                {
-                    endDate = value;
-                    continue;
-                }
-                else
-                {
-                    startDate = "2099-12-31";
-                    continue;
-                }            }
-
-            System.out.println("key:" + key);
-            System.out.println("value:" + value);
-
-            if (!Objects.equals(value, ""))
-            {
-                if (!Objects.equals(value, "All"))
-                {
-                    if (!(params.get(key) instanceof String))
-                    {
-                        sql += " AND " + key + " = " + params.get(key);
-                    }
-                    else
-                    {
-                        sql += " AND " + key + " = " + '"' + params.get(key) + '"';
-                    }
-                }
-            }
-        }
-
-        if ((!Objects.equals(startDate, "")) && (!Objects.equals(endDate, "")))
-        {
-            sql += " AND `register-date` BETWEEN '" + startDate + "' AND '" + endDate + "'";
-        }
-        sql += " GROUP BY P.`number`";
-
-        System.out.println(sql);
-
-        this.template.query(sql, rs ->
-        {
-            HashMap<String, Object> singleRow = new HashMap<>();
-
-            singleRow.put("punchId", rs.getString("number"));
-            singleRow.put("punchType", rs.getString("type"));
-            singleRow.put("supplier", rs.getString("manufacturer"));
-            singleRow.put("specification", rs.getString("specification"));
-            singleRow.put("punchStatus", rs.getString("status"));
-            singleRow.put("punchStorageLocation", rs.getString("location"));
-            singleRow.put("product", rs.getString("product"));
-            singleRow.put("productType", rs.getString("ptype"));
-            singleRow.put("latestCleaningHistory", rs.getString("latestCleanDate"));
-            singleRow.put("latestInspectionDate", rs.getString("latestInspectionDate"));
-            singleRow.put("inspectionFilePath", rs.getString("inspectionFilePath"));
-
-            singleRow.put("isSelected", false);
-
-            rowFromDB.add(singleRow);
-        });
-        return rowFromDB;
-    }
-
-    public void updateNewStatus(Map<String, Object> params)
-    {
-        this.template.update("update `punch-list` set `status` = :newStatus where `number` = :punchId", params);
-    }
 
     public int updateNewStatusForRecoveryPunch(Map<String, Object> params)
     {
@@ -154,19 +40,6 @@ public class PunchDao
         idMap.put("punchId", punchId);
 
         return this.template.queryForObject("select count(*) from `punch-list` where `number` = :punchId", idMap, Integer.class);
-    }
-
-    public void deletePunch(PunchScrapDao punchScrapDao)
-    {
-        Map<String, Object> deleteInformation = punchScrapDao.returnMapCollection();
-
-        System.out.println(deleteInformation);
-        System.out.println("deleteInformation");
-
-
-        this.template.update("update `punch-list` set `status` = :newStatus where number = :punchId", deleteInformation);
-        this.template.update("insert into `delete-history` (`punch-number`, `product`, `previous_status`, `reason`, `date`) values (:punchId, :product, :previousStatus," +
-                ":reason, now())", deleteInformation);
     }
 
     public void addCleanHistory(HashMap<String, Object> param)
@@ -218,14 +91,6 @@ public class PunchDao
 
         return this.template.queryForObject( "select `specification` from `punch-list` where `number` = :punchId", numberMap, String.class);
     }
-
-    public List<String> returnProducts()
-    {
-        Map<String, Object> paramMap = Collections.emptyMap();
-
-        return this.template.queryForList( "select `product` from `size-control`", paramMap, String.class);
-    }
-
 
     public int updateInspectionResult(Map<String, Object> mapParamsWithPdfFile)
     {

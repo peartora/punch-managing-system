@@ -2,7 +2,7 @@ package com.example.toolmanagingsystem.controller;
 
 import com.example.toolmanagingsystem.dao.PunchDao;
 import com.example.toolmanagingsystem.dto.request.PunchRegisterRequestDto;
-import com.example.toolmanagingsystem.dto.request.PunchScrapDao;
+import com.example.toolmanagingsystem.dto.request.PunchScrapRequestDao;
 import com.example.toolmanagingsystem.dto.request.PunchStatusUpdateRequestDto;
 import com.example.toolmanagingsystem.dto.request.UserRegisterDto;
 import com.example.toolmanagingsystem.dto.response.PunchRegisterResponseDto;
@@ -11,6 +11,7 @@ import com.example.toolmanagingsystem.entity.*;
 import com.example.toolmanagingsystem.entity.logging.Logging;
 import com.example.toolmanagingsystem.entity.logging.LoggingActivity;
 import com.example.toolmanagingsystem.entity.punch.Punch;
+import com.example.toolmanagingsystem.entity.punch.PunchDelete;
 import com.example.toolmanagingsystem.entity.punch.PunchStatus;
 import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.repository.*;
@@ -45,6 +46,8 @@ public class ApiController
     UserRepository userRepository;
     @Autowired
     LoggingRepository loggingRepository;
+    @Autowired
+    PunchDeleteRepository punchDeleteRepository;
 
     @Value("${TOOL_MANAGING_SYSTEM_STATIC_PATH}")
     private String staticPath;
@@ -88,6 +91,18 @@ public class ApiController
     {
         System.out.println("params");
         System.out.println(params);
+
+//        return this.punchRepository.findPunchListByAttributes(
+//                (LocalDate) params.get("startDate"),
+//                (LocalDate) params.get("endDate"),
+//                (String) params.get("punchPosition"),
+//                (String) params.get("supplier"),
+//                (String) params.get("strStatus"),
+//                (String) params.get("punchStatus"),
+//                (String) params.get("storageLocation"),
+//                (String) params.get("medicine"),
+//                (String) params.get("medicineType")
+//        );
 
         List<Punch> punchList = new ArrayList<>();
         List<Punch> filteredPunchList = new ArrayList<>();
@@ -173,11 +188,22 @@ public class ApiController
     }
 
     @PostMapping("/updateStatus/scrap")
-    public void scrapPunch(@RequestBody PunchScrapDao punchScrapDao)
+    public void scrapPunch(@RequestBody PunchScrapRequestDao punchScrapRequestDao)
     {
-        System.out.println("/updateStatus/scrap");
-        System.out.println(punchScrapDao);
-        this.dao.deletePunch(punchScrapDao);
+        System.out.println("scrapPunch");
+        System.out.println(punchScrapRequestDao);
+
+        Punch punch = this.punchRepository.findByPunchId(punchScrapRequestDao.getPunchId());
+        punch.setPunchStatus(PunchStatus.폐기);
+        this.punchRepository.save(punch);
+
+        Medicine medicine = punch.getMedicine();
+        PunchStatus previousStatus = punch.getPunchStatus();
+        String reason = punchScrapRequestDao.getReason();
+
+
+        PunchDelete punchDelete = new PunchDelete(punch, medicine, previousStatus, reason, LocalDate.now());
+        this.punchDeleteRepository.save(punchDelete);
     }
     @PostMapping("/addCleanHistory")
     public void addCleanHistory(@RequestBody HashMap<String, Object> params)
