@@ -17,6 +17,7 @@ import com.example.toolmanagingsystem.entity.punch.PunchStatus;
 import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.repository.*;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -88,7 +89,7 @@ public class ApiController
     }
 
     @GetMapping("/display")
-    public List<Punch> returnPunchList(@RequestParam HashMap<String, Object> params)
+    public List<Punch> returnPunchList(@RequestParam HashMap<String, Object> params) // 단일 값을 받던지, 다수를 받으려면 Map;
     {
         System.out.println("params");
         System.out.println(params);
@@ -188,6 +189,7 @@ public class ApiController
         return this.dao.deletePunchFromDeleteHistory(params);
     }
 
+    @Transactional
     @PostMapping("/updateStatus/scrap")
     public void scrapPunch(@RequestBody PunchScrapRequestDao punchScrapRequestDao)
     {
@@ -202,13 +204,10 @@ public class ApiController
         PunchStatus previousStatus = punch.getPunchStatus();
         String reason = punchScrapRequestDao.getReason();
 
-
         PunchDelete punchDelete = new PunchDelete(punch, medicine, previousStatus, reason, LocalDate.now());
         this.punchDeleteRepository.save(punchDelete);
-
-        // 199열, 207열 2개 transaction 성공 하면, response 생성.
-
     }
+
     @PostMapping("/addCleanHistory")
     public void addCleanHistory(@RequestBody HashMap<String, Object> params)
     {
