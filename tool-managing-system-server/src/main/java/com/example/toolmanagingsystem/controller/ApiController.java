@@ -503,14 +503,12 @@ public class ApiController
         System.out.println("returnCheckResultForUsername");
         System.out.println(params);
 
-        String username = (String) params.get("id");
-        int count = this.userRepository.countByUsername(username);
+        User user = this.userRepository.findByUsername((String) params.get("id"));
 
-        if (count == 0)
+        if (user == null)
         {
             return "OK";
-        }
-        else
+        } else
         {
             return "NOK";
         }
