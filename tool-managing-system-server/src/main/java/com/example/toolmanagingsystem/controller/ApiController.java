@@ -139,6 +139,9 @@ public class ApiController
 
         for (PunchStatusUpdateRequestDto punchStatusUpdateRequestDto : punchStatusUpdateRequestDtoList)
         {
+            System.out.println("punchStatusUpdateRequestDto");
+            System.out.println(punchStatusUpdateRequestDto);
+
             String punchId = punchStatusUpdateRequestDto.getPunchId();
             Punch punch = this.punchRepository.findByPunchId(punchId);
             punch.setPunchStatus(PunchStatus.valueOf(punchStatusUpdateRequestDto.getNewStatus()));

@@ -93,11 +93,12 @@ export function PunchStatusSelect({
         }
       }
     } else {
-      const data: Data = {
-        punchId: punchId,
-        newStatus: newStatus,
-      };
-
+      const data: Data[] = [
+        {
+          punchId: punchId,
+          newStatus: newStatus,
+        },
+      ];
       try {
         const response = await request.post(
           `/api/tool-managing-system/updateStatus`,

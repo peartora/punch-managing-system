@@ -59,6 +59,9 @@ export function PunchStatusChangeForm() {
           })
         );
 
+        console.log("requestBody");
+        console.log(requestBody);
+
         request
           .post(`/api/tool-managing-system/updateStatus`, requestBody)
           .then((response) => {
