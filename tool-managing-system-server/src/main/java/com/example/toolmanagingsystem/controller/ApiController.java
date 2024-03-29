@@ -6,7 +6,6 @@ import com.example.toolmanagingsystem.dto.request.PunchScrapRequestDao;
 import com.example.toolmanagingsystem.dto.request.PunchStatusUpdateRequestDto;
 import com.example.toolmanagingsystem.dto.request.UserRegisterDto;
 import com.example.toolmanagingsystem.dto.response.PunchRegisterResponseDto;
-import com.example.toolmanagingsystem.dto.response.PunchScrapResponseDto;
 import com.example.toolmanagingsystem.dto.response.PunchStatusUpdateResponseDto;
 import com.example.toolmanagingsystem.entity.*;
 import com.example.toolmanagingsystem.entity.logging.Logging;
@@ -16,7 +15,12 @@ import com.example.toolmanagingsystem.entity.punch.PunchDelete;
 import com.example.toolmanagingsystem.entity.punch.PunchStatus;
 import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.repository.*;
+import com.example.toolmanagingsystem.repository.punch.PunchDeleteRepository;
+import com.example.toolmanagingsystem.repository.punch.PunchRepository;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,13 +47,15 @@ public class ApiController
     @Autowired
     MedicineRepository medicineRepository;
     @Autowired
-    PunchSupplierRepository punchSupplierRepository;
+    SupplierRepository punchSupplierRepository;
     @Autowired
     UserRepository userRepository;
     @Autowired
     LoggingRepository loggingRepository;
     @Autowired
     PunchDeleteRepository punchDeleteRepository;
+    @Autowired
+    InsepctionRepository inspectionRepository;
 
     @Value("${TOOL_MANAGING_SYSTEM_STATIC_PATH}")
     private String staticPath;
@@ -93,18 +99,6 @@ public class ApiController
     {
         System.out.println("params");
         System.out.println(params);
-
-//        return this.punchRepository.findPunchListByAttributes(
-//                (LocalDate) params.get("startDate"),
-//                (LocalDate) params.get("endDate"),
-//                (String) params.get("punchPosition"),
-//                (String) params.get("supplier"),
-//                (String) params.get("strStatus"),
-//                (String) params.get("punchStatus"),
-//                (String) params.get("storageLocation"),
-//                (String) params.get("medicine"),
-//                (String) params.get("medicineType")
-//        );
 
         List<Punch> punchList = new ArrayList<>();
         List<Punch> filteredPunchList = new ArrayList<>();
@@ -204,7 +198,7 @@ public class ApiController
         PunchStatus previousStatus = punch.getPunchStatus();
         String reason = punchScrapRequestDao.getReason();
 
-        PunchDelete punchDelete = new PunchDelete(punch, medicine, previousStatus, reason, LocalDate.now());
+        PunchDelete punchDelete = new PunchDelete(punch.getPunchId(), medicine.getMedicine(), previousStatus, reason, LocalDate.now());
         this.punchDeleteRepository.save(punchDelete);
     }
 
@@ -315,27 +309,39 @@ public class ApiController
             return "NOK";
         }
     }
-    @PostMapping("updateInspectionResult")
-    public void updateInspectionResult(MultipartHttpServletRequest params)
+
+    @Transactional
+    @PostMapping("updateInspectionResultAndStatus")
+    public void updateInspectionResult(MultipartHttpServletRequest params) throws JsonProcessingException
     {
+        System.out.println("updateInspectionResult");
+
         Map<String, MultipartFile> fileMap = params.getFileMap();
         String filePath = saveInspectionFile(fileMap.get("inspectionResultPdfFile"));
 
-        Map<String, String[]> parameterMap = params.getParameterMap();
+        String punchStatusUpdateJson = params.getParameter("punchStatusUpdateDto");
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Map<String, String>> punchStatusUpdateDtoMap = objectMapper.readValue(
+                punchStatusUpdateJson, new TypeReference<List<Map<String, String>>>(){}
+        );
 
-        for (String key: parameterMap.keySet())
+        List<Inspection> inspectionList = new ArrayList<>();
+        List<Punch> punchList = new ArrayList<>();
+
+        for (Map<String, String> punchStatusUpdateDto: punchStatusUpdateDtoMap)
         {
-            Map<String, Object> mapParamsWithPdfFilePath = new HashMap<String, Object>();
+            String punchId = punchStatusUpdateDto.get("punchId");
 
-            String[] punchIdArrays = parameterMap.get(key);
-            for(int i = 0; i < punchIdArrays.length; i++)
-            {
-                mapParamsWithPdfFilePath.put("punchId", punchIdArrays[i]);
-                mapParamsWithPdfFilePath.put("filePath", filePath);
+            Inspection inspection = new Inspection(punchId, LocalDateTime.now(), filePath);
+            inspectionList.add(inspection);
 
-                this.dao.updateInspectionResult(mapParamsWithPdfFilePath);
-            }
+            Punch punch = this.punchRepository.findByPunchId(punchId);
+            punch.setPunchStatus(PunchStatus.사용가능);
+            punchList.add(punch);
         }
+
+        this.inspectionRepository.saveAll(inspectionList);
+        this.punchRepository.saveAll(punchList);
     }
 
     @PostMapping("/addSupplier")
@@ -368,12 +374,17 @@ public class ApiController
     }
 
     @GetMapping("/display-scrapped")
-    public List<Map<String, Object>> returnScrappedPunchList(@RequestParam Map<String, Object> params)
+    public List<PunchDelete> returnScrappedPunchList(@RequestParam Map<String, Object> params)
     {
         System.out.println("returnScrappedPunchList");
         System.out.println(params);
 
-        return dao.getScrappedPunchList(params);
+        List<PunchDelete> punchDeleteList = this.punchDeleteRepository.findAll();
+
+        System.out.println(punchDeleteList);
+
+        return punchDeleteList;
+//        return dao.getScrappedPunchList(params);
     }
 
     @PostMapping("/usercheck")

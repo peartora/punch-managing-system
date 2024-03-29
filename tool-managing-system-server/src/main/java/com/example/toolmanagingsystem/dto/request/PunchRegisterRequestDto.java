@@ -1,9 +1,6 @@
 package com.example.toolmanagingsystem.dto.request;
 
-import com.example.toolmanagingsystem.entity.punch.PunchStatus;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 

@@ -3,7 +3,7 @@ import { useAuth } from "@/common/contexts/auth";
 import { request } from "@/common/utils/ajax";
 
 type PunchListType = {
-  "punch-number": string;
+  punchId: string;
   reason: string;
   date: string;
   previous_status: string;
@@ -47,7 +47,7 @@ export function ScrappedPunchList({
       .then((result) => {
         if (result === "supervisor" || result === "admin") {
           const data: Data = {
-            punchId: punch["punch-number"],
+            punchId: punch["punchId"],
             newStatus: punch.previous_status,
           };
 
@@ -61,7 +61,7 @@ export function ScrappedPunchList({
             .then((result) => {
               if (result === "1") {
                 const dataForDelete: DataForDelete = {
-                  punchId: punch["punch-number"],
+                  punchId: punch["punchId"],
                 };
                 request
                   .post(`/api/tool-managing-system/delete`, dataForDelete)
@@ -74,7 +74,7 @@ export function ScrappedPunchList({
                   .then((result) => {
                     if (result === "1") {
                       const filteredPunchList = punchList.filter(
-                        (p) => p["punch-number"] !== dataForDelete["punchId"]
+                        (p) => p["punchId"] !== dataForDelete["punchId"]
                       );
                       setScrappedPunchList(filteredPunchList);
 
@@ -105,8 +105,8 @@ export function ScrappedPunchList({
       <tbody>
         {punchList.length > 0 ? (
           punchList.map((punch, i) => (
-            <tr key={punch["punch-number"] + i}>
-              <td>{punch["punch-number"]}</td>
+            <tr key={punch["punchId"] + i}>
+              <td>{punch["punchId"]}</td>
               <td>{punch["date"]}</td>
               <td>{punch["reason"]}</td>
               <td>{punch["previous_status"]}</td>

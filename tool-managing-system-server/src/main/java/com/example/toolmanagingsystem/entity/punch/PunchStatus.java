@@ -6,7 +6,7 @@ public enum PunchStatus
 
     private final int statusValue;
 
-    PunchStatus (int statusValue)
+    PunchStatus(int statusValue)
     {
         this.statusValue = statusValue;
     }
@@ -15,8 +15,6 @@ public enum PunchStatus
     {
         return statusValue;
     }
-
-
 
     public static PunchStatus valueOf(int statusValue)
     {

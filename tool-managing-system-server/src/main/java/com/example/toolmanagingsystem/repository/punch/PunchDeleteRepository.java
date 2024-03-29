@@ -1,4 +1,4 @@
-package com.example.toolmanagingsystem.repository;
+package com.example.toolmanagingsystem.repository.punch;
 
 import com.example.toolmanagingsystem.entity.punch.PunchDelete;
 import org.springframework.data.jpa.repository.JpaRepository;

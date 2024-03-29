@@ -9,17 +9,17 @@ import { ScrappedPunchList } from "./components/ScrappedPunchList";
 export function PunchDeleteHistory() {
   const [scrappedPunchList, setScrappedPunchList] = useState([]);
 
-  let selectedProduct = "";
+  let selectedMedicine = "";
 
   const { medicineNameList } = useBringProductList();
 
-  function changeHandler(event: React.ChangeEvent<HTMLSelectElement>) {
-    selectedProduct = event.target.value;
+  function selectMedicine(event: React.ChangeEvent<HTMLSelectElement>) {
+    selectedMedicine = event.target.value;
 
     setScrappedPunchList([]);
 
     const query = new URLSearchParams();
-    query.append("product", selectedProduct);
+    query.append("medicine", selectedMedicine);
 
     request
       .get(`/api/tool-managing-system/display-scrapped?${query}`)
@@ -32,6 +32,9 @@ export function PunchDeleteHistory() {
         return response.json();
       })
       .then((result) => {
+        console.log(`scrappedPunchList`);
+        console.log(result);
+
         setScrappedPunchList(result);
       })
       .catch((error) => alert(error));
@@ -48,8 +51,8 @@ export function PunchDeleteHistory() {
         <select
           id="productName"
           className="form-select"
-          value={selectedProduct}
-          onChange={changeHandler}
+          value={selectedMedicine}
+          onChange={selectMedicine}
           required
         >
           <option value="" disabled>

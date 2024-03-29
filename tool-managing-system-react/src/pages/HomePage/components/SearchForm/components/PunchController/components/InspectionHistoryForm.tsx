@@ -27,47 +27,31 @@ export function InspectionHistoryForm() {
             formData.append("inspectionResultPdfFile", selectedFile);
           }
 
+          const punchStatusUpdateDto: Record<string, string>[] = [];
+
           try {
             for (const id of selectedIds) {
-              if (punchRowsById[id].punchStatus !== "사용대기") {
+              const selectedPunch = punchRowsById[id];
+
+              if (selectedPunch.punchStatus !== "사용대기") {
                 alert(`검수이력은 사용대기 상태의 펀치만 가능 합니다.`);
                 throw new Error("Check failed"); // Throw an exception
               }
 
-              formData.append("punchId", id);
+              punchStatusUpdateDto.push({
+                punchId: selectedPunch.punchId,
+                newStatus: "사용가능",
+              });
             }
 
+            formData.append(
+              "punchStatusUpdateDto",
+              JSON.stringify(punchStatusUpdateDto)
+            );
+
             await request.post(
-              `/api/tool-managing-system/updateInspectionResult`,
+              `/api/tool-managing-system/updateInspectionResultAndStatus`,
               formData
-            );
-
-            const targetRows = selectedIds.map((id) => ({
-              punchId: id,
-              newStatus: "사용가능",
-            }));
-
-            const statusUpdateRequestBody = {
-              rows: targetRows,
-            };
-
-            await request.post(
-              `/api/tool-managing-system/updateStatus`,
-              statusUpdateRequestBody
-            );
-
-            const usageNumberResetRows = selectedIds.map((id) => ({
-              punchId: id,
-              totalUsageNumber: 0,
-            }));
-
-            const usageNumberResetRequestBody = {
-              rows: usageNumberResetRows,
-            };
-
-            await request.post(
-              `/api/tool-managing-system/updateUsageNumber`,
-              usageNumberResetRequestBody
             );
 
             setSelectedFile(null);

@@ -39,7 +39,7 @@ public class PunchDao
         Map<String, String> idMap = new HashMap<>();
         idMap.put("punchId", punchId);
 
-        return this.template.queryForObject("select count(*) from `punch-list` where `number` = :punchId", idMap, Integer.class);
+        return this.template.queryForObject("select count(*) from `punch` where `number` = :punchId", idMap, Integer.class);
     }
 
     public void addCleanHistory(HashMap<String, Object> param)

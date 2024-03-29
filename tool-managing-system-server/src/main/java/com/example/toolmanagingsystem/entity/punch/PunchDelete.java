@@ -1,6 +1,5 @@
 package com.example.toolmanagingsystem.entity.punch;
 
-import com.example.toolmanagingsystem.entity.Medicine;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,23 +13,19 @@ public class PunchDelete
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
-    @JoinColumn(name = "punch_id")
-    private Punch punchNumber;
+    @Column(name = "punch_name")
+    private String punch;
 
-    @OneToOne
-    @JoinColumn(name = "medicine_id")
-    private Medicine medicineId;
-
+    private String medicine;
     @Column(name = "previous_status")
     @Enumerated(EnumType.STRING)
     private PunchStatus previousPunchStatus;
     private String reason;
     private LocalDate date;
 
-    public PunchDelete(Punch punchNumber, Medicine medicineId, PunchStatus previousPunchStatus, String reason, LocalDate date) {
-        this.punchNumber = punchNumber;
-        this.medicineId = medicineId;
+    public PunchDelete(String punch, String medicine, PunchStatus previousPunchStatus, String reason, LocalDate date) {
+        this.punch = punch;
+        this.medicine = medicine;
         this.previousPunchStatus = previousPunchStatus;
         this.reason = reason;
         this.date = date;
@@ -42,8 +37,8 @@ public class PunchDelete
     public String toString() {
         return "PunchDelete{" +
                 "id=" + id +
-                ", punchNumber=" + punchNumber +
-                ", medicineId=" + medicineId +
+                ", punchNumber=" + punch +
+                ", medicineId=" + medicine +
                 ", previousPunchStatus=" + previousPunchStatus +
                 ", reason='" + reason + '\'' +
                 ", date=" + date +
