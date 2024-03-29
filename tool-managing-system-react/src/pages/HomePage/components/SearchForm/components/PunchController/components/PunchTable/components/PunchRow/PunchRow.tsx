@@ -25,7 +25,6 @@ export function PunchRow({
   refetch,
 }: Props) {
   console.log("PunchRow");
-  console.log("row");
   console.log(row);
 
   let checkResult = "";

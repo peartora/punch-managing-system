@@ -170,8 +170,8 @@ public class ApiController
     public int recoverPunchFromDeleteStatus(@RequestBody Map<String, Object> params)
     {
         System.out.println("recoverPunchFromDeleteStatus");
-        System.out.println(params);
         System.out.println("params");
+        System.out.println(params);
 
         return this.dao.updateNewStatusForRecoveryPunch(params);
     }

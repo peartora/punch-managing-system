@@ -92,11 +92,6 @@ public class PunchDao
         return this.template.queryForObject( "select `specification` from `punch-list` where `number` = :punchId", numberMap, String.class);
     }
 
-    public int updateInspectionResult(Map<String, Object> mapParamsWithPdfFile)
-    {
-        return this.template.update("insert into `inspection-history` (`punch-number`, `when-inspected`, `file-path`) values (:punchId, now(), :filePath)", mapParamsWithPdfFile);
-    }
-
     public int checkDuplicateSupplier(String supplier)
     {
         Map<String, String> supplierMap = new HashMap<>();
