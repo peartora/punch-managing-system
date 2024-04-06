@@ -49,6 +49,8 @@ export function InspectionHistoryForm() {
               JSON.stringify(punchStatusUpdateDto)
             );
 
+            // validation.
+
             await request.post(
               `/api/tool-managing-system/updateInspectionResultAndStatus`,
               formData
