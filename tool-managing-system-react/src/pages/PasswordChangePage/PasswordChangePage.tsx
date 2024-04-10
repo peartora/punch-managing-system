@@ -1,12 +1,12 @@
 import { NavBar } from "@/common/components/NavBar";
 
-import { CheckIdAndPassword } from "./components/CheckIdAndPassword";
+import { ChangePassword } from "./components/CheckIdAndPassword/components/ChangePassword";
 
 export function PasswordChangePage() {
   return (
     <main>
       <NavBar />
-      <CheckIdAndPassword />
+      <ChangePassword />
     </main>
   );
 }

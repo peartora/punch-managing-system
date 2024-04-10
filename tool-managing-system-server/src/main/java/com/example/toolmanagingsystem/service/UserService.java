@@ -156,28 +156,6 @@ public class UserService
         return this.responseDto;
     }
 
-    public PasswordChangeResponseDto passwordChange(PasswordChangeRequestDto requestDto) {
-        User user = this.getUser(requestDto.getUserId());
-
-        PasswordChangeResponseDto responseDto = new PasswordChangeResponseDto(user.getUsername());
-
-        if (Objects.equals(requestDto.getNewPassword(), requestDto.getNewPasswordConfirmation())) {
-            if (!Objects.equals(requestDto.getCurrentPassword(), requestDto.getNewPassword())) {
-                responseDto.setPasswordChanged(true);
-                user.setPassword(requestDto.getNewPassword());
-                this.userRepository.save(user);
-            } else {
-                responseDto.setPasswordChanged(false);
-                responseDto.setNewPasswordSameWithCurrentPassword(true);
-            }
-        } else {
-            responseDto.setPasswordChanged(false);
-            responseDto.setNewPasswordSameWithNewPasswordConfirmation(true);
-        }
-        return responseDto;
-    }
-
-
     public boolean isDuplicate(String id)
     {
        User user = this.getUser(id);

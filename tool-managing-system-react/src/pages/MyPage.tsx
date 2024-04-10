@@ -6,7 +6,10 @@ import { request } from "@/common/utils/ajax";
 
 import { DisplayId } from "@/pages/DisplayId";
 import { DisplayAdminId } from "./DisplayAdminId";
+import { Link } from "react-router-dom";
+
 import { Dayjs } from "dayjs";
+import { useLinkClickHandler } from "react-router-dom";
 
 type Id = {
   username: string;
@@ -100,6 +103,7 @@ export const MyPage = () => {
               <th>역할</th>
               <th>비밀번호 설정날짜</th>
               <th>비밀번호 유효날짜</th>
+              <th>비밀번호 변경</th>
             </tr>
           </thead>
           <tbody>
@@ -107,6 +111,11 @@ export const MyPage = () => {
               <td>{userRole}</td>
               <td>{passwordSetDate}</td>
               <td>{passwordValidDate}</td>
+              <td>
+                <Link to={`/password-change`} style={{ marginRight: "20px" }}>
+                  비밀번호 변경
+                </Link>
+              </td>
             </tr>
           </tbody>
         </table>

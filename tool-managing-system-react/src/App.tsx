@@ -51,6 +51,10 @@ const routerAfterLogin = createHashRouter([
     path: "/mypage",
     element: <MyPage />,
   },
+  {
+    path: "/password-change",
+    element: <PasswordChangePage />,
+  },
 ]);
 
 const routerBeforeLogin = createHashRouter([
@@ -62,10 +66,7 @@ const routerBeforeLogin = createHashRouter([
     path: "/sign-in",
     element: <LoginPage />,
   },
-  {
-    path: "/password-change",
-    element: <PasswordChangePage />,
-  },
+
   {
     path: "/create-id",
     element: <CreateId />,

@@ -5,22 +5,24 @@ import lombok.Data;
 @Data
 public class PasswordChangeResponseDto
 {
-    private String userId;
-    private boolean isNewPasswordSameWithCurrentPassword;
+    private String username;
+    private boolean isNewPasswordDifferentWithCurrentPassword;
     private boolean isNewPasswordSameWithNewPasswordConfirmation;
+    private boolean isNewPasswordLonghEnough;
     private boolean isPasswordChanged;
 
-    public PasswordChangeResponseDto (String userId) {
-        this.userId = userId;
+    public PasswordChangeResponseDto (String username) {
+        this.username = username;
     }
 
     public PasswordChangeResponseDto() {}
 
     @Override
     public String toString() {
-        return "userId: " + this.userId +
-            ", isPasswordChanged" + this.isPasswordChanged +
-            ", isNewPasswordSameWithCurrentPassword" + this.isNewPasswordSameWithCurrentPassword +
-            ", isNewPasswordSameWithNewPasswordConfirmation" + this.isNewPasswordSameWithNewPasswordConfirmation;
+        return "username: " + this.username +
+            ", isPasswordChanged: " + this.isPasswordChanged +
+            ", isNewPasswordDifferentWithCurrentPassword: " + this.isNewPasswordDifferentWithCurrentPassword +
+            ", isNewPasswordSameWithNewPasswordConfirmation: " + this.isNewPasswordSameWithNewPasswordConfirmation +
+            ", isNewPasswordLonghEnough: " + this.isNewPasswordLonghEnough;
     }
 }

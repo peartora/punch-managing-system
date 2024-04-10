@@ -5,17 +5,15 @@ import lombok.Data;
 @Data
 public class PasswordChangeRequestDto
 {
-    private String userId;
-    private String currentPassword;
+    private String username;
     private String newPassword;
-    private String newPasswordConfirmation;
+    private String newPasswordForConfirmation;
 
 
     @Override
     public String toString() {
-        return "userId: " + this.userId +
-                " currentPassword: " + this.currentPassword +
+        return "username: " + this.username +
                 " newPassword: " + this.newPassword +
-                " newPasswordConfirmation" + this.newPasswordConfirmation;
+                " newPasswordForConfirmation: " + this.newPasswordForConfirmation;
     }
 }

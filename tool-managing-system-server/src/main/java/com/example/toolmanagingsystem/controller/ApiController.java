@@ -395,107 +395,55 @@ public class ApiController
         return this.userService.login(requestDto);
     }
 
-//    @PostMapping("/usercheck")
-//    public String checkUserId (@RequestBody Map<String, Object> params)
-//    {
-//        System.out.println("checkUserId");
-//        System.out.println(params);
-//
-//        User user = this.userRepository.findByUsername(params.get("username").toString());
-//        if (user == null)
-//        {
-////            this.logging("unknown", LoggingActivity.LOGIN_FAIL_PASSWORD_UNREGISTERED_ID);
-//            System.out.println("NoId");
-//            return "NoId";
-//        }
-//        // User entity, Teacher entity
-//
-//        String username = user.getUsername();
-//        boolean isApproved = user.isApproved();
-//        boolean isLocked = user.isNotLocked();
-//        String currentPassword = user.getPassword();
-//        int trialCount = user.getTrialCount();
-//        LocalDate createdDate = user.getCreatedDate();
-//
-////        this.logging(username, LoggingActivity.LOGIN_TRIAL);
-//
-//        if (!isApproved)
-//        {
-////            this.logging(username, LoggingActivity.LOGIN_FAIL_NOT_APPROVED_ID);
-//            System.out.println("NotYetApproved");
-//            return ("NotYetApproved");
-//        }
-//        else // approved
-//        {
-//            if (isLocked)
-//            {
-////                this.logging(username, LoggingActivity.LOGIN_FAIL_LOCKED_ID);
-//                System.out.println("Locked");
-//                return "Locked";
-//            }
-//            else // unlocked
-//            {
-//                if (LocalDate.now().isAfter(createdDate.plusMonths(6)))
-//                {
-////                    this.logging(username, LoggingActivity.LOGIN_FAIL_PASSWORD_EXPIRED);
-//                    System.out.println("password is expired");
-//                    return "Expired";
-//                }
-//                else // password is not expired
-//                {
-//                    if (Objects.equals(params.get("password"), currentPassword))
-//                    {
-////                        this.logging(username, LoggingActivity.LOGIN);
-//                        user.setTrialCount(0);
-//                        this.userRepository.save(user);
-//                        System.out.println("LOGINED AS " + username);
-//                        return "OK";
-//                    }
-//                    else // password is not correct
-//                    {
-////                        this.logging(username, LoggingActivity.LOGIN_FAIL_PASSWORD_INCORRECT);
-//                        int trialCountPlusOne = trialCount + 1;
-//                        user.setTrialCount(trialCountPlusOne);
-//                        this.userRepository.save(user);
-//
-//                        if (trialCountPlusOne >= 5)
-//                        {
-//                            user.setLocked(true);
-//                            this.userRepository.save(user);
-//                            System.out.println("It`s newly locked");
-//                            return "Locked";
-//                        }
-//                        else
-//                        {
-//                            System.out.println("password is wrong," + trialCountPlusOne);
-//                            return "NOK," + trialCountPlusOne;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-
     @PostMapping("/password_change")
-    public String changePassword (@RequestBody Map<String, Object> params)
+    public PasswordChangeResponseDto changePassword (@RequestBody PasswordChangeRequestDto requestDto)
     {
         System.out.println("changePassword");
-        System.out.println(params);
+        System.out.println(requestDto);
 
-        String username = params.get("username").toString();
+        String username = requestDto.getUsername();
         User user = this.userRepository.findByUsername(username);
-        user.setPassword(params.get("newPassword").toString());
 
-        try
+        PasswordChangeResponseDto responseDto = new PasswordChangeResponseDto(username);
+
+        if (Objects.equals(user.getPassword(), requestDto.getNewPassword()))
         {
-            this.userRepository.save(user);
-//            this.logging(username, LoggingActivity.PASSWORD_CHANGE);
-            return "OK";
+            responseDto.setPasswordChanged(false);
+            responseDto.setNewPasswordDifferentWithCurrentPassword(false);
+            return responseDto;
         }
-        catch (Exception e)
+        else
         {
-            return "NOK";
+            responseDto.setNewPasswordDifferentWithCurrentPassword(true);
         }
+
+        if (!Objects.equals(requestDto.getNewPassword(), requestDto.getNewPasswordForConfirmation()))
+        {
+            responseDto.setPasswordChanged(false);
+            responseDto.setNewPasswordSameWithNewPasswordConfirmation(false);
+            return responseDto;
+        }
+        else
+        {
+            responseDto.setNewPasswordSameWithNewPasswordConfirmation(true);
+        }
+
+        if (requestDto.getNewPassword().length() < 6)
+        {
+            responseDto.setPasswordChanged(false);
+            responseDto.setNewPasswordLonghEnough(false);
+            return responseDto;
+        }
+        else
+        {
+            responseDto.setNewPasswordLonghEnough(true);
+        }
+
+        responseDto.setPasswordChanged(true);
+        user.setPassword(requestDto.getNewPassword());
+        user.setPasswordSetDate(LocalDate.now());
+        this.userRepository.save(user);
+        return responseDto;
     }
 
     @PostMapping("/register_user")
