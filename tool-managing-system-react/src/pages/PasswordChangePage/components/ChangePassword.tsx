@@ -32,8 +32,20 @@ export function ChangePassword() {
               return response.json();
             })
             .then((json) => {
-              console.log("json for password change");
+              console.log("json");
               console.log(json);
+
+              if (json.passwordChanged) {
+                alert(`${username}의 비밀번호가 변경 되었습니다.`);
+              } else {
+                if (!json.newPasswordLonghEnough) {
+                  alert(`입력된 비밀번호가 6자리 미만 입니다.`);
+                } else if (!json.newPasswordDifferentWithCurrentPassword) {
+                  alert(`신규 비밀번호가 현재의 비밀번호와 동일 합니다.`);
+                } else if (!json.newPasswordSameWithNewPasswordConfirmation) {
+                  alert(`입력된 2개의 비밀번호가 다릅니다.`);
+                }
+              }
             })
             .catch((error) => console.error(error));
         } else {

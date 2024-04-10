@@ -428,6 +428,7 @@ public class ApiController
             responseDto.setNewPasswordSameWithNewPasswordConfirmation(true);
         }
 
+
         if (requestDto.getNewPassword().length() < 6)
         {
             responseDto.setPasswordChanged(false);
