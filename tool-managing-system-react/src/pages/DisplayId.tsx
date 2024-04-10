@@ -4,9 +4,11 @@ import { request } from "@/common/utils/ajax";
 
 type Id = {
   username: string;
-  role: string;
-  is_locked: boolean;
-  is_approved: boolean;
+  userRole: string;
+  notLocked: boolean;
+  approved: boolean;
+  notExpired: boolean;
+  createdDate: string;
 };
 
 type SetIdList = (newIdList: Id[]) => void;
@@ -20,8 +22,8 @@ type IdProps = {
 };
 
 export function DisplayId({ id, idList, setIdList }: IdProps) {
-  const [isLocked, setIsLocked] = useState(() => id.is_locked);
-  const [isApproved, setIsApproved] = useState(() => id.is_approved);
+  const [isLocked, setIsLocked] = useState(() => id.notLocked);
+  const [isApproved, setIsApproved] = useState(() => id.approved);
   const [newPassword, setNewPassword] = useState("");
 
   const changeHandler = function (e: React.ChangeEvent<HTMLInputElement>) {
@@ -122,7 +124,7 @@ export function DisplayId({ id, idList, setIdList }: IdProps) {
   return (
     <tr>
       <td>{id.username}</td>
-      <td>{id.role}</td>
+      <td>{id.userRole}</td>
 
       {isLocked ? <td>비활성화</td> : <td>활성화</td>}
       {isLocked ? (

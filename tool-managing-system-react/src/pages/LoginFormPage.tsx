@@ -1,10 +1,8 @@
 import { useState } from "react";
 
 import { Link } from "react-router-dom";
-
 import { useAuth } from "@/common/contexts/auth";
-
-import { checkUser } from "@/common/utils/checkUser";
+import { request } from "@/common/utils/ajax";
 
 export const LoginFormPage = () => {
   const { login } = useAuth();
@@ -20,25 +18,38 @@ export const LoginFormPage = () => {
       password,
     };
 
-    checkUser(body, {
-      OK: () => {
-        login(username);
-      },
-      NOK: (params) => {
-        const trialCount = parseInt(params[0], 10);
-        if (trialCount >= 5) {
-          alert(
-            `${username} 계정의 비밀번호가 5회 틀렸습니다. 계정이 잠겼습니다.(관리자에게 문의 하세요)`
-          );
-        } else {
-          alert(
-            `${username} 계정의 비밀번호가 ${trialCount}회 틀렸습니다.(5회 이상 틀리면 계정이 잠금으로 바뀝니다.`
-          );
+    request
+      .post(`/api/tool-managing-system/login`, body)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`회원가입 중 network error 발생 하였습니다.`);
         }
-      },
-    }).catch((error) => {
-      console.error(error);
-    });
+        return response.json();
+      })
+      .then((json) => {
+        if (json.login == true) {
+          console.log("login true");
+          login(username);
+        } else {
+          if (!json.approved) {
+            alert(
+              `Id: ${json.username} 은(는) 미승인 상태 입니다. 관리자에게 문의 하세요.`
+            );
+          } else if (!json.notLocked) {
+            alert(
+              `Id: ${json.username} 은(는) 잠김 상태 입니다. 관리자에게 문의 하세요.`
+            );
+          } else if (!json.notExpired) {
+            alert(
+              `Id: ${json.username} 은(는) 비밀번호 유효기간이 만료 되었습니다. 비밀번호를 변경 하세요.`
+            );
+          } else if (!json.passwordCorrect) {
+            alert(
+              `Id: ${json.username}의 비밀번호가 ${json.loginTrialCount}회 틀렸습니다.(5회이상 틀리면 계정이 잠깁니다.)`
+            );
+          }
+        }
+      });
   };
 
   return (

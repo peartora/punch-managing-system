@@ -3,18 +3,19 @@ package com.example.toolmanagingsystem.dto.request;
 import lombok.Data;
 
 @Data
-public class UserRegisterDto
+public class UserRegisterRequestDto
 {
-    private String id;
+    private String username;
     private String password;
+    private String passwordConfirmation;
     private String role;
-
     @Override
     public String toString()
     {
-        return "UserRegisterDto{" +
-                "username='" + id + '\'' +
+        return "UserRegisterRequestDto{" +
+                "username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", passwordConfirmation='" + passwordConfirmation + '\'' +
                 ", userRole='" + role + '\'' +
                 '}';
     }

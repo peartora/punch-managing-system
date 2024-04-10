@@ -6,11 +6,11 @@ import lombok.Data;
 public class PunchRegisterResponseDto
 {
     private int count;
-    private String message;
+    private String result;
 
     public PunchRegisterResponseDto(int count, String message)
     {
         this.count = count;
-        this.message = message;
+        this.result = message;
     }
 }

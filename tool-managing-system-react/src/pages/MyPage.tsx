@@ -6,17 +6,23 @@ import { request } from "@/common/utils/ajax";
 
 import { DisplayId } from "@/pages/DisplayId";
 import { DisplayAdminId } from "./DisplayAdminId";
+import { Dayjs } from "dayjs";
 
 type Id = {
   username: string;
-  role: string;
-  is_locked: boolean;
-  is_approved: boolean;
+  userRole: string;
+  notLocked: boolean;
+  approved: boolean;
+  notExpired: boolean;
+  createdDate: string;
 };
 
 export const MyPage = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [idList, setIdList] = useState<Id[]>([]);
+  const [userRole, setUserRole] = useState<string>("");
+  const [passwordSetDate, setPasswordSetDate] = useState<string>("");
+  const [passwordValidDate, setPasswordValidDate] = useState<string>("");
 
   const { user, logout } = useAuth();
 
@@ -26,38 +32,24 @@ export const MyPage = () => {
     };
 
     request
-      .post(`/api/tool-managing-system/authority`, body)
+      .post(`/api/tool-managing-system/my_page`, body)
       .then((response) => {
         if (!response.ok) {
           throw new Error(
             `${user} 계정의 권한 확인 중 network 에러 발생 하였습니다.`
           );
         }
-        return response.text();
+        return response.json();
       })
-      .then((result) => {
-        if (result === "ADMIN") {
+      .then((json) => {
+        if (json.admin) {
           setIsAdmin(true);
-
-          request
-            .get(`/api/tool-managing-system/idList`)
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error(
-                  `id 목록을 가져 오는 중 network error 발생 하였습니다.`
-                );
-              }
-              return response.json();
-            })
-            .then((result) => {
-              console.log("result");
-              console.log(result);
-
-              setIdList(result);
-            })
-            .catch((error) => console.error(error));
+          setIdList(json.userList);
         } else {
-          setIsAdmin(false);
+          console.log(json);
+          setUserRole(json.userRole);
+          setPasswordSetDate(json.passwordSetDate);
+          setPasswordValidDate(json.passwordValidUntil);
         }
       })
       .catch((error) => console.error(error));
@@ -73,7 +65,7 @@ export const MyPage = () => {
         </button>
       </div>
 
-      {isAdmin && (
+      {isAdmin ? (
         <table className="table table-striped table-bordered table-hover custom-table-width">
           <thead>
             <tr>
@@ -88,7 +80,7 @@ export const MyPage = () => {
           </thead>
           <tbody>
             {idList.map((id: Id) =>
-              id.role === "admin" ? (
+              id.userRole === "ADMIN" ? (
                 <DisplayAdminId key={id.username} id={id} />
               ) : (
                 <DisplayId
@@ -99,6 +91,23 @@ export const MyPage = () => {
                 />
               )
             )}
+          </tbody>
+        </table>
+      ) : (
+        <table className="table table-striped table-bordered table-hover custom-table-width">
+          <thead>
+            <tr>
+              <th>역할</th>
+              <th>비밀번호 설정날짜</th>
+              <th>비밀번호 유효날짜</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr key={user}>
+              <td>{userRole}</td>
+              <td>{passwordSetDate}</td>
+              <td>{passwordValidDate}</td>
+            </tr>
           </tbody>
         </table>
       )}

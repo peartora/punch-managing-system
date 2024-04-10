@@ -1,15 +1,12 @@
 package com.example.toolmanagingsystem.controller;
 
 import com.example.toolmanagingsystem.dao.PunchDao;
-import com.example.toolmanagingsystem.dto.request.PunchRegisterRequestDto;
-import com.example.toolmanagingsystem.dto.request.PunchScrapRequestDao;
-import com.example.toolmanagingsystem.dto.request.PunchStatusUpdateRequestDto;
-import com.example.toolmanagingsystem.dto.request.UserRegisterDto;
-import com.example.toolmanagingsystem.dto.response.PunchRegisterResponseDto;
-import com.example.toolmanagingsystem.dto.response.PunchStatusUpdateResponseDto;
+import com.example.toolmanagingsystem.dto.request.*;
+import com.example.toolmanagingsystem.dto.response.*;
+import com.example.toolmanagingsystem.dto.response.myPageResponseDto.MyPageResponseDto;
+import com.example.toolmanagingsystem.dto.response.myPageResponseDto.PageResponseDtoForAdmin;
+import com.example.toolmanagingsystem.dto.response.myPageResponseDto.PageResponseDtoForNotAdmin;
 import com.example.toolmanagingsystem.entity.*;
-import com.example.toolmanagingsystem.entity.logging.Logging;
-import com.example.toolmanagingsystem.entity.logging.LoggingActivity;
 import com.example.toolmanagingsystem.entity.punch.Punch;
 import com.example.toolmanagingsystem.entity.punch.PunchDelete;
 import com.example.toolmanagingsystem.entity.punch.PunchStatus;
@@ -17,6 +14,7 @@ import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.repository.*;
 import com.example.toolmanagingsystem.repository.punch.PunchDeleteRepository;
 import com.example.toolmanagingsystem.repository.punch.PunchRepository;
+import com.example.toolmanagingsystem.service.UserService;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -50,12 +48,13 @@ public class ApiController
     SupplierRepository punchSupplierRepository;
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    LoggingRepository loggingRepository;
+
     @Autowired
     PunchDeleteRepository punchDeleteRepository;
     @Autowired
     InsepctionRepository inspectionRepository;
+    @Autowired
+    UserService userService;
 
     @Value("${TOOL_MANAGING_SYSTEM_STATIC_PATH}")
     private String staticPath;
@@ -390,86 +389,92 @@ public class ApiController
 //        return dao.getScrappedPunchList(params);
     }
 
-    @PostMapping("/usercheck")
-    public String checkUserId (@RequestBody Map<String, Object> params)
+    @PostMapping("/login")
+    public LoginResponseDto login (@RequestBody LoginRequestDto requestDto)
     {
-        System.out.println("checkUserId");
-        System.out.println(params);
-
-        User user = this.userRepository.findByUsername(params.get("username").toString());
-        if (user == null)
-        {
-            this.logging("unknown", LoggingActivity.LOGIN_FAIL_PASSWORD_UNREGISTERED_ID);
-            System.out.println("NoId");
-            return "NoId";
-        }
-        // User entity, Teacher entity
-
-        String username = user.getUsername();
-        boolean isApproved = user.isApproved();
-        boolean isLocked = user.isLocked();
-        String currentPassword = user.getPassword();
-        int trialCount = user.getTrialCount();
-        LocalDate createdDate = user.getCreatedDate();
-
-        this.logging(username, LoggingActivity.LOGIN_TRIAL);
-
-        if (!isApproved)
-        {
-            this.logging(username, LoggingActivity.LOGIN_FAIL_NOT_APPROVED_ID);
-            System.out.println("NotYetApproved");
-            return ("NotYetApproved");
-        }
-        else // approved
-        {
-            if (isLocked)
-            {
-                this.logging(username, LoggingActivity.LOGIN_FAIL_LOCKED_ID);
-                System.out.println("Locked");
-                return "Locked";
-            }
-            else // unlocked
-            {
-                if (LocalDate.now().isAfter(createdDate.plusMonths(6)))
-                {
-                    this.logging(username, LoggingActivity.LOGIN_FAIL_PASSWORD_EXPIRED);
-                    System.out.println("password is expired");
-                    return "Expired";
-                }
-                else // password is not expired
-                {
-                    if (Objects.equals(params.get("password"), currentPassword))
-                    {
-                        this.logging(username, LoggingActivity.LOGIN);
-                        user.setTrialCount(0);
-                        this.userRepository.save(user);
-                        System.out.println("LOGINED AS " + username);
-                        return "OK";
-                    }
-                    else // password is not correct
-                    {
-                        this.logging(username, LoggingActivity.LOGIN_FAIL_PASSWORD_INCORRECT);
-                        int trialCountPlusOne = trialCount + 1;
-                        user.setTrialCount(trialCountPlusOne);
-                        this.userRepository.save(user);
-
-                        if (trialCountPlusOne >= 5)
-                        {
-                            user.setLocked(true);
-                            this.userRepository.save(user);
-                            System.out.println("It`s newly locked");
-                            return "Locked";
-                        }
-                        else
-                        {
-                            System.out.println("password is wrong," + trialCountPlusOne);
-                            return "NOK," + trialCountPlusOne;
-                        }
-                    }
-                }
-            }
-        }
+        return this.userService.login(requestDto);
     }
+
+//    @PostMapping("/usercheck")
+//    public String checkUserId (@RequestBody Map<String, Object> params)
+//    {
+//        System.out.println("checkUserId");
+//        System.out.println(params);
+//
+//        User user = this.userRepository.findByUsername(params.get("username").toString());
+//        if (user == null)
+//        {
+////            this.logging("unknown", LoggingActivity.LOGIN_FAIL_PASSWORD_UNREGISTERED_ID);
+//            System.out.println("NoId");
+//            return "NoId";
+//        }
+//        // User entity, Teacher entity
+//
+//        String username = user.getUsername();
+//        boolean isApproved = user.isApproved();
+//        boolean isLocked = user.isNotLocked();
+//        String currentPassword = user.getPassword();
+//        int trialCount = user.getTrialCount();
+//        LocalDate createdDate = user.getCreatedDate();
+//
+////        this.logging(username, LoggingActivity.LOGIN_TRIAL);
+//
+//        if (!isApproved)
+//        {
+////            this.logging(username, LoggingActivity.LOGIN_FAIL_NOT_APPROVED_ID);
+//            System.out.println("NotYetApproved");
+//            return ("NotYetApproved");
+//        }
+//        else // approved
+//        {
+//            if (isLocked)
+//            {
+////                this.logging(username, LoggingActivity.LOGIN_FAIL_LOCKED_ID);
+//                System.out.println("Locked");
+//                return "Locked";
+//            }
+//            else // unlocked
+//            {
+//                if (LocalDate.now().isAfter(createdDate.plusMonths(6)))
+//                {
+////                    this.logging(username, LoggingActivity.LOGIN_FAIL_PASSWORD_EXPIRED);
+//                    System.out.println("password is expired");
+//                    return "Expired";
+//                }
+//                else // password is not expired
+//                {
+//                    if (Objects.equals(params.get("password"), currentPassword))
+//                    {
+////                        this.logging(username, LoggingActivity.LOGIN);
+//                        user.setTrialCount(0);
+//                        this.userRepository.save(user);
+//                        System.out.println("LOGINED AS " + username);
+//                        return "OK";
+//                    }
+//                    else // password is not correct
+//                    {
+////                        this.logging(username, LoggingActivity.LOGIN_FAIL_PASSWORD_INCORRECT);
+//                        int trialCountPlusOne = trialCount + 1;
+//                        user.setTrialCount(trialCountPlusOne);
+//                        this.userRepository.save(user);
+//
+//                        if (trialCountPlusOne >= 5)
+//                        {
+//                            user.setLocked(true);
+//                            this.userRepository.save(user);
+//                            System.out.println("It`s newly locked");
+//                            return "Locked";
+//                        }
+//                        else
+//                        {
+//                            System.out.println("password is wrong," + trialCountPlusOne);
+//                            return "NOK," + trialCountPlusOne;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     @PostMapping("/password_change")
     public String changePassword (@RequestBody Map<String, Object> params)
@@ -484,7 +489,7 @@ public class ApiController
         try
         {
             this.userRepository.save(user);
-            this.logging(username, LoggingActivity.PASSWORD_CHANGE);
+//            this.logging(username, LoggingActivity.PASSWORD_CHANGE);
             return "OK";
         }
         catch (Exception e)
@@ -493,22 +498,13 @@ public class ApiController
         }
     }
 
-    @PostMapping("/create_id")
-    public String registerUser (@RequestBody UserRegisterDto userRegisterDto)
+    @PostMapping("/register_user")
+    public UserRegisterResponseDto registerUser (@RequestBody UserRegisterRequestDto requestDto)
     {
         System.out.println("registerUser");
-        System.out.println(userRegisterDto);
+        System.out.println(requestDto);
 
-        User user = new User(userRegisterDto);
-        try
-        {
-            this.userRepository.save(user);
-            return "OK";
-        }
-        catch (Exception e)
-        {
-            return "NOK";
-        }
+        return this.userService.registerUser(requestDto);
     }
 
     @PostMapping("/duplicate_username")
@@ -547,6 +543,43 @@ public class ApiController
         return user.getUserRole().toString();
     }
 
+    @PostMapping("/my_page")
+    public MyPageResponseDto createMyPage(@RequestBody MyPageRequestDto requestDto)
+    {
+        System.out.println("createMyPage");
+        System.out.println(requestDto);
+
+        User user = this.userRepository.findByUsername(requestDto.getUsername());
+
+        MyPageResponseDto responseDto;
+
+        if (Objects.equals(user.getUserRole().toString(), "ADMIN"))
+        {
+            responseDto = new PageResponseDtoForAdmin(user.getUsername());
+            responseDto.setAdmin(true);
+            Iterable<User> userIterable = this.userRepository.findAll();
+
+            if (responseDto instanceof PageResponseDtoForAdmin)
+            {
+                ((PageResponseDtoForAdmin) responseDto).setUserList(userIterable);
+            }
+        }
+        else
+        {
+            LocalDate passwordSetDate = user.getPasswordSetDate();
+            responseDto = new PageResponseDtoForNotAdmin(user.getUsername());
+            responseDto.setAdmin(false);
+
+            if (responseDto instanceof PageResponseDtoForNotAdmin)
+            {
+                ((PageResponseDtoForNotAdmin) responseDto).setPasswordSetDate(user.getPasswordSetDate());
+                ((PageResponseDtoForNotAdmin) responseDto).setUserRole(user.getUserRole());
+                ((PageResponseDtoForNotAdmin) responseDto).setPasswordValidUntil(passwordSetDate.plusMonths(6));
+            }
+        }
+        return responseDto;
+    }
+
     @GetMapping("/idList")
     public List<Map<String, Object>> returnIdList()
     {
@@ -559,7 +592,7 @@ public class ApiController
         {
             Map<String, Object> idMap = new HashMap<>();
             idMap.put("username", user.getUsername());
-            idMap.put("is_locked", user.isLocked());
+            idMap.put("is_not_locked", user.isNotLocked());
             idMap.put("is_approved", user.isApproved());
             idMap.put("role", user.getUserRole());
             idList.add(idMap);
@@ -594,6 +627,8 @@ public class ApiController
 
         User user = this.userRepository.findByUsername(params.get("username").toString());
         user.setApproved(true);
+        user.setNotExpired(true);
+        user.setNotLocked(true);
         try
         {
             this.userRepository.save(user);
@@ -620,7 +655,7 @@ public class ApiController
         }
 
         user.setPassword(params.get("password").toString());
-        user.setLocked(false);
+        user.setNotLocked(true);
 
         try
         {
@@ -687,11 +722,7 @@ public class ApiController
         }
     }
 
-    private void logging(String username, LoggingActivity activity)
-    {
-        Logging logging = new Logging(username, activity, LocalDateTime.now());
-        this.loggingRepository.save(logging);
-    }
+
 
     private boolean filterPunch(Punch punch, HashMap<String, Object> params)
     {
