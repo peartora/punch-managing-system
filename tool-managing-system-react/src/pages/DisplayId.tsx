@@ -22,7 +22,7 @@ type IdProps = {
 };
 
 export function DisplayId({ id, idList, setIdList }: IdProps) {
-  const [isLocked, setIsLocked] = useState(() => id.notLocked);
+  const [notLocked, setNotLocked] = useState(() => id.notLocked);
   const [isApproved, setIsApproved] = useState(() => id.approved);
   const [newPassword, setNewPassword] = useState("");
 
@@ -39,8 +39,6 @@ export function DisplayId({ id, idList, setIdList }: IdProps) {
       const body = {
         username: resetId,
         password: newPassword,
-        isLocked: false,
-        trialCount: 0,
       };
 
       request
@@ -51,18 +49,19 @@ export function DisplayId({ id, idList, setIdList }: IdProps) {
               `${resetId} 계정의 잠금상태 초기화 중 error 발생 하였습니다.`
             );
           }
-          return response.text();
+          return response.json();
         })
-        .then((result) => {
-          if (result === "OK") {
-            setIsLocked(false);
-            alert(`${resetId} 계정의 초기화가 완료 되었습니다.`);
-          } else if (result === "NOK_PasswordSame") {
-            alert(
-              `${resetId} 계정의 입력 된 비밀번호가 과거 비밀번호와 동일 합니다.`
-            );
-          } else {
-            alert(`${resetId} 계정의 초기화 중 error가 발생 하였습니다.`);
+        .then((json) => {
+          console.log("json");
+          console.log(json);
+
+          if (json.passwordReset) {
+            alert(`초기화 되었습니다.`);
+            setNotLocked(true);
+          } else if (!json.passwordLongEnough) {
+            alert(`입력된 비밀번호의 길이가 6자리 미만 입니다.`);
+          } else if (!json.passwordSameWithCurrentPassword) {
+            alert(`입력된 비밀번호가 현재 비밀번호와 동일 합니다.`);
           }
         })
         .catch((error) => console.error(error));
@@ -126,8 +125,8 @@ export function DisplayId({ id, idList, setIdList }: IdProps) {
       <td>{id.username}</td>
       <td>{id.userRole}</td>
 
-      {isLocked ? <td>비활성화</td> : <td>활성화</td>}
-      {isLocked ? (
+      {!notLocked ? <td>비활성화</td> : <td>활성화</td>}
+      {!notLocked ? (
         <td>
           <form onSubmit={submitHandler}>
             <label>

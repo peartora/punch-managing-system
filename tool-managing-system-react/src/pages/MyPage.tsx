@@ -45,6 +45,8 @@ export const MyPage = () => {
         return response.json();
       })
       .then((json) => {
+        console.log(json);
+
         if (json.admin) {
           setIsAdmin(true);
           setIdList(json.userList);

@@ -590,31 +590,43 @@ public class ApiController
     }
 
     @PostMapping("/resetPassword")
-    public String resetPassword(@RequestBody Map<String, Object> params)
+    public ResetPasswordResponseDto resetPassword(@RequestBody ResetPasswordRequestDto requestDto)
     {
         System.out.println("resetPassword");
-        System.out.println(params);
+        System.out.println(requestDto);
 
-        User user = this.userRepository.findByUsername(params.get("username").toString());
+        User user = this.userRepository.findByUsername(requestDto.getUsername());
         String currentPassword = user.getPassword();
 
-        if (currentPassword.equals(params.get("password"))) {
-            System.out.println("NOK_PasswordSame");
-            return "NOK_PasswordSame";
+        ResetPasswordResponseDto responseDto = new ResetPasswordResponseDto(requestDto.getUsername());
+
+        if (currentPassword.equals(requestDto.getPassword()))
+        {
+            responseDto.setPasswordSameWithCurrentPassword(true);
+            return responseDto;
+        }
+        else
+        {
+            responseDto.setPasswordSameWithCurrentPassword(false);
         }
 
-        user.setPassword(params.get("password").toString());
-        user.setNotLocked(true);
+        if (requestDto.getPassword().length() < 6)
+        {
+            responseDto.setPasswordLongEnough(false);
+            return responseDto;
+        }
+        else
+        {
+            responseDto.setPasswordLongEnough(true);
+        }
 
-        try
-        {
-            this.userRepository.save(user);
-            return "OK";
-        }
-        catch (Exception e)
-        {
-            return "NOK";
-        }
+        responseDto.setPasswordReset(true);
+        user.setPassword(requestDto.getPassword());
+        user.setPasswordSetDate(LocalDate.now());
+        user.setTrialCount(0);
+        this.userRepository.save(user);
+
+        return responseDto;
     }
 
     @PostMapping("/delete_user")
