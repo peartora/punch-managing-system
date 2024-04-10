@@ -9,6 +9,8 @@ export function ChangePassword() {
   const [newPasswordForConfirmation, setNewPasswordForConfirmation] =
     useState("");
 
+  const navigate = useNavigate();
+
   const username = sessionStorage.getItem("tool-managing-system-current-user");
 
   const submitHandler = function (event: React.FormEvent<HTMLFormElement>) {
@@ -32,10 +34,8 @@ export function ChangePassword() {
               return response.json();
             })
             .then((json) => {
-              console.log("json");
-              console.log(json);
-
               if (json.passwordChanged) {
+                navigate("/mypage");
                 alert(`${username}의 비밀번호가 변경 되었습니다.`);
               } else {
                 if (!json.newPasswordLonghEnough) {
