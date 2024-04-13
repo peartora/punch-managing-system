@@ -1,4 +1,4 @@
-package com.example.toolmanagingsystem.service;
+package com.example.toolmanagingsystem.service.userService;
 
 import com.example.toolmanagingsystem.dto.request.LoginRequestDto;
 import com.example.toolmanagingsystem.dto.request.PasswordChangeRequestDto;
@@ -9,11 +9,16 @@ import com.example.toolmanagingsystem.dto.response.PasswordChangeResponseDto;
 import com.example.toolmanagingsystem.dto.response.PunchRegisterResponseDto;
 import com.example.toolmanagingsystem.dto.response.UserRegisterResponseDto;
 import com.example.toolmanagingsystem.entity.user.User;
+import com.example.toolmanagingsystem.error.DuplicatedIdError;
 import com.example.toolmanagingsystem.repository.UserRepository;
+import com.example.toolmanagingsystem.service.userService.exception.DuplicatedUsernameException;
+import com.example.toolmanagingsystem.service.userService.exception.PasswordLengthIsNotEnoughException;
+import com.example.toolmanagingsystem.service.userService.exception.PasswordNotSameException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,64 +31,43 @@ public class UserService
     UserRepository userRepository;
     LoginResponseDto responseDto;
 
-    public UserRegisterResponseDto registerUser(UserRegisterRequestDto requestDto)
+    public void registerUser(UserRegisterRequestDto requestDto)
     {
-        UserRegisterResponseDto responseDto = new UserRegisterResponseDto(requestDto.getUsername());
-
-        System.out.println("initial responseDto");
-        System.out.println(responseDto);
-
-        boolean checkResult = this.isDuplicate(requestDto.getUsername());
-
-        System.out.println("checkResult");
-        System.out.println(checkResult);
-
-        if (!checkResult) {
-            responseDto.setDuplicate(true);
-            responseDto.setRegistered(false);
-            return responseDto;
-        }
-
-        System.out.println("after duplicate checkResult");
-        System.out.println(responseDto);
-
         String password = requestDto.getPassword();
         String passwordConfirmation = requestDto.getPasswordConfirmation();
 
-        if (Objects.equals(password, passwordConfirmation))
+        try
         {
-            responseDto.setPasswordSameWithConfirmation(true);
-        } else {
-            responseDto.setPasswordSameWithConfirmation(false);
-            responseDto.setRegistered(false);
-
-            return responseDto;
+            this.isPasswordSame(password, passwordConfirmation);
+        }
+        catch(SQLException e)
+        {
+            System.out.println("PasswordNotSameException");
+            throw new PasswordNotSameException(e);
         }
 
-        System.out.println("after passwordSame");
-        System.out.println(responseDto);
-
-        if (password.length() >= 6)
+        try
         {
-            responseDto.setPasswordLongEnough(true);
-        } else {
-            responseDto.setPasswordLongEnough(false);
-            responseDto.setRegistered(false);
-
-            return responseDto;
+            this.isPasswordLongEnough(password);
+        }
+        catch(SQLException e)
+        {
+            System.out.println("PasswordLengthIsNotEnoughException");
+            throw new PasswordLengthIsNotEnoughException(e);
         }
 
-        System.out.println("after password length check");
-        System.out.println(responseDto);
-
-        responseDto.setRegistered(true);
-
-        System.out.println("final");
-        System.out.println(responseDto);
+        try
+        {
+            this.isUsernameDuplicated(requestDto.getUsername());
+        }
+        catch(SQLException e)
+        {
+            System.out.println("DuplicatedUsernameException");
+            throw new DuplicatedUsernameException(e);
+        }
 
         User user = new User(requestDto);
         this.userRepository.save(user);
-        return responseDto;
     }
 
     public LoginResponseDto login(LoginRequestDto requestDto) {
@@ -156,13 +140,14 @@ public class UserService
         return this.responseDto;
     }
 
-    public boolean isDuplicate(String id)
+    public boolean isNotDuplicate(String id)
     {
        User user = this.getUser(id);
 
        if (user == null) {
            return true;
        } else {
+
            return false;
        }
     }
@@ -207,5 +192,43 @@ public class UserService
             }
         }
         this.userRepository.saveAll(userList);
+    }
+
+
+
+    private boolean isPasswordSame(String password, String passwordConfirmation) throws SQLException
+    {
+        if (password.equals(passwordConfirmation))
+        {
+            return true;
+        }
+        else
+        {
+            throw new SQLException("Password is not same");
+        }
+    }
+
+    private boolean isPasswordLongEnough(String password) throws SQLException
+    {
+        if (password.length() >= 6)
+        {
+            return true;
+        }
+        else
+        {
+            throw new SQLException("Password is not long enough");
+        }
+    }
+
+    private boolean isUsernameDuplicated(String username) throws SQLException
+    {
+        if (userRepository.findByUsername(username) == null)
+        {
+            return true;
+        }
+        else
+        {
+            throw new SQLException("Username is duplicated");
+        }
     }
 }

@@ -32,11 +32,13 @@ export function CreateId() {
             return response.json();
           })
           .then((json) => {
+            console.log("json", json);
+
             if (json.registered) {
               alert(`Id: ${json.username}이(가) 등록 되었습니다.`);
               navigate(`/sign-in`);
             } else {
-              if (json.duplicate) {
+              if (!json.notDuplicate) {
                 alert(`Id: ${json.username}은(는) 이미 등록 되었습니다.`);
               } else if (!json.passwordLongEnough) {
                 alert(

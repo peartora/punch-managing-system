@@ -6,8 +6,9 @@ import lombok.Data;
 public class UserRegisterResponseDto
 {
     private String username;
-    private boolean isDuplicate;
     private boolean isRegistered;
+
+    private boolean isNotDuplicate;
     private boolean isPasswordSameWithConfirmation;
     private boolean isPasswordLongEnough;
 
@@ -20,7 +21,7 @@ public class UserRegisterResponseDto
     {
         return "UserRegisterResponseDto{" +
                 "username='" + username + '\'' +
-                ", isDuplicate=" + isDuplicate +
+                ", isNotDuplicate=" + isNotDuplicate +
                 ", isRegistered=" + isRegistered +
                 ", isPasswordSameWithConfirmation=" + isPasswordSameWithConfirmation +
                 ", isPasswordLongEnough=" + isPasswordLongEnough +

@@ -14,7 +14,10 @@ import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.repository.*;
 import com.example.toolmanagingsystem.repository.punch.PunchDeleteRepository;
 import com.example.toolmanagingsystem.repository.punch.PunchRepository;
-import com.example.toolmanagingsystem.service.UserService;
+import com.example.toolmanagingsystem.service.userService.UserService;
+import com.example.toolmanagingsystem.service.userService.exception.DuplicatedUsernameException;
+import com.example.toolmanagingsystem.service.userService.exception.PasswordLengthIsNotEnoughException;
+import com.example.toolmanagingsystem.service.userService.exception.PasswordNotSameException;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -31,6 +34,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -453,7 +457,37 @@ public class ApiController
         System.out.println("registerUser");
         System.out.println(requestDto);
 
-        return this.userService.registerUser(requestDto);
+        UserRegisterResponseDto responseDto = new UserRegisterResponseDto(requestDto.getUsername());
+
+        try
+        {
+            this.userService.registerUser(requestDto);
+            responseDto.setRegistered(true);
+        }
+        catch (DuplicatedUsernameException e)
+        {
+            responseDto.setRegistered(false);
+            responseDto.setNotDuplicate(false);
+            responseDto.setPasswordSameWithConfirmation(true);
+            responseDto.setPasswordLongEnough(true);
+        }
+        catch (PasswordNotSameException e)
+        {
+            responseDto.setRegistered(false);
+            responseDto.setPasswordSameWithConfirmation(false);
+            responseDto.setNotDuplicate(true);
+            responseDto.setPasswordLongEnough(true);
+
+        }
+        catch (PasswordLengthIsNotEnoughException e)
+        {
+            responseDto.setRegistered(false);
+            responseDto.setPasswordLongEnough(false);
+            responseDto.setNotDuplicate(true);
+            responseDto.setPasswordSameWithConfirmation(true);
+        }
+
+        return responseDto;
     }
 
     @PostMapping("/duplicate_username")
@@ -500,33 +534,29 @@ public class ApiController
 
         User user = this.userRepository.findByUsername(requestDto.getUsername());
 
-        MyPageResponseDto responseDto;
 
         if (Objects.equals(user.getUserRole().toString(), "ADMIN"))
         {
-            responseDto = new PageResponseDtoForAdmin(user.getUsername());
+            PageResponseDtoForAdmin responseDto = new PageResponseDtoForAdmin(user.getUsername());
             responseDto.setAdmin(true);
             Iterable<User> userIterable = this.userRepository.findAll();
 
-            if (responseDto instanceof PageResponseDtoForAdmin)
-            {
-                ((PageResponseDtoForAdmin) responseDto).setUserList(userIterable);
-            }
+            responseDto.setUserList(userIterable);
+
+            return responseDto;
         }
         else
         {
             LocalDate passwordSetDate = user.getPasswordSetDate();
-            responseDto = new PageResponseDtoForNotAdmin(user.getUsername());
+            PageResponseDtoForNotAdmin responseDto = new PageResponseDtoForNotAdmin(user.getUsername());
             responseDto.setAdmin(false);
 
-            if (responseDto instanceof PageResponseDtoForNotAdmin)
-            {
-                ((PageResponseDtoForNotAdmin) responseDto).setPasswordSetDate(user.getPasswordSetDate());
-                ((PageResponseDtoForNotAdmin) responseDto).setUserRole(user.getUserRole());
-                ((PageResponseDtoForNotAdmin) responseDto).setPasswordValidUntil(passwordSetDate.plusMonths(6));
-            }
+            responseDto.setPasswordSetDate(user.getPasswordSetDate());
+            responseDto.setUserRole(user.getUserRole());
+            responseDto.setPasswordValidUntil(passwordSetDate.plusMonths(6));
+
+            return responseDto;
         }
-        return responseDto;
     }
 
     @GetMapping("/idList")
