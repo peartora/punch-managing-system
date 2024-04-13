@@ -15,6 +15,7 @@ import com.example.toolmanagingsystem.service.userService.exception.DuplicatedUs
 import com.example.toolmanagingsystem.service.userService.exception.PasswordLengthIsNotEnoughException;
 import com.example.toolmanagingsystem.service.userService.exception.PasswordNotSameException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -56,18 +57,17 @@ public class UserService
             throw new PasswordLengthIsNotEnoughException(e);
         }
 
+        User user = new User(requestDto);
+
         try
         {
-            this.isUsernameDuplicated(requestDto.getUsername());
+            this.userRepository.save(user);
         }
-        catch(SQLException e)
+        catch(DataAccessException e)
         {
             System.out.println("DuplicatedUsernameException");
             throw new DuplicatedUsernameException(e);
         }
-
-        User user = new User(requestDto);
-        this.userRepository.save(user);
     }
 
     public LoginResponseDto login(LoginRequestDto requestDto) {
