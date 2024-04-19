@@ -1,9 +1,11 @@
 package com.example.toolmanagingsystem.service.userService.exception;
 
-public class PasswordNotSameException extends RuntimeException
+import com.example.toolmanagingsystem.error.BusinessError;
+
+public class PasswordNotSameException extends BusinessError
 {
-    public PasswordNotSameException(Throwable cause)
+    public PasswordNotSameException()
     {
-        super(cause);
+        super("PASSWORD_NOT_SAME", "Password not same", null);
     }
 }

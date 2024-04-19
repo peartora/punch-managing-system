@@ -1,6 +1,7 @@
 package com.example.toolmanagingsystem.controller;
 
 import com.example.toolmanagingsystem.dao.PunchDao;
+import com.example.toolmanagingsystem.dto.ApiResponse;
 import com.example.toolmanagingsystem.dto.request.*;
 import com.example.toolmanagingsystem.dto.response.*;
 import com.example.toolmanagingsystem.dto.response.myPageResponseDto.MyPageResponseDto;
@@ -11,6 +12,7 @@ import com.example.toolmanagingsystem.entity.punch.Punch;
 import com.example.toolmanagingsystem.entity.punch.PunchDelete;
 import com.example.toolmanagingsystem.entity.punch.PunchStatus;
 import com.example.toolmanagingsystem.entity.user.User;
+import com.example.toolmanagingsystem.error.BusinessError;
 import com.example.toolmanagingsystem.repository.*;
 import com.example.toolmanagingsystem.repository.punch.PunchDeleteRepository;
 import com.example.toolmanagingsystem.repository.punch.PunchRepository;
@@ -23,7 +25,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -44,26 +48,27 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ApiController
 {
-    @Autowired
-    PunchRepository punchRepository;
-    @Autowired
-    MedicineRepository medicineRepository;
-    @Autowired
-    SupplierRepository punchSupplierRepository;
-    @Autowired
-    UserRepository userRepository;
+//    private final Logger logger;
 
-    @Autowired
-    PunchDeleteRepository punchDeleteRepository;
-    @Autowired
-    InsepctionRepository inspectionRepository;
-    @Autowired
-    UserService userService;
+    private final PunchRepository punchRepository;
+    private final MedicineRepository medicineRepository;
+    private final SupplierRepository punchSupplierRepository;
+    private final UserRepository userRepository;
+    private final PunchDeleteRepository punchDeleteRepository;
+    private final InsepctionRepository inspectionRepository;
+    private final UserService userService;
+    private final PunchDao dao;
+
+    @ExceptionHandler(BusinessError.class)
+    public ApiResponse handleBusinessError(BusinessError error)
+    {
+        return ApiResponse.error(error);
+    }
 
     @Value("${TOOL_MANAGING_SYSTEM_STATIC_PATH}")
     private String staticPath;
 
-    private final PunchDao dao;
+
     @PostMapping("/register")
     public PunchRegisterResponseDto registerPunch(@RequestBody List<PunchRegisterRequestDto> punchRegisterRequestDtoList)
     {
@@ -452,42 +457,14 @@ public class ApiController
     }
 
     @PostMapping("/register_user")
-    public UserRegisterResponseDto registerUser (@RequestBody UserRegisterRequestDto requestDto)
+    public UserRegisterResponseDto registerUser (@RequestBody @Valid UserRegisterRequestDto requestDto)
     {
-        System.out.println("registerUser");
-        System.out.println(requestDto);
+//        logger.debug("registerUser");
+//        logger.debug("%o", requestDto);
 
-        UserRegisterResponseDto responseDto = new UserRegisterResponseDto(requestDto.getUsername());
+        this.userService.registerUser(requestDto);
 
-        try
-        {
-            this.userService.registerUser(requestDto);
-            responseDto.setRegistered(true);
-        }
-        catch (DuplicatedUsernameException e)
-        {
-            responseDto.setRegistered(false);
-            responseDto.setNotDuplicate(false);
-            responseDto.setPasswordSameWithConfirmation(true);
-            responseDto.setPasswordLongEnough(true);
-        }
-        catch (PasswordNotSameException e)
-        {
-            responseDto.setRegistered(false);
-            responseDto.setPasswordSameWithConfirmation(false);
-            responseDto.setNotDuplicate(true);
-            responseDto.setPasswordLongEnough(true);
-
-        }
-        catch (PasswordLengthIsNotEnoughException e)
-        {
-            responseDto.setRegistered(false);
-            responseDto.setPasswordLongEnough(false);
-            responseDto.setNotDuplicate(true);
-            responseDto.setPasswordSameWithConfirmation(true);
-        }
-
-        return responseDto;
+        return new UserRegisterResponseDto(requestDto.getUsername());
     }
 
     @PostMapping("/duplicate_username")

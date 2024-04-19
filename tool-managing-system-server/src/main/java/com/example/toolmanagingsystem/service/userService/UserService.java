@@ -37,25 +37,8 @@ public class UserService
         String password = requestDto.getPassword();
         String passwordConfirmation = requestDto.getPasswordConfirmation();
 
-        try
-        {
-            this.isPasswordSame(password, passwordConfirmation);
-        }
-        catch(SQLException e)
-        {
-            System.out.println("PasswordNotSameException");
-            throw new PasswordNotSameException(e);
-        }
-
-        try
-        {
-            this.isPasswordLongEnough(password);
-        }
-        catch(SQLException e)
-        {
-            System.out.println("PasswordLengthIsNotEnoughException");
-            throw new PasswordLengthIsNotEnoughException(e);
-        }
+        this.isPasswordSame(password, passwordConfirmation);
+        this.isPasswordLongEnough(password);
 
         User user = new User(requestDto);
 
@@ -65,7 +48,6 @@ public class UserService
         }
         catch(DataAccessException e)
         {
-            System.out.println("DuplicatedUsernameException");
             throw new DuplicatedUsernameException(e);
         }
     }
@@ -196,28 +178,24 @@ public class UserService
 
 
 
-    private boolean isPasswordSame(String password, String passwordConfirmation) throws SQLException
+    private boolean isPasswordSame(String password, String passwordConfirmation)
     {
-        if (password.equals(passwordConfirmation))
+        if (!password.equals(passwordConfirmation))
         {
-            return true;
+            throw new PasswordNotSameException();
         }
-        else
-        {
-            throw new SQLException("Password is not same");
-        }
+
+        return true;
     }
 
-    private boolean isPasswordLongEnough(String password) throws SQLException
+    private boolean isPasswordLongEnough(String password)
     {
-        if (password.length() >= 6)
+        if (password.length() < 6)
         {
-            return true;
+            throw new PasswordLengthIsNotEnoughException();
         }
-        else
-        {
-            throw new SQLException("Password is not long enough");
-        }
+
+        return true;
     }
 
     private boolean isUsernameDuplicated(String username) throws SQLException
