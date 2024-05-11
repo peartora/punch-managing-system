@@ -6,7 +6,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
-@Entity(name = "employee")
+@Entity(name = "user")
 @Data
 public class User
 {
@@ -14,9 +14,10 @@ public class User
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
-    private String username;
+    @Column(name = "user_id")
+    private String userId;
     private String password;
-    @Column(name = "role")
+    @Column(name = "user_role")
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
     @Column(name = "is_not_locked")
@@ -34,7 +35,7 @@ public class User
 
 
     public User(UserRegisterRequestDto userRegisterRequestDto) {
-        this.username = userRegisterRequestDto.getUsername();
+        this.userId = userRegisterRequestDto.getUsername();
         this.password = userRegisterRequestDto.getPassword();
         this.userRole = UserRole.valueOf(userRegisterRequestDto.getRole());
         this.isNotLocked = false;

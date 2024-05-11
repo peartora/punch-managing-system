@@ -1,34 +1,22 @@
 package com.example.toolmanagingsystem.controller;
 
 import com.example.toolmanagingsystem.dao.PunchDao;
-import com.example.toolmanagingsystem.dto.ApiResponse;
 import com.example.toolmanagingsystem.dto.request.*;
 import com.example.toolmanagingsystem.dto.response.*;
-import com.example.toolmanagingsystem.dto.response.myPageResponseDto.MyPageResponseDto;
-import com.example.toolmanagingsystem.dto.response.myPageResponseDto.PageResponseDtoForAdmin;
-import com.example.toolmanagingsystem.dto.response.myPageResponseDto.PageResponseDtoForNotAdmin;
 import com.example.toolmanagingsystem.entity.*;
 import com.example.toolmanagingsystem.entity.punch.Punch;
 import com.example.toolmanagingsystem.entity.punch.PunchDelete;
 import com.example.toolmanagingsystem.entity.punch.PunchStatus;
-import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.error.BusinessError;
 import com.example.toolmanagingsystem.repository.*;
 import com.example.toolmanagingsystem.repository.punch.PunchDeleteRepository;
 import com.example.toolmanagingsystem.repository.punch.PunchRepository;
-import com.example.toolmanagingsystem.service.userService.UserService;
-import com.example.toolmanagingsystem.service.userService.exception.DuplicatedUsernameException;
-import com.example.toolmanagingsystem.service.userService.exception.PasswordLengthIsNotEnoughException;
-import com.example.toolmanagingsystem.service.userService.exception.PasswordNotSameException;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,32 +26,29 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/tool-managing-system")
+@RequestMapping("/api/tool-managing-system/punchs")
 @RequiredArgsConstructor
-public class ApiController
+public class PunchApiController
 {
 //    private final Logger logger;
 
     private final PunchRepository punchRepository;
     private final MedicineRepository medicineRepository;
     private final SupplierRepository punchSupplierRepository;
-    private final UserRepository userRepository;
     private final PunchDeleteRepository punchDeleteRepository;
     private final InsepctionRepository inspectionRepository;
-    private final UserService userService;
     private final PunchDao dao;
 
-    @ExceptionHandler(BusinessError.class)
-    public ApiResponse handleBusinessError(BusinessError error)
-    {
-        return ApiResponse.error(error);
-    }
+//    @ExceptionResponse(BusinessError.class)
+//    public UserApiResponse handleBusinessError(BusinessError error)
+//    {
+//        return UserApiResponse.error(error);
+//    }
 
     @Value("${TOOL_MANAGING_SYSTEM_STATIC_PATH}")
     private String staticPath;
@@ -398,91 +383,10 @@ public class ApiController
 //        return dao.getScrappedPunchList(params);
     }
 
-    @PostMapping("/login")
-    public LoginResponseDto login (@RequestBody LoginRequestDto requestDto)
-    {
-        return this.userService.login(requestDto);
-    }
-
-    @PostMapping("/password_change")
-    public PasswordChangeResponseDto changePassword (@RequestBody PasswordChangeRequestDto requestDto)
-    {
-        System.out.println("changePassword");
-        System.out.println(requestDto);
-
-        String username = requestDto.getUsername();
-        User user = this.userRepository.findByUsername(username);
-
-        PasswordChangeResponseDto responseDto = new PasswordChangeResponseDto(username);
-
-        if (Objects.equals(user.getPassword(), requestDto.getNewPassword()))
-        {
-            responseDto.setPasswordChanged(false);
-            responseDto.setNewPasswordDifferentWithCurrentPassword(false);
-            return responseDto;
-        }
-        else
-        {
-            responseDto.setNewPasswordDifferentWithCurrentPassword(true);
-        }
-
-        if (!Objects.equals(requestDto.getNewPassword(), requestDto.getNewPasswordForConfirmation()))
-        {
-            responseDto.setPasswordChanged(false);
-            responseDto.setNewPasswordSameWithNewPasswordConfirmation(false);
-            return responseDto;
-        }
-        else
-        {
-            responseDto.setNewPasswordSameWithNewPasswordConfirmation(true);
-        }
 
 
-        if (requestDto.getNewPassword().length() < 6)
-        {
-            responseDto.setPasswordChanged(false);
-            responseDto.setNewPasswordLonghEnough(false);
-            return responseDto;
-        }
-        else
-        {
-            responseDto.setNewPasswordLonghEnough(true);
-        }
 
-        responseDto.setPasswordChanged(true);
-        user.setPassword(requestDto.getNewPassword());
-        user.setPasswordSetDate(LocalDate.now());
-        this.userRepository.save(user);
-        return responseDto;
-    }
 
-    @PostMapping("/register_user")
-    public UserRegisterResponseDto registerUser (@RequestBody @Valid UserRegisterRequestDto requestDto)
-    {
-//        logger.debug("registerUser");
-//        logger.debug("%o", requestDto);
-
-        this.userService.registerUser(requestDto);
-
-        return new UserRegisterResponseDto(requestDto.getUsername());
-    }
-
-    @PostMapping("/duplicate_username")
-    public String returnCheckResultForUsername(@RequestBody Map<String, Object> params)
-    {
-        System.out.println("returnCheckResultForUsername");
-        System.out.println(params);
-
-        User user = this.userRepository.findByUsername((String) params.get("id"));
-
-        if (user == null)
-        {
-            return "OK";
-        } else
-        {
-            return "NOK";
-        }
-    }
 
     @GetMapping("/created-date")
     public String returnCreatedDate(@RequestParam Map<String, Object> params)
@@ -493,69 +397,7 @@ public class ApiController
         return dao.returnCreatedDate(params);
     }
 
-    @PostMapping("/authority")
-    public String returnAuthority(@RequestBody Map<String, Object> params)
-    {
-        System.out.println("returnAuthority");
-        System.out.println(params);
 
-        User user = this.userRepository.findByUsername(params.get("username").toString());
-        return user.getUserRole().toString();
-    }
-
-    @PostMapping("/my_page")
-    public MyPageResponseDto createMyPage(@RequestBody MyPageRequestDto requestDto)
-    {
-        System.out.println("createMyPage");
-        System.out.println(requestDto);
-
-        User user = this.userRepository.findByUsername(requestDto.getUsername());
-
-
-        if (Objects.equals(user.getUserRole().toString(), "ADMIN"))
-        {
-            PageResponseDtoForAdmin responseDto = new PageResponseDtoForAdmin(user.getUsername());
-            responseDto.setAdmin(true);
-            Iterable<User> userIterable = this.userRepository.findAll();
-
-            responseDto.setUserList(userIterable);
-
-            return responseDto;
-        }
-        else
-        {
-            LocalDate passwordSetDate = user.getPasswordSetDate();
-            PageResponseDtoForNotAdmin responseDto = new PageResponseDtoForNotAdmin(user.getUsername());
-            responseDto.setAdmin(false);
-
-            responseDto.setPasswordSetDate(user.getPasswordSetDate());
-            responseDto.setUserRole(user.getUserRole());
-            responseDto.setPasswordValidUntil(passwordSetDate.plusMonths(6));
-
-            return responseDto;
-        }
-    }
-
-    @GetMapping("/idList")
-    public List<Map<String, Object>> returnIdList()
-    {
-        System.out.println("returnIdList");
-
-        List<Map<String, Object>> idList = new ArrayList<>();
-        Iterable<User> userIterableList = this.userRepository.findAll();
-
-        for (User user: userIterableList)
-        {
-            Map<String, Object> idMap = new HashMap<>();
-            idMap.put("username", user.getUsername());
-            idMap.put("is_not_locked", user.isNotLocked());
-            idMap.put("is_approved", user.isApproved());
-            idMap.put("role", user.getUserRole());
-            idList.add(idMap);
-        }
-
-        return idList;
-    }
 
     @PostMapping("/resetId")
     public String resetId(@RequestBody Map<String, Object> params)
@@ -575,84 +417,7 @@ public class ApiController
         }
     }
 
-    @PostMapping("/approveId")
-    public String approveId(@RequestBody Map<String, Object> params)
-    {
-        System.out.println("approveId");
-        System.out.println(params);
 
-        User user = this.userRepository.findByUsername(params.get("username").toString());
-        user.setApproved(true);
-        user.setNotExpired(true);
-        user.setNotLocked(true);
-        try
-        {
-            this.userRepository.save(user);
-            return "OK";
-        }
-        catch (Exception e)
-        {
-            return "NOK";
-        }
-    }
-
-    @PostMapping("/resetPassword")
-    public ResetPasswordResponseDto resetPassword(@RequestBody ResetPasswordRequestDto requestDto)
-    {
-        System.out.println("resetPassword");
-        System.out.println(requestDto);
-
-        User user = this.userRepository.findByUsername(requestDto.getUsername());
-        String currentPassword = user.getPassword();
-
-        ResetPasswordResponseDto responseDto = new ResetPasswordResponseDto(requestDto.getUsername());
-
-        if (currentPassword.equals(requestDto.getPassword()))
-        {
-            responseDto.setPasswordSameWithCurrentPassword(true);
-            return responseDto;
-        }
-        else
-        {
-            responseDto.setPasswordSameWithCurrentPassword(false);
-        }
-
-        if (requestDto.getPassword().length() < 6)
-        {
-            responseDto.setPasswordLongEnough(false);
-            return responseDto;
-        }
-        else
-        {
-            responseDto.setPasswordLongEnough(true);
-        }
-
-        responseDto.setPasswordReset(true);
-        user.setPassword(requestDto.getPassword());
-        user.setPasswordSetDate(LocalDate.now());
-        user.setTrialCount(0);
-        this.userRepository.save(user);
-
-        return responseDto;
-    }
-
-    @PostMapping("/delete_user")
-    public String deleteUser(@RequestBody Map<String, Object> params)
-    {
-        System.out.println("deleteUser");
-        System.out.println(params);
-
-        User user = this.userRepository.findByUsername(params.get("username").toString());
-        try
-        {
-            this.userRepository.delete(user);
-            return "OK";
-        }
-        catch (Exception e)
-        {
-            return "NOK";
-        }
-    }
 
     private String saveSpecificationFile(MultipartFile specificationFile)
     {

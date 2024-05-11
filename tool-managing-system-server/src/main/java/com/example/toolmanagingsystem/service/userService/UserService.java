@@ -32,24 +32,30 @@ public class UserService
     UserRepository userRepository;
     LoginResponseDto responseDto;
 
-    public void registerUser(UserRegisterRequestDto requestDto)
+
+    public boolean isPasswordSame(UserRegisterRequestDto requestDto) throws PasswordNotSameException
     {
         String password = requestDto.getPassword();
         String passwordConfirmation = requestDto.getPasswordConfirmation();
 
-        this.isPasswordSame(password, passwordConfirmation);
-        this.isPasswordLongEnough(password);
-
-        User user = new User(requestDto);
-
-        try
+        if (!password.equals(passwordConfirmation))
         {
-            this.userRepository.save(user);
+            throw new PasswordNotSameException("password is not same");
         }
-        catch(DataAccessException e)
+
+        return true;
+    }
+
+    public boolean isPasswordLongEnough(UserRegisterRequestDto requestDto) throws PasswordLengthIsNotEnoughException
+    {
+        String password = requestDto.getPassword();
+
+        if (password.length() < 6)
         {
-            throw new DuplicatedUsernameException(e);
+            throw new PasswordLengthIsNotEnoughException("password is not long enough");
         }
+
+        return true;
     }
 
     public LoginResponseDto login(LoginRequestDto requestDto) {
@@ -62,7 +68,7 @@ public class UserService
         System.out.println("user");
         System.out.println(user);
 
-        this.responseDto = new LoginResponseDto(user.getUsername());
+        this.responseDto = new LoginResponseDto(user.getUserId());
 
         System.out.println("Initial responseDto");
         System.out.println(responseDto);
@@ -154,7 +160,7 @@ public class UserService
 
     public User getUser(String id)
     {
-        return this.userRepository.findByUsername(id);
+        return this.userRepository.findByUserId(id);
     }
 
 //    @Scheduled 이 함수는, 매일 자정 패스워드 유효 여부 확인
@@ -176,31 +182,9 @@ public class UserService
         this.userRepository.saveAll(userList);
     }
 
-
-
-    private boolean isPasswordSame(String password, String passwordConfirmation)
-    {
-        if (!password.equals(passwordConfirmation))
-        {
-            throw new PasswordNotSameException();
-        }
-
-        return true;
-    }
-
-    private boolean isPasswordLongEnough(String password)
-    {
-        if (password.length() < 6)
-        {
-            throw new PasswordLengthIsNotEnoughException();
-        }
-
-        return true;
-    }
-
     private boolean isUsernameDuplicated(String username) throws SQLException
     {
-        if (userRepository.findByUsername(username) == null)
+        if (userRepository.findByUserId(username) == null)
         {
             return true;
         }

@@ -1,31 +1,35 @@
-import { Data } from "../types";
-
 export const request = {
   get(url: string) {
     return fetch(url);
   },
-  post(
-    url: string,
-    payload:
-      | Data[]
-      | FormData
-      | Record<string, unknown>
-      | Record<string, unknown>[],
-    headers: Record<string, string> = {}
-  ) {
+  post: async (url: string, payload: unknown) => {
+    let res: Response;
     if (payload instanceof FormData) {
-      return fetch(url, {
+      res = await fetch(url, {
         method: "POST",
-        // headers: { "content-Type": "multipart/form-data" },
         body: payload,
       });
     } else {
-      return fetch(url, {
+      res = await fetch(url, {
         method: "POST",
-        headers: { "content-Type": "application/json", ...headers },
+        headers: {
+          "content-Type": "application/json",
+        },
         body: JSON.stringify(payload),
       });
     }
+
+    const jsonRes = res.json();
+
+    console.log("res before", res);
+    console.log("res", jsonRes);
+
+    if (!res.ok) {
+      throw new Error("network error");
+      // 왜?, 상세 내용?
+    }
+
+    return jsonRes;
   },
   delete(url: string) {
     return fetch(url, { method: "DELETE" });

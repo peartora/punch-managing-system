@@ -11,7 +11,7 @@ public class DataSourceConfiguration
     public HikariDataSource dataSource()
     {
         HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl("jdbc:mysql://localhost/tool-managing-system");
+        dataSource.setJdbcUrl("jdbc:mysql://localhost:3306/PUNCH_MANAGEMENT_SYSTEM");
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setUsername("root");
         dataSource.setPassword("");

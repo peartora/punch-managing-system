@@ -22,3 +22,5 @@ export function DisplayAdminId({ id }: IdProps) {
     </tr>
   );
 }
+
+// 구현은 어쩔 수 없음, 하지만 호출부는 깨끗 해야 함.

@@ -15,9 +15,9 @@ public class Punch
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name = "number")
+    @Column(name = "punch_id")
     private String punchId;
-    @Column(name = "date")
+    @Column(name = "register_date")
     private LocalDate date;
     @Column(name = "punch_position")
     private String punchPosition;
@@ -31,7 +31,7 @@ public class Punch
     private String storageLocation;
     private String specification;
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "medicine_id")
     private Medicine medicine;
     @Column(name = "medicine_type")
     private String medicineType;
