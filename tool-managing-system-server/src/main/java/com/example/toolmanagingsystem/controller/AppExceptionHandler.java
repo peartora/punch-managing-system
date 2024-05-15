@@ -1,7 +1,8 @@
-//package com.example.toolmanagingsystem.controller;
+package com.example.toolmanagingsystem.controller;
 
-//import com.example.toolmanagingsystem.dto.ApiResponse;
+import com.example.toolmanagingsystem.dto.ApiResponse;
 import com.example.toolmanagingsystem.error.BusinessError;
+import com.example.toolmanagingsystem.error.InternalServerBusinessError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,14 +10,27 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-//@RestControllerAdvice
-//public class AppExceptionHandler extends ResponseEntityExceptionHandler
-//{
-    //@ExceptionHandler(BusinessError.class)
-    //@ResponseStatus(HttpStatus.OK)
-    //public ResponseEntity<ApiResponse> handleBusinessError(
-            //BusinessError exception
-    //) //{
-        //return ResponseEntity.ok(ApiResponse.error(exception));
-    //}
-//}
+@RestControllerAdvice
+public class AppExceptionHandler extends ResponseEntityExceptionHandler
+{
+    @ExceptionHandler(BusinessError.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ApiResponse> handleBusinessError(BusinessError businessError) {
+
+        System.out.println("Exception Handler for Business Error");
+        System.out.println(businessError);
+
+
+
+        return ResponseEntity.badRequest().body(ApiResponse.error(businessError));
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ApiResponse> handleException(Exception exception)
+    {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponse.error(new InternalServerBusinessError(exception)));
+    }
+}

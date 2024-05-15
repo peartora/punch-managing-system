@@ -19,17 +19,18 @@ export const request = {
       });
     }
 
-    const jsonRes = res.json();
+    const resJson = await res.json();
+    console.log("res", resJson);
 
-    console.log("res before", res);
-    console.log("res", jsonRes);
+    const errorCode = resJson.error.code;
+    console.log("errorCode", errorCode);
 
     if (!res.ok) {
-      throw new Error("network error");
-      // 왜?, 상세 내용?
+      console.log("here error is occured");
+      throw new Error(errorCode);
     }
 
-    return jsonRes;
+    return resJson;
   },
   delete(url: string) {
     return fetch(url, { method: "DELETE" });

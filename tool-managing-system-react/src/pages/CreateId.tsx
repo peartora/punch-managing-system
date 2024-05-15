@@ -42,27 +42,16 @@ export function CreateId() {
     try {
       output = await addUser(input);
     } catch (error) {
-      console.error(`======error======`, error);
-      alert("회원가입 중 network error 발생 하였습니다.....");
+      alert(error.message);
       return;
     }
 
     console.log(`output`, output);
 
-    alert(`Id: ${output.username}이(가) 등록 되었습니다.`);
-    navigate(`/sign-in`);
+    const returnedUsername = output.success.data.username;
 
-    //   if (!json.notDuplicate) {
-    //     alert(`Id: ${json.username}은(는) 이미 등록 되었습니다.`);
-    //   } else if (!json.passwordLongEnough) {
-    //     alert(
-    //       `Id: ${json.username}의 비밀번호는 6자 이상으로 설정 되어야 합니다.`
-    //     );
-    //   } else if (!json.passwordSameWithConfirmation) {
-    //     alert(
-    //       `Id: ${json.username}의 입력 된 비밀번호 2개가 일치 하지 않습니다.`
-    //     );
-    //   }
+    alert(`Id: ${returnedUsername}이(가) 등록 되었습니다.`);
+    navigate(`/sign-in`);
   };
 
   return (

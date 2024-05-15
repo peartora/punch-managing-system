@@ -1,22 +1,13 @@
 package com.example.toolmanagingsystem.service.userService;
 
 import com.example.toolmanagingsystem.dto.request.LoginRequestDto;
-import com.example.toolmanagingsystem.dto.request.PasswordChangeRequestDto;
-import com.example.toolmanagingsystem.dto.request.PunchRegisterRequestDto;
 import com.example.toolmanagingsystem.dto.request.UserRegisterRequestDto;
 import com.example.toolmanagingsystem.dto.response.LoginResponseDto;
-import com.example.toolmanagingsystem.dto.response.PasswordChangeResponseDto;
-import com.example.toolmanagingsystem.dto.response.PunchRegisterResponseDto;
-import com.example.toolmanagingsystem.dto.response.UserRegisterResponseDto;
 import com.example.toolmanagingsystem.entity.user.User;
-import com.example.toolmanagingsystem.error.DuplicatedIdError;
 import com.example.toolmanagingsystem.repository.UserRepository;
-import com.example.toolmanagingsystem.service.userService.exception.DuplicatedUsernameException;
-import com.example.toolmanagingsystem.service.userService.exception.PasswordLengthIsNotEnoughException;
-import com.example.toolmanagingsystem.service.userService.exception.PasswordNotSameException;
+import com.example.toolmanagingsystem.error.user.PasswordLengthIsNotEnoughException;
+import com.example.toolmanagingsystem.error.user.PasswordNotSameException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -40,7 +31,7 @@ public class UserService
 
         if (!password.equals(passwordConfirmation))
         {
-            throw new PasswordNotSameException("password is not same");
+            throw new PasswordNotSameException();
         }
 
         return true;
@@ -52,7 +43,7 @@ public class UserService
 
         if (password.length() < 6)
         {
-            throw new PasswordLengthIsNotEnoughException("password is not long enough");
+            throw new PasswordLengthIsNotEnoughException();
         }
 
         return true;
