@@ -1,4 +1,4 @@
-package com.example.toolmanagingsystem.controller.user.userController;
+package com.example.toolmanagingsystem.controller.user;
 
 import com.example.toolmanagingsystem.dto.request.ResetPasswordRequestDto;
 import com.example.toolmanagingsystem.dto.response.ResetPasswordResponseDto;

@@ -1,6 +1,7 @@
-package com.example.toolmanagingsystem.controller.user.userController;
+package com.example.toolmanagingsystem.controller.user;
 
 
+import com.example.toolmanagingsystem.dto.ApiResponse;
 import com.example.toolmanagingsystem.dto.request.LoginRequestDto;
 import com.example.toolmanagingsystem.dto.request.PasswordChangeRequestDto;
 import com.example.toolmanagingsystem.dto.response.LoginResponseDto;
@@ -26,7 +27,7 @@ public class AuthApiController
     private final UserService userService;
 
     @PostMapping("/login")
-    public LoginResponseDto login (@RequestBody LoginRequestDto requestDto)
+    public ApiResponse login (@RequestBody LoginRequestDto requestDto)
     {
         return this.userService.login(requestDto);
     }

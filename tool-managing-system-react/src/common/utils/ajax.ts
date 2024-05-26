@@ -1,3 +1,5 @@
+import { BusinessError } from "../error";
+
 export const request = {
   get(url: string) {
     return fetch(url);
@@ -22,14 +24,15 @@ export const request = {
     const resJson = await res.json();
     console.log("res", resJson);
 
-    const errorCode = resJson.error.code;
-    console.log("errorCode", errorCode);
-
     if (!res.ok) {
-      console.log("here error is occured");
-      throw new Error(errorCode);
+      console.log("res.ok is false");
+
+      const { code, message, detail } = resJson.error;
+      console.log(resJson.error);
+      throw new BusinessError(code, message, detail);
     }
 
+    console.log("res.ok is true");
     return resJson;
   },
   delete(url: string) {

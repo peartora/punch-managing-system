@@ -1,20 +1,18 @@
 package com.example.toolmanagingsystem.service.userService;
 
+import com.example.toolmanagingsystem.dto.ApiResponse;
 import com.example.toolmanagingsystem.dto.request.LoginRequestDto;
 import com.example.toolmanagingsystem.dto.request.UserRegisterRequestDto;
 import com.example.toolmanagingsystem.dto.response.LoginResponseDto;
 import com.example.toolmanagingsystem.entity.user.User;
+import com.example.toolmanagingsystem.error.user.*;
 import com.example.toolmanagingsystem.repository.UserRepository;
-import com.example.toolmanagingsystem.error.user.PasswordLengthIsNotEnoughException;
-import com.example.toolmanagingsystem.error.user.PasswordNotSameException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class UserService
@@ -49,110 +47,110 @@ public class UserService
         return true;
     }
 
-    public LoginResponseDto login(LoginRequestDto requestDto) {
-        String name = requestDto.getUsername();
-        System.out.println("name");
-        System.out.println(name);
+    public ApiResponse login(LoginRequestDto requestDto) {
+        System.out.println("login method called in UserService");
 
-        User user = this.getUser(requestDto.getUsername());
+        User user;
+
+        try
+        {
+            user = this.userRepository.findByUserId(requestDto.getUsername());
+            System.out.println("user in login Method");
+            System.out.println(user);
+        }
+        catch (Exception e)
+        {
+            System.out.println("User not existed Exception called");
+            throw new UserIsNotExistException();
+        }
 
         System.out.println("user");
         System.out.println(user);
 
-        this.responseDto = new LoginResponseDto(user.getUserId());
-
-        System.out.println("Initial responseDto");
-        System.out.println(responseDto);
-
         this.isUserApproved(user);
-        if (!this.responseDto.isApproved()) {
-            return this.responseDto;
-        }
-
-        System.out.println("responseDto after check isApproved");
-        System.out.println(responseDto);
+        System.out.println("isUserApproved");
 
         this.isUserNotLocked(user);
-        if (!this.responseDto.isNotLocked()) {
-            return this.responseDto;
-        }
+        System.out.println("isUserNotLocked");
 
-        System.out.println("responseDto after check isNotLocked");
-        System.out.println(responseDto);
+        this.isUserNotExpired(user);
+        System.out.println("isUserNotExpired");
 
-        if (!user.isNotExpired()) {
-            this.responseDto.setNotExpired(false);
-            this.responseDto.setLogin(false);
-            return this.responseDto;
-        } else {
-            this.responseDto.setNotExpired(true);
-            user.setNotExpired(true);
-        }
+        this.isPasswordSame(user, requestDto.getPassword());
+        System.out.println("isPasswordSame");
 
-        System.out.println("responseDto after check isNotExpired");
-        System.out.println(responseDto);
+        System.out.println("before call final success of user");
 
-        String password = user.getPassword();
 
-        if (Objects.equals(requestDto.getPassword(), password)) {
-            user.setTrialCount(0);
-            this.responseDto.setPasswordCorrect(true);
-            this.responseDto.setLogin(true);
-        } else {
-            this.responseDto.setPasswordCorrect(false);
-            if (user.getTrialCount() == 4) {
-                user.setTrialCount(5);
-                user.setNotLocked(false);
-                this.responseDto.setLoginTrialCount(5);
-                this.responseDto.setNotLocked(false);
-            } else {
-                int beforeIncreaseTrialCount = user.getTrialCount();
-                user.setTrialCount(beforeIncreaseTrialCount + 1);
-                this.responseDto.setLoginTrialCount(beforeIncreaseTrialCount + 1);
-            }
-        }
-        this.userRepository.save(user);
 
-        System.out.println("final responseDto");
-        System.out.println(responseDto);
+        Map<String, String> usernameMap = new HashMap<>();
 
-        return this.responseDto;
+        System.out.println("before apiResponse");
+
+        return ApiResponse.success(usernameMap.put("username", user.getUserId()));
     }
 
-    public boolean isNotDuplicate(String id)
+    private void isUserApproved(User user)
     {
-       User user = this.getUser(id);
+        System.out.println("isUserApproved called");
 
-       if (user == null) {
-           return true;
-       } else {
-
-           return false;
-       }
-    }
-
-    private void isUserApproved(User user) {
-        if (user.isApproved()) {
-            this.responseDto.setApproved(true);
-        } else {
-            this.responseDto.setApproved(false);
-            this.responseDto.setLogin(false);
+        if (!user.isApproved())
+        {
+            throw new UserIsNotApprovedException();
         }
     }
 
     private void isUserNotLocked(User user) {
-        if (user.isNotLocked()) {
-            this.responseDto.setNotLocked(true);
-        } else {
-            this.responseDto.setNotLocked(false);
-            this.responseDto.setLogin(false);
+        System.out.println("isUserNotLocked called");
+
+        if (!user.isNotLocked())
+        {
+            throw new UserIsLockedException();
         }
     }
 
-    public User getUser(String id)
-    {
-        return this.userRepository.findByUserId(id);
+    private void isUserNotExpired(User user) {
+        System.out.println("isUserNotExpired called");
+
+        if (!user.isNotExpired())
+        {
+            throw new UserIsExpiredException();
+        }
     }
+
+    private void isPasswordSame(User user, String password) {
+        System.out.println("isPasswordSame called");
+
+        if (!Objects.equals(user.getPassword(), password))
+        {
+            this.increaseTrialcount(user);
+            throw new PasswordNotSameException();
+        }
+        else
+        {
+            user.setTrialCount(0);
+            this.userRepository.save(user);
+        }
+    }
+
+    private void increaseTrialcount(User user) {
+        System.out.println("increaseTrialcount called");
+
+        int trialCount = user.getTrialCount();
+
+        if (trialCount == 4) {
+            user.setTrialCount(5);
+            user.setNotLocked(false);
+            this.userRepository.save(user);
+
+            throw new UserIsLockedException();
+        } else {
+            user.setTrialCount(trialCount + 1);
+            this.userRepository.save(user);
+        }
+    }
+
+
 
 //    @Scheduled 이 함수는, 매일 자정 패스워드 유효 여부 확인
     public void isPasswordValid() {
@@ -171,17 +169,5 @@ public class UserService
             }
         }
         this.userRepository.saveAll(userList);
-    }
-
-    private boolean isUsernameDuplicated(String username) throws SQLException
-    {
-        if (userRepository.findByUserId(username) == null)
-        {
-            return true;
-        }
-        else
-        {
-            throw new SQLException("Username is duplicated");
-        }
     }
 }

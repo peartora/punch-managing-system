@@ -8,6 +8,7 @@ import com.example.toolmanagingsystem.dto.response.myPageResponseDto.MyPageRespo
 import com.example.toolmanagingsystem.dto.response.myPageResponseDto.PageResponseDtoForAdmin;
 import com.example.toolmanagingsystem.dto.response.myPageResponseDto.PageResponseDtoForNotAdmin;
 import com.example.toolmanagingsystem.entity.user.User;
+import com.example.toolmanagingsystem.error.user.UserIsNotExistException;
 import com.example.toolmanagingsystem.repository.UserRepository;
 import com.example.toolmanagingsystem.service.userService.UserService;
 import com.example.toolmanagingsystem.error.user.DuplicatedUsernameException;
@@ -59,6 +60,16 @@ public class UserApiController
 
         return ApiResponse.success(usernameMap);
     }
+
+    @PostMapping("/login")
+    public ApiResponse loginUser(@RequestBody LoginRequestDto requestDto)
+    {
+        System.out.println("loginUser");
+        System.out.println(requestDto);
+
+        return this.userService.login(requestDto);
+    }
+
 
     @PostMapping("/authority")
     public String returnAuthority(@RequestBody Map<String, Object> params)

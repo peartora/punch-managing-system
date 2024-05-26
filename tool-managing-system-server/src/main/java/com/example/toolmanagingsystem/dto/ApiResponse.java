@@ -42,4 +42,10 @@ public final class ApiResponse
         res.error = new ErrorResponse(error.getCode(), error.getMessage(), error.getDetail());
         return res;
     }
+
+    public static ApiResponse internalServerError(Exception error) {
+        ApiResponse res = new ApiResponse();
+        res.error = new ErrorResponse("INTERNAL_SERVER_ERROR", "서버에서 알 수 없는 에러가 발생했습니다.", error);
+        return res;
+    }
 }
