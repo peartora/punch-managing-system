@@ -55,12 +55,9 @@ public class UserService
         try
         {
             user = this.userRepository.findByUserId(requestDto.getUsername());
-            System.out.println("user in login Method");
-            System.out.println(user);
         }
         catch (Exception e)
         {
-            System.out.println("User not existed Exception called");
             throw new UserIsNotExistException();
         }
 
@@ -81,13 +78,13 @@ public class UserService
 
         System.out.println("before call final success of user");
 
-
-
         Map<String, String> usernameMap = new HashMap<>();
+        usernameMap.put("username", user.getUserId());
 
-        System.out.println("before apiResponse");
+        System.out.println("usernameMap");
+        System.out.println(usernameMap.get("username"));
 
-        return ApiResponse.success(usernameMap.put("username", user.getUserId()));
+        return ApiResponse.success(usernameMap);
     }
 
     private void isUserApproved(User user)
@@ -96,6 +93,7 @@ public class UserService
 
         if (!user.isApproved())
         {
+            System.out.println("user is not Approved");
             throw new UserIsNotApprovedException();
         }
     }
@@ -105,6 +103,7 @@ public class UserService
 
         if (!user.isNotLocked())
         {
+            System.out.println("user is Locked");
             throw new UserIsLockedException();
         }
     }
@@ -114,6 +113,7 @@ public class UserService
 
         if (!user.isNotExpired())
         {
+            System.out.println("user is expired");
             throw new UserIsExpiredException();
         }
     }
@@ -123,6 +123,7 @@ public class UserService
 
         if (!Objects.equals(user.getPassword(), password))
         {
+            System.out.println("password is not same!");
             this.increaseTrialcount(user);
             throw new PasswordNotSameException();
         }

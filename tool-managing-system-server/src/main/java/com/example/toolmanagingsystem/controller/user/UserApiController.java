@@ -82,23 +82,29 @@ public class UserApiController
     }
 
     @PostMapping("/my_page")
-    public MyPageResponseDto createMyPage(@RequestBody MyPageRequestDto requestDto)
+    public ApiResponse createMyPage(@RequestBody MyPageRequestDto requestDto)
     {
         System.out.println("createMyPage");
         System.out.println(requestDto);
 
         User user = this.userRepository.findByUserId(requestDto.getUsername());
 
+        System.out.println("user");
+        System.out.println(user);
+
+        //responseDto를 하나로 묶어 처리 해야 함.
 
         if (Objects.equals(user.getUserRole().toString(), "ADMIN"))
         {
+            System.out.println("Yes, Admin");
+
             PageResponseDtoForAdmin responseDto = new PageResponseDtoForAdmin(user.getUserId());
             responseDto.setAdmin(true);
             Iterable<User> userIterable = this.userRepository.findAll();
 
             responseDto.setUserList(userIterable);
 
-            return responseDto;
+            return ApiResponse.success(responseDto);
         }
         else
         {
@@ -110,7 +116,7 @@ public class UserApiController
             responseDto.setUserRole(user.getUserRole());
             responseDto.setPasswordValidUntil(passwordSetDate.plusMonths(6));
 
-            return responseDto;
+            return ApiResponse.success(responseDto);
         }
     }
 }

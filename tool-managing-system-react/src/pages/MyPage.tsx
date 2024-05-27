@@ -10,9 +10,11 @@ import { Link } from "react-router-dom";
 
 import { Dayjs } from "dayjs";
 import { useLinkClickHandler } from "react-router-dom";
+import { createMyPage } from "@/common/actions/user";
+import { MyPageInput, MyPageOutput } from "@/common/actions/user";
 
 type Id = {
-  username: string;
+  userId: string;
   userRole: string;
   notLocked: boolean;
   approved: boolean;
@@ -29,35 +31,34 @@ export const MyPage = () => {
 
   const { user, logout } = useAuth();
 
+  const fetchData = async (body: MyPageInput) => {
+    console.log("async called");
+
+    try {
+      const output = await createMyPage(body);
+
+      if (output.success.data.admin) {
+        setIsAdmin(true);
+        setIdList(output.success.data.userList);
+        console.log(idList);
+      } else {
+        setUserRole(output.success.data.userRole);
+        setPasswordSetDate(output.success.data.passwordSetDate);
+        setPasswordValidDate(output.success.data.passwordValidUntil);
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   useEffect(() => {
-    const body = {
+    console.log("Effect called");
+
+    const body: MyPageInput = {
       username: user,
     };
 
-    request
-      .post(`/api/tool-managing-system/my_page`, body)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(
-            `${user} 계정의 권한 확인 중 network 에러 발생 하였습니다.`
-          );
-        }
-        return response.json();
-      })
-      .then((json) => {
-        console.log(json);
-
-        if (json.admin) {
-          setIsAdmin(true);
-          setIdList(json.userList);
-        } else {
-          console.log(json);
-          setUserRole(json.userRole);
-          setPasswordSetDate(json.passwordSetDate);
-          setPasswordValidDate(json.passwordValidUntil);
-        }
-      })
-      .catch((error) => console.error(error));
+    fetchData(body);
   }, [user]);
 
   return (
@@ -86,10 +87,10 @@ export const MyPage = () => {
           <tbody>
             {idList.map((id: Id) =>
               id.userRole === "ADMIN" ? (
-                <DisplayAdminId key={id.username} id={id} />
+                <DisplayAdminId key={id.userId} id={id} />
               ) : (
                 <DisplayId
-                  key={id.username}
+                  key={id.userId}
                   id={id}
                   idList={idList}
                   setIdList={setIdList}
