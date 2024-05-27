@@ -10,3 +10,5 @@ spring:
 
 server:
   port: 7070
+
+TOOL_MANAGING_SYSTEM_STATIC_PATH: C:\Users\lsm1dae\Desktop\tool-management-static\resources\pdf
