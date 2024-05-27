@@ -77,7 +77,7 @@ public class UserApiController
         System.out.println("returnAuthority");
         System.out.println(params);
 
-        User user = this.userRepository.findByUserId(params.get("username").toString());
+        User user = this.userRepository.findByUsername(params.get("username").toString());
         return user.getUserRole().toString();
     }
 
@@ -87,7 +87,7 @@ public class UserApiController
         System.out.println("createMyPage");
         System.out.println(requestDto);
 
-        User user = this.userRepository.findByUserId(requestDto.getUsername());
+        User user = this.userRepository.findByUsername(requestDto.getUsername());
 
         System.out.println("user");
         System.out.println(user);
@@ -98,7 +98,7 @@ public class UserApiController
         {
             System.out.println("Yes, Admin");
 
-            PageResponseDtoForAdmin responseDto = new PageResponseDtoForAdmin(user.getUserId());
+            PageResponseDtoForAdmin responseDto = new PageResponseDtoForAdmin(user.getUsername());
             responseDto.setAdmin(true);
             Iterable<User> userIterable = this.userRepository.findAll();
 
@@ -109,7 +109,7 @@ public class UserApiController
         else
         {
             LocalDate passwordSetDate = user.getPasswordSetDate();
-            PageResponseDtoForNotAdmin responseDto = new PageResponseDtoForNotAdmin(user.getUserId());
+            PageResponseDtoForNotAdmin responseDto = new PageResponseDtoForNotAdmin(user.getUsername());
             responseDto.setAdmin(false);
 
             responseDto.setPasswordSetDate(user.getPasswordSetDate());

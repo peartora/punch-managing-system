@@ -39,7 +39,7 @@ public class AuthApiController
         System.out.println(requestDto);
 
         String username = requestDto.getUsername();
-        User user = this.userRepository.findByUserId(username);
+        User user = this.userRepository.findByUsername(username);
 
         PasswordChangeResponseDto responseDto = new PasswordChangeResponseDto(username);
 

@@ -54,7 +54,7 @@ public class UserService
 
         try
         {
-            user = this.userRepository.findByUserId(requestDto.getUsername());
+            user = this.userRepository.findByUsername(requestDto.getUsername());
         }
         catch (Exception e)
         {
@@ -79,7 +79,7 @@ public class UserService
         System.out.println("before call final success of user");
 
         Map<String, String> usernameMap = new HashMap<>();
-        usernameMap.put("username", user.getUserId());
+        usernameMap.put("username", user.getUsername());
 
         System.out.println("usernameMap");
         System.out.println(usernameMap.get("username"));

@@ -15,7 +15,7 @@ public class User
     private long id;
 
     @Column(name = "user_id")
-    private String userId;
+    private String username;
     private String password;
     @Column(name = "user_role")
     @Enumerated(EnumType.STRING)
@@ -35,7 +35,7 @@ public class User
 
 
     public User(UserRegisterRequestDto userRegisterRequestDto) {
-        this.userId = userRegisterRequestDto.getUsername();
+        this.username = userRegisterRequestDto.getUsername();
         this.password = userRegisterRequestDto.getPassword();
         this.userRole = UserRole.valueOf(userRegisterRequestDto.getRole());
         this.isNotLocked = false;

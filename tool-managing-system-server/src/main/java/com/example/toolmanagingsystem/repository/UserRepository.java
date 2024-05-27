@@ -9,7 +9,7 @@ import java.sql.SQLException;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>
 {
-    int countByUserId(String username);
-    User findByUserId(String username);
+    int countByUsername(String username);
+    User findByUsername(String username);
 
 }

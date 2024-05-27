@@ -6,7 +6,7 @@ import {
   addUser,
   type AddUserInput,
   type AddUserOutput,
-} from "@/common/actions/user";
+} from "@/common/actions/user/addUser";
 
 export function CreateId() {
   const [username, setUsername] = useState<AddUserInput["username"]>("");

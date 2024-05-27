@@ -2,19 +2,16 @@ import { useState, useEffect } from "react";
 
 import { useAuth } from "@/common/contexts/auth";
 import { NavBar } from "@/common/components/NavBar";
-import { request } from "@/common/utils/ajax";
 
 import { DisplayId } from "@/pages/DisplayId";
 import { DisplayAdminId } from "./DisplayAdminId";
 import { Link } from "react-router-dom";
 
-import { Dayjs } from "dayjs";
-import { useLinkClickHandler } from "react-router-dom";
-import { createMyPage } from "@/common/actions/user";
-import { MyPageInput, MyPageOutput } from "@/common/actions/user";
+import { createMyPage } from "@/common/actions/user/myPage";
+import { MyPageInput, MyPageOutput } from "@/common/actions/user/myPage";
 
 type Id = {
-  userId: string;
+  username: string;
   userRole: string;
   notLocked: boolean;
   approved: boolean;
@@ -87,10 +84,10 @@ export const MyPage = () => {
           <tbody>
             {idList.map((id: Id) =>
               id.userRole === "ADMIN" ? (
-                <DisplayAdminId key={id.userId} id={id} />
+                <DisplayAdminId key={id.username} id={id} />
               ) : (
                 <DisplayId
-                  key={id.userId}
+                  key={id.username}
                   id={id}
                   idList={idList}
                   setIdList={setIdList}

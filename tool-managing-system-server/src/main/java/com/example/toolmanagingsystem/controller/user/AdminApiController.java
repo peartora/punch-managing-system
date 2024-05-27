@@ -33,7 +33,7 @@ public class AdminApiController
         for (User user: userIterableList)
         {
             Map<String, Object> idMap = new HashMap<>();
-            idMap.put("username", user.getUserId());
+            idMap.put("username", user.getUsername());
             idMap.put("is_not_locked", user.isNotLocked());
             idMap.put("is_approved", user.isApproved());
             idMap.put("role", user.getUserRole());
@@ -49,7 +49,7 @@ public class AdminApiController
         System.out.println("approveId");
         System.out.println(params);
 
-        User user = this.userRepository.findByUserId(params.get("username").toString());
+        User user = this.userRepository.findByUsername(params.get("username").toString());
         user.setApproved(true);
         user.setNotExpired(true);
         user.setNotLocked(true);
@@ -70,7 +70,7 @@ public class AdminApiController
         System.out.println("resetPassword");
         System.out.println(requestDto);
 
-        User user = this.userRepository.findByUserId(requestDto.getUsername());
+        User user = this.userRepository.findByUsername(requestDto.getUsername());
         String currentPassword = user.getPassword();
 
         ResetPasswordResponseDto responseDto = new ResetPasswordResponseDto(requestDto.getUsername());
@@ -110,7 +110,7 @@ public class AdminApiController
         System.out.println("deleteUser");
         System.out.println(params);
 
-        User user = this.userRepository.findByUserId(params.get("username").toString());
+        User user = this.userRepository.findByUsername(params.get("username").toString());
         try
         {
             this.userRepository.delete(user);

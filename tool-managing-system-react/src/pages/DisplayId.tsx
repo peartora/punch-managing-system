@@ -3,7 +3,7 @@ import { useState } from "react";
 import { request } from "@/common/utils/ajax";
 
 type Id = {
-  userId: string;
+  username: string;
   userRole: string;
   notLocked: boolean;
   approved: boolean;
@@ -34,7 +34,7 @@ export function DisplayId({ id, idList, setIdList }: IdProps) {
     e.preventDefault();
 
     if (newPassword.length >= 6) {
-      const resetId = id.userId;
+      const resetId = id.username;
 
       const body = {
         username: resetId,
@@ -72,7 +72,7 @@ export function DisplayId({ id, idList, setIdList }: IdProps) {
 
   const clickHandler = function (e: React.MouseEvent<HTMLButtonElement>) {
     const body = {
-      username: id.userId,
+      username: id.username,
       isApprove: true,
     };
 
@@ -80,23 +80,23 @@ export function DisplayId({ id, idList, setIdList }: IdProps) {
       .post(`/api/tool-managing-system/approveId`, body)
       .then((response) => {
         if (!response.ok) {
-          throw new Error(`${id.userId} 계정 승인 중 error 발생 하였습니다.`);
+          throw new Error(`${id.username} 계정 승인 중 error 발생 하였습니다.`);
         }
         return response.text();
       })
       .then((result) => {
         if (result === "OK") {
           setIsApproved(true);
-          alert(`${id.userId} 계정이 승인 되었습니다.`);
+          alert(`${id.username} 계정이 승인 되었습니다.`);
         } else {
-          alert(`${id.userId} 계정 승인 중 error가 발생 하였습니다.`);
+          alert(`${id.username} 계정 승인 중 error가 발생 하였습니다.`);
         }
       })
       .catch((error) => console.error(error));
   };
 
   const deleteUser = function () {
-    const candidateId = id.userId;
+    const candidateId = id.username;
 
     const body = {
       username: candidateId,
@@ -106,13 +106,13 @@ export function DisplayId({ id, idList, setIdList }: IdProps) {
       .post(`/api/tool-managing-system/delete_user`, body)
       .then((response) => {
         if (!response.ok) {
-          throw new Error(`${id.userId} 계정 삭제 중 error 발생 하였습니다.`);
+          throw new Error(`${id.username} 계정 삭제 중 error 발생 하였습니다.`);
         }
         return response.text();
       })
       .then((result) => {
         if (result === "OK") {
-          const newIdList = idList.filter((id) => id.userId !== candidateId);
+          const newIdList = idList.filter((id) => id.username !== candidateId);
           setIdList(newIdList);
           alert(`${candidateId} 계정이 삭제 되었습니다.`);
         }
@@ -122,7 +122,7 @@ export function DisplayId({ id, idList, setIdList }: IdProps) {
 
   return (
     <tr>
-      <td>{id.userId}</td>
+      <td>{id.username}</td>
       <td>{id.userRole}</td>
 
       {!notLocked ? <td>비활성화</td> : <td>활성화</td>}
