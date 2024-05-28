@@ -7,7 +7,7 @@ import {
   loginUser,
   type LoginUserInput,
   type LoginUserOutput,
-} from "@/common/actions/user";
+} from "@/common/actions/user/loginUser";
 
 export const LoginFormPage = () => {
   const { login } = useAuth();
