@@ -1,8 +1,11 @@
 import { BusinessError } from "../error";
 
 export const request = {
-  get(url: string) {
-    return fetch(url);
+  get: async (url: string) => {
+    const res = await fetch(url);
+    const jsonRes = await res.json();
+
+    return jsonRes;
   },
   post: async (url: string, payload: unknown) => {
     let res: Response;

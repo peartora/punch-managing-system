@@ -30,6 +30,24 @@ public class UserApiController
     private final UserRepository userRepository;
     private final UserService userService;
 
+    @GetMapping
+    public ApiResponse returnUserList()
+    {
+        System.out.println("returnUserList");
+
+        Iterable<User> userIterable = this.userRepository.findAll();
+
+        List<User> userList = new ArrayList<>();
+        for (User user : userIterable) {
+            userList.add(user);
+        }
+
+        Map<String, List<User>> userListMap = new HashMap<>();
+        userListMap.put("userList", userList);
+
+        return ApiResponse.success(userListMap);
+    }
+
     @PostMapping
     public ApiResponse registerUser (@RequestBody UserRegisterRequestDto requestDto)
     {

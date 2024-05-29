@@ -1,4 +1,4 @@
-type Id = {
+type User = {
   username: string;
   userRole: string;
   notLocked: boolean;
@@ -6,14 +6,14 @@ type Id = {
 };
 
 type IdProps = {
-  id: Id;
+  user: User;
 };
 
-export function DisplayAdminId({ id }: IdProps) {
+export function DisplayAdminId({ user }: IdProps) {
   return (
     <tr>
-      <td>{id.username}</td>
-      <td>{id.userRole}</td>
+      <td>{user.username}</td>
+      <td>{user.userRole}</td>
       <td>-</td>
       <td>-</td>
       <td>-</td>

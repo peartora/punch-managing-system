@@ -1,5 +1,6 @@
-import { BusinessError } from "./../../error";
-import { request } from "./../../utils/ajax";
+import { BusinessError } from "@/common/error";
+import { request } from "@/common/utils/ajax";
+
 
 type ResetPasswordInput = {
   username: string;
@@ -14,17 +15,17 @@ type ResetPasswordOutput = {
 
 
 
-const resetPassword = async (body: ResetPasswordInput) => {
-  let output: ResetPasswordOutput;
+// const resetPassword = async (body: ResetPasswordInput) => {
+//   let output: ResetPasswordOutput;
 
-  try {
-    output = await request.post(`/api/tool-managing-system/resetPassword`, body)
-  } catch (error) {
-    if (error instanceof BusinessError) {
-      if (error.code === "")
-    }
-  }
-}
+//   try {
+//     output = await request.post(`/api/tool-managing-system/resetPassword`, body)
+//   } catch (error) {
+//     if (error instanceof BusinessError) {
+//       if (error.code === "")
+//     }
+//   }
+// }
 
 
 

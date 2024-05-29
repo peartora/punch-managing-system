@@ -1,18 +1,20 @@
 package com.example.toolmanagingsystem.controller.user;
 
+import com.example.toolmanagingsystem.dto.ApiResponse;
 import com.example.toolmanagingsystem.dto.request.ResetPasswordRequestDto;
 import com.example.toolmanagingsystem.dto.response.ResetPasswordResponseDto;
 import com.example.toolmanagingsystem.entity.user.User;
+import com.example.toolmanagingsystem.error.user.NewPasswordSameWithCurrentPasswordException;
+import com.example.toolmanagingsystem.error.user.NotAuthorizeRequestException;
+import com.example.toolmanagingsystem.error.user.PasswordLengthIsNotEnoughException;
+import com.example.toolmanagingsystem.error.user.UserIsNotExistException;
 import com.example.toolmanagingsystem.repository.UserRepository;
 import com.example.toolmanagingsystem.service.userService.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/tool-managing-system/admin")
@@ -44,64 +46,68 @@ public class AdminApiController
     }
 
     @PostMapping("/approveId")
-    public String approveId(@RequestBody Map<String, Object> params)
+    public ApiResponse approveId(@RequestBody Map<String, Object> params)
     {
         System.out.println("approveId");
         System.out.println(params);
 
         User user = this.userRepository.findByUsername(params.get("username").toString());
+
+        if (user == null)
+        {
+            throw new UserIsNotExistException();
+        }
+
         user.setApproved(true);
         user.setNotExpired(true);
         user.setNotLocked(true);
-        try
-        {
-            this.userRepository.save(user);
-            return "OK";
-        }
-        catch (Exception e)
-        {
-            return "NOK";
-        }
+
+        this.userRepository.save(user);
+
+        Map<String, String> usernameMap = new HashMap<>();
+        usernameMap.put("username", (String) params.get("username"));
+
+        return ApiResponse.success(usernameMap);
     }
 
     @PostMapping("/resetPassword")
-    public ResetPasswordResponseDto resetPassword(@RequestBody ResetPasswordRequestDto requestDto)
+    public ApiResponse resetPassword(@RequestBody ResetPasswordRequestDto requestDto)
     {
         System.out.println("resetPassword");
         System.out.println(requestDto);
 
         User user = this.userRepository.findByUsername(requestDto.getUsername());
+
+        if (user == null)
+        {
+            throw new UserIsNotExistException();
+        }
+
+        if (!Objects.equals(user.getUserRole().toString(), "ADMIN"))
+        {
+            throw new NotAuthorizeRequestException();
+        }
+
         String currentPassword = user.getPassword();
+        String newPassword = requestDto.getNewPassword();
 
-        ResetPasswordResponseDto responseDto = new ResetPasswordResponseDto(requestDto.getUsername());
-
-        if (currentPassword.equals(requestDto.getPassword()))
+        if (currentPassword.equals(newPassword))
         {
-            responseDto.setPasswordSameWithCurrentPassword(true);
-            return responseDto;
-        }
-        else
-        {
-            responseDto.setPasswordSameWithCurrentPassword(false);
+            throw new NewPasswordSameWithCurrentPasswordException();
         }
 
-        if (requestDto.getPassword().length() < 6)
-        {
-            responseDto.setPasswordLongEnough(false);
-            return responseDto;
-        }
-        else
-        {
-            responseDto.setPasswordLongEnough(true);
+        if (newPassword.length() < 6) {
+            throw new PasswordLengthIsNotEnoughException();
         }
 
-        responseDto.setPasswordReset(true);
-        user.setPassword(requestDto.getPassword());
-        user.setPasswordSetDate(LocalDate.now());
-        user.setTrialCount(0);
+        user.setPassword(newPassword);
+        user = userService.initializeUser(user);
         this.userRepository.save(user);
 
-        return responseDto;
+        Map<String, String> usernameMap = new HashMap<>();
+        usernameMap.put("username", user.getUsername());
+
+        return ApiResponse.success(usernameMap);
     }
 
     @PostMapping("/delete_user")

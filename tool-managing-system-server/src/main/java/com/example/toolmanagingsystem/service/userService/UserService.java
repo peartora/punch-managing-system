@@ -151,6 +151,16 @@ public class UserService
         }
     }
 
+    public User initializeUser(User user)
+    {
+        user.setTrialCount(0);
+        user.setPasswordSetDate(LocalDate.now());
+        user.setNotExpired(true);
+        user.setNotLocked(true);
+
+        return user;
+    }
+
 
 
 //    @Scheduled 이 함수는, 매일 자정 패스워드 유효 여부 확인

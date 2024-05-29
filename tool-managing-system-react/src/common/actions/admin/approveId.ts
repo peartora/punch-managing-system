@@ -1,22 +1,22 @@
 import { BusinessError } from "@/common/error";
 import { request } from "@/common/utils/ajax";
 
-export type MyPageInput = {
+export type ApproveIdInput = {
   username: string;
 };
 
-export type MyPageOutput = {
+export type ApproveIdOutput = {
   success: Record<string, string>;
 };
 
-export const createMyPage = async (
-  input: MyPageInput
-): Promise<MyPageOutput> => {
+export const approveId = async (
+  input: ApproveIdInput
+): Promise<ApproveIdOutput> => {
   let output;
 
   try {
     output = await request.post(
-      `/api/tool-managing-system/users/my_page`,
+      `/api/tool-managing-system/admin/approveId`,
       input
     );
   } catch (error) {
@@ -28,5 +28,5 @@ export const createMyPage = async (
     throw new Error("==알 수 없는 오류가 발생했습니다.==");
   }
 
-  return output as MyPageOutput;
+  return output as ApproveIdOutput;
 };

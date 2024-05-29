@@ -2,7 +2,9 @@ import { useState } from "react";
 
 import { request } from "@/common/utils/ajax";
 
-type Id = {
+import { approveId } from "@/common/actions/admin/approveId";
+
+type User = {
   username: string;
   userRole: string;
   notLocked: boolean;
@@ -11,19 +13,19 @@ type Id = {
   createdDate: string;
 };
 
-type SetIdList = (newIdList: Id[]) => void;
+type UserReftch = () => void;
 
-type IdList = Id[];
+type UserList = User[];
 
 type IdProps = {
-  id: Id;
-  idList: IdList;
-  setIdList: SetIdList;
+  user: User;
+  userList: UserList;
+  userRefetch: UserReftch;
 };
 
-export function DisplayId({ id, idList, setIdList }: IdProps) {
-  const [notLocked, setNotLocked] = useState(() => id.notLocked);
-  const [isApproved, setIsApproved] = useState(() => id.approved);
+export function DisplayId({ user, userList, userRefetch }: IdProps) {
+  const [notLocked, setNotLocked] = useState(() => user.notLocked);
+  const [isApproved, setIsApproved] = useState(() => user.approved);
   const [newPassword, setNewPassword] = useState("");
 
   const changeHandler = function (e: React.ChangeEvent<HTMLInputElement>) {
@@ -34,7 +36,7 @@ export function DisplayId({ id, idList, setIdList }: IdProps) {
     e.preventDefault();
 
     if (newPassword.length >= 6) {
-      const resetId = id.username;
+      const resetId = user.username;
 
       const body = {
         username: resetId,
@@ -70,33 +72,26 @@ export function DisplayId({ id, idList, setIdList }: IdProps) {
     }
   };
 
-  const clickHandler = function (e: React.MouseEvent<HTMLButtonElement>) {
+  const clickHandler = async function (e: React.MouseEvent<HTMLButtonElement>) {
     const body = {
-      username: id.username,
-      isApprove: true,
+      username: user.username,
     };
 
-    request
-      .post(`/api/tool-managing-system/approveId`, body)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`${id.username} 계정 승인 중 error 발생 하였습니다.`);
-        }
-        return response.text();
-      })
-      .then((result) => {
-        if (result === "OK") {
-          setIsApproved(true);
-          alert(`${id.username} 계정이 승인 되었습니다.`);
-        } else {
-          alert(`${id.username} 계정 승인 중 error가 발생 하였습니다.`);
-        }
-      })
-      .catch((error) => console.error(error));
+    let output;
+
+    try {
+      output = await approveId(body);
+    } catch (error) {
+      alert(error.message);
+      return;
+    }
+
+    userRefetch();
+    alert(`${output.success.data.username} 이/가 승인 되었습니다.`);
   };
 
   const deleteUser = function () {
-    const candidateId = id.username;
+    const candidateId = user.username;
 
     const body = {
       username: candidateId,
@@ -106,14 +101,18 @@ export function DisplayId({ id, idList, setIdList }: IdProps) {
       .post(`/api/tool-managing-system/delete_user`, body)
       .then((response) => {
         if (!response.ok) {
-          throw new Error(`${id.username} 계정 삭제 중 error 발생 하였습니다.`);
+          throw new Error(
+            `${user.username} 계정 삭제 중 error 발생 하였습니다.`
+          );
         }
         return response.text();
       })
       .then((result) => {
         if (result === "OK") {
-          const newIdList = idList.filter((id) => id.username !== candidateId);
-          setIdList(newIdList);
+          const newIdList = userList.filter(
+            (id) => id.username !== candidateId
+          );
+          userRefetch();
           alert(`${candidateId} 계정이 삭제 되었습니다.`);
         }
       })
@@ -122,8 +121,8 @@ export function DisplayId({ id, idList, setIdList }: IdProps) {
 
   return (
     <tr>
-      <td>{id.username}</td>
-      <td>{id.userRole}</td>
+      <td>{user.username}</td>
+      <td>{user.userRole}</td>
 
       {!notLocked ? <td>비활성화</td> : <td>활성화</td>}
       {!notLocked ? (

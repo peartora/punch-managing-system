@@ -6,11 +6,11 @@ import lombok.Data;
 public class ResetPasswordRequestDto
 {
     private String username;
-    private String password;
+    private String newPassword;
 
     @Override
     public String toString() {
         return "username: " + this.username + " ," +
-                "password: " + this.password;
+                "newPassword: " + this.newPassword;
     }
 }

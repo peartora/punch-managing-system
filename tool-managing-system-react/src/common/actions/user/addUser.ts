@@ -1,5 +1,5 @@
-import { BusinessError } from "./../../error";
-import { request } from "./../../utils/ajax";
+import { BusinessError } from "@/common/error";
+import { request } from "@/common/utils/ajax";
 
 export type AddUserInput = {
   username: string;

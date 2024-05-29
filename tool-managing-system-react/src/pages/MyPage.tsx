@@ -9,8 +9,9 @@ import { Link } from "react-router-dom";
 
 import { createMyPage } from "@/common/actions/user/myPage";
 import { MyPageInput, MyPageOutput } from "@/common/actions/user/myPage";
+import { useFetchUserList } from "@/common/hooks/useFetchUserList";
 
-type Id = {
+type User = {
   username: string;
   userRole: string;
   notLocked: boolean;
@@ -19,14 +20,21 @@ type Id = {
   createdDate: string;
 };
 
-export const MyPage = () => {
+export const MyPage = async () => {
+  console.log("MyPage called");
+
   const [isAdmin, setIsAdmin] = useState(false);
-  const [idList, setIdList] = useState<Id[]>([]);
+  // const [idList, setIdList] = useState<Id[]>([]);
   const [userRole, setUserRole] = useState<string>("");
   const [passwordSetDate, setPasswordSetDate] = useState<string>("");
   const [passwordValidDate, setPasswordValidDate] = useState<string>("");
 
   const { user, logout } = useAuth();
+
+  const { userList, userRefetch } = await useFetchUserList();
+
+  console.log("userList in MyPage component");
+  console.log(userList);
 
   const fetchData = async (body: MyPageInput) => {
     console.log("async called");
@@ -34,10 +42,13 @@ export const MyPage = () => {
     try {
       const output = await createMyPage(body);
 
+      console.log("output in my page");
+      console.log(output);
+
       if (output.success.data.admin) {
         setIsAdmin(true);
-        setIdList(output.success.data.userList);
-        console.log(idList);
+        // setIdList(output.success.data.userList);
+        // console.log(idList);
       } else {
         setUserRole(output.success.data.userRole);
         setPasswordSetDate(output.success.data.passwordSetDate);
@@ -82,15 +93,15 @@ export const MyPage = () => {
             </tr>
           </thead>
           <tbody>
-            {idList.map((id: Id) =>
-              id.userRole === "ADMIN" ? (
-                <DisplayAdminId key={id.username} id={id} />
+            {userList.map((user: User) =>
+              user.userRole === "ADMIN" ? (
+                <DisplayAdminId key={user.username} user={user} />
               ) : (
                 <DisplayId
-                  key={id.username}
-                  id={id}
-                  idList={idList}
-                  setIdList={setIdList}
+                  key={user.username}
+                  user={user}
+                  userList={userList}
+                  userRefetch={userRefetch}
                 />
               )
             )}
