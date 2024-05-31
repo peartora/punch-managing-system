@@ -11,27 +11,22 @@ import { createMyPage } from "@/common/actions/user/myPage";
 import { MyPageInput, MyPageOutput } from "@/common/actions/user/myPage";
 import { useFetchUserList } from "@/common/hooks/useFetchUserList";
 
-type User = {
-  username: string;
-  userRole: string;
-  notLocked: boolean;
-  approved: boolean;
-  notExpired: boolean;
-  createdDate: string;
-};
+import { User } from "@/common/hooks/useFetchUserList";
 
-export const MyPage = async () => {
+type Id = {};
+
+export const MyPage = () => {
   console.log("MyPage called");
 
   const [isAdmin, setIsAdmin] = useState(false);
-  // const [idList, setIdList] = useState<Id[]>([]);
   const [userRole, setUserRole] = useState<string>("");
   const [passwordSetDate, setPasswordSetDate] = useState<string>("");
   const [passwordValidDate, setPasswordValidDate] = useState<string>("");
+  const [key, setKey] = useState(() => Date.now());
 
   const { user, logout } = useAuth();
 
-  const { userList, userRefetch } = await useFetchUserList();
+  const { userList } = useFetchUserList(user);
 
   console.log("userList in MyPage component");
   console.log(userList);
@@ -101,7 +96,7 @@ export const MyPage = async () => {
                   key={user.username}
                   user={user}
                   userList={userList}
-                  userRefetch={userRefetch}
+                  refetch={setKey}
                 />
               )
             )}

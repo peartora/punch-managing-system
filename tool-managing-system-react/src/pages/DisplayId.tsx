@@ -4,14 +4,7 @@ import { request } from "@/common/utils/ajax";
 
 import { approveId } from "@/common/actions/admin/approveId";
 
-type User = {
-  username: string;
-  userRole: string;
-  notLocked: boolean;
-  approved: boolean;
-  notExpired: boolean;
-  createdDate: string;
-};
+import { User } from "@/common/hooks/useFetchUserList";
 
 type UserReftch = () => void;
 
@@ -20,10 +13,10 @@ type UserList = User[];
 type IdProps = {
   user: User;
   userList: UserList;
-  userRefetch: UserReftch;
+  refetch: UserReftch;
 };
 
-export function DisplayId({ user, userList, userRefetch }: IdProps) {
+export function DisplayId({ user, userList, refetch }: IdProps) {
   const [notLocked, setNotLocked] = useState(() => user.notLocked);
   const [isApproved, setIsApproved] = useState(() => user.approved);
   const [newPassword, setNewPassword] = useState("");
@@ -86,7 +79,7 @@ export function DisplayId({ user, userList, userRefetch }: IdProps) {
       return;
     }
 
-    userRefetch();
+    refetch();
     alert(`${output.success.data.username} 이/가 승인 되었습니다.`);
   };
 

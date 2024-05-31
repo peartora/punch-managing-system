@@ -1,8 +1,8 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 import { getUserList } from "@/common/actions/user/getUserList";
 
-type User = {
+export type User = {
   username: string;
   userRole: string;
   notLocked: boolean;
@@ -11,28 +11,29 @@ type User = {
   createdDate: string;
 };
 
-export const useFetchUserList = async function () {
+export const useFetchUserList = function (username: String) {
   console.log(`useFetchUserList`);
 
   const [userList, setUserList] = useState<User[]>([]);
-  const [key, setKey] = useState(() => Date.now());
 
-  const output = await getUserList();
+  useEffect(() => {
+    console.log(`effect in useFetchUserList called`);
 
-  console.log("output in useFetchUserList");
-  console.log(output.success.data.userList);
+    const fetchUserList = async () => {
+      const output = await getUserList();
 
-  setUserList(output.success.data.userList);
+      console.log("before fetching userlist");
+      console.log(output.success.data.userList);
 
-  console.log("userList");
-  console.log(userList);
+      setUserList(output.success.data.userList);
+    };
 
-  const userRefetch = useCallback(() => {
-    setKey(Date.now());
-  }, []);
+    fetchUserList();
+    console.log("after fetching userlist");
+    console.log(userList);
+  }, [username]);
 
   return {
     userList,
-    userRefetch,
   };
 };
