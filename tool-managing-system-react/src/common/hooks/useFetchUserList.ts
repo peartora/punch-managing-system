@@ -11,29 +11,35 @@ export type User = {
   createdDate: string;
 };
 
-export const useFetchUserList = function (username: String) {
-  console.log(`useFetchUserList`);
+export const useFetchUserList = function (username: string) {
+  console.log(`useFetchUserList called`);
 
   const [userList, setUserList] = useState<User[]>([]);
+  const [key, setKey] = useState(() => Date.now());
 
   useEffect(() => {
-    console.log(`effect in useFetchUserList called`);
+    console.log(
+      `================effect in useFetchUserList called================`
+    );
 
     const fetchUserList = async () => {
       const output = await getUserList();
 
-      console.log("before fetching userlist");
+      console.log("userList in useFetchUserList");
       console.log(output.success.data.userList);
-
       setUserList(output.success.data.userList);
     };
 
     fetchUserList();
-    console.log("after fetching userlist");
-    console.log(userList);
-  }, [username]);
+  }, [username, key]);
+
+  const refetchForUserList = useCallback(() => {
+    console.log("refetchForUserList in useFetchForUserList called");
+    setKey(Date.now());
+  }, []);
 
   return {
     userList,
+    refetchForUserList,
   };
 };

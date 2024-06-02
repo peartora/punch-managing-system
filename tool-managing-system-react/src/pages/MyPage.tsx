@@ -13,32 +13,25 @@ import { useFetchUserList } from "@/common/hooks/useFetchUserList";
 
 import { User } from "@/common/hooks/useFetchUserList";
 
-type Id = {};
-
 export const MyPage = () => {
-  console.log("MyPage called");
+  console.log(
+    "=========================MyPage called========================="
+  );
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [userRole, setUserRole] = useState<string>("");
   const [passwordSetDate, setPasswordSetDate] = useState<string>("");
   const [passwordValidDate, setPasswordValidDate] = useState<string>("");
-  const [key, setKey] = useState(() => Date.now());
 
   const { user, logout } = useAuth();
+  const { userList, refetchForUserList } = useFetchUserList(user);
 
-  const { userList } = useFetchUserList(user);
-
-  console.log("userList in MyPage component");
+  console.log("userList displayId component");
   console.log(userList);
 
   const fetchData = async (body: MyPageInput) => {
-    console.log("async called");
-
     try {
       const output = await createMyPage(body);
-
-      console.log("output in my page");
-      console.log(output);
 
       if (output.success.data.admin) {
         setIsAdmin(true);
@@ -55,8 +48,6 @@ export const MyPage = () => {
   };
 
   useEffect(() => {
-    console.log("Effect called");
-
     const body: MyPageInput = {
       username: user,
     };
@@ -96,7 +87,7 @@ export const MyPage = () => {
                   key={user.username}
                   user={user}
                   userList={userList}
-                  refetch={setKey}
+                  refetchForUserList={refetchForUserList}
                 />
               )
             )}

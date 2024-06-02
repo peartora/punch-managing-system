@@ -13,10 +13,10 @@ type UserList = User[];
 type IdProps = {
   user: User;
   userList: UserList;
-  refetch: UserReftch;
+  refetchForUserList: UserReftch;
 };
 
-export function DisplayId({ user, userList, refetch }: IdProps) {
+export function DisplayId({ user, userList, refetchForUserList }: IdProps) {
   const [notLocked, setNotLocked] = useState(() => user.notLocked);
   const [isApproved, setIsApproved] = useState(() => user.approved);
   const [newPassword, setNewPassword] = useState("");
@@ -66,6 +66,8 @@ export function DisplayId({ user, userList, refetch }: IdProps) {
   };
 
   const clickHandler = async function (e: React.MouseEvent<HTMLButtonElement>) {
+    console.log(`clickHandler in DisplayId called`);
+
     const body = {
       username: user.username,
     };
@@ -79,7 +81,7 @@ export function DisplayId({ user, userList, refetch }: IdProps) {
       return;
     }
 
-    refetch();
+    refetchForUserList();
     alert(`${output.success.data.username} 이/가 승인 되었습니다.`);
   };
 
@@ -105,7 +107,7 @@ export function DisplayId({ user, userList, refetch }: IdProps) {
           const newIdList = userList.filter(
             (id) => id.username !== candidateId
           );
-          userRefetch();
+          refetchForUserList();
           alert(`${candidateId} 계정이 삭제 되었습니다.`);
         }
       })
