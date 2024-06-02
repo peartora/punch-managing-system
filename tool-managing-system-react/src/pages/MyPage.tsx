@@ -9,41 +9,35 @@ import { Link } from "react-router-dom";
 
 import { createMyPage } from "@/common/actions/user/myPage";
 import { MyPageInput, MyPageOutput } from "@/common/actions/user/myPage";
-import { useFetchUserList } from "@/common/hooks/useFetchUserList";
 
-import { User } from "@/common/hooks/useFetchUserList";
+import { User, useFetchUserList } from "@/common/hooks/useFetchUserList";
 
 export const MyPage = () => {
   console.log(
     "=========================MyPage called========================="
   );
 
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [userRole, setUserRole] = useState<string>("");
-  const [passwordSetDate, setPasswordSetDate] = useState<string>("");
-  const [passwordValidDate, setPasswordValidDate] = useState<string>("");
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { user, logout } = useAuth();
   const { userList, refetchForUserList } = useFetchUserList(user);
 
-  console.log("userList displayId component");
-  console.log(userList);
+  console.log("user: ", user);
+  console.log("userList: ", userList);
+  console.log("isLoading: ", isLoading);
 
   const fetchData = async (body: MyPageInput) => {
     try {
       const output = await createMyPage(body);
 
-      if (output.success.data.admin) {
+      if (output.success.data.userRole === "ADMIN") {
         setIsAdmin(true);
-        // setIdList(output.success.data.userList);
-        // console.log(idList);
-      } else {
-        setUserRole(output.success.data.userRole);
-        setPasswordSetDate(output.success.data.passwordSetDate);
-        setPasswordValidDate(output.success.data.passwordValidUntil);
       }
     } catch (error) {
       alert(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -54,6 +48,10 @@ export const MyPage = () => {
 
     fetchData(body);
   }, [user]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
@@ -105,9 +103,9 @@ export const MyPage = () => {
           </thead>
           <tbody>
             <tr key={user}>
-              <td>{userRole}</td>
-              <td>{passwordSetDate}</td>
-              <td>{passwordValidDate}</td>
+              <td>{userList.userRole}</td>
+              <td>{userList.passwordSetDate}</td>
+              <td>{userList.passwordValidDate}</td>
               <td>
                 <Link to={`/password-change`} style={{ marginRight: "20px" }}>
                   비밀번호 변경
