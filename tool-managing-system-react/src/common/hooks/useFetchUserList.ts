@@ -12,17 +12,16 @@ export type User = {
 };
 
 export const useFetchUserList = function (username: string) {
-  console.log(`useFetchUserList called`);
+  console.log(`useFetchUserList Customs Hook called`);
 
   const [userList, setUserList] = useState<User[]>([]);
   const [key, setKey] = useState(() => Date.now());
 
   useEffect(() => {
-    console.log(
-      `================effect in useFetchUserList called================`
-    );
+    console.log(`=====effect in useFetchUserList called=====`);
 
     const fetchUserList = async () => {
+      console.log(`fetchUserList called in effect`);
       const output = await getUserList();
 
       console.log("userList in useFetchUserList");

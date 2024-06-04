@@ -66,7 +66,7 @@ export function DisplayId({ user, userList, refetchForUserList }: IdProps) {
   };
 
   const clickHandler = async function (e: React.MouseEvent<HTMLButtonElement>) {
-    console.log(`clickHandler in DisplayId called`);
+    console.log(`** clickHandler in DisplayId called`);
 
     const body = {
       username: user.username,

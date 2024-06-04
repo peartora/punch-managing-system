@@ -13,19 +13,21 @@ import { MyPageInput, MyPageOutput } from "@/common/actions/user/myPage";
 import { User, useFetchUserList } from "@/common/hooks/useFetchUserList";
 
 export const MyPage = () => {
-  console.log(
-    "=========================MyPage called========================="
-  );
+  console.log("=====MyPage Component called=====");
 
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { user, logout } = useAuth();
+
+  console.log("before effect");
+
   const { userList, refetchForUserList } = useFetchUserList(user);
+
+  console.log("after effect");
 
   console.log("user: ", user);
   console.log("userList: ", userList);
-  console.log("isLoading: ", isLoading);
+  console.log("isAdmin: ", isAdmin);
 
   const fetchData = async (body: MyPageInput) => {
     try {
@@ -36,12 +38,12 @@ export const MyPage = () => {
       }
     } catch (error) {
       alert(error.message);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   useEffect(() => {
+    console.log(`effect called in MyPage`);
+
     const body: MyPageInput = {
       username: user,
     };
@@ -49,8 +51,9 @@ export const MyPage = () => {
     fetchData(body);
   }, [user]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (userList.length == 0) {
+    console.log(`userList == empty array`);
+    return <div>...Loading</div>;
   }
 
   return (

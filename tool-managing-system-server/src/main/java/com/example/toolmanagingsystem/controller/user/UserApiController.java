@@ -4,7 +4,7 @@ package com.example.toolmanagingsystem.controller.user;
 import com.example.toolmanagingsystem.dto.ApiResponse;
 import com.example.toolmanagingsystem.dto.request.*;
 
-import com.example.toolmanagingsystem.dto.response.myPageResponseDto.MyPageResponseDto;
+import com.example.toolmanagingsystem.dto.response.MyPageResponseDto;
 import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.repository.UserRepository;
 import com.example.toolmanagingsystem.service.userService.UserService;
@@ -103,16 +103,6 @@ public class UserApiController
         System.out.println(user);
 
         MyPageResponseDto responseDto = new MyPageResponseDto(user.getUsername(), user.getUserRole(), user.getPasswordSetDate());
-
-        if (Objects.equals(user.getUserRole().toString(), "ADMIN"))
-        {
-            Iterable<User> userIterable = this.userRepository.findAll();
-            responseDto.setUserList(userIterable);
-        }
-        else
-        {
-            responseDto.setOneUserList(user);
-        }
 
         return ApiResponse.success(responseDto);
     }
