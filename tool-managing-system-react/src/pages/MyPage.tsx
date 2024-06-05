@@ -13,25 +13,31 @@ import { MyPageInput, MyPageOutput } from "@/common/actions/user/myPage";
 import { User, useFetchUserList } from "@/common/hooks/useFetchUserList";
 
 export const MyPage = () => {
-  console.log("=====MyPage Component called=====");
+  console.log("==========MyPage Component called==========");
 
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   const { user, logout } = useAuth();
 
-  console.log("before effect");
+  console.log("before custom hook");
 
   const { userList, refetchForUserList } = useFetchUserList(user);
 
-  console.log("after effect");
+  console.log("after custom hook");
 
   console.log("user: ", user);
   console.log("userList: ", userList);
   console.log("isAdmin: ", isAdmin);
 
   const fetchData = async (body: MyPageInput) => {
+    console.log("fetchData called in MyPage.tsx");
+
     try {
+      console.log("before createMyPage async function called");
+
       const output = await createMyPage(body);
+
+      console.log("after createMyPage async function called");
 
       if (output.success.data.userRole === "ADMIN") {
         setIsAdmin(true);
@@ -42,7 +48,7 @@ export const MyPage = () => {
   };
 
   useEffect(() => {
-    console.log(`effect called in MyPage`);
+    console.log(`=====effect called in MyPage=====`);
 
     const body: MyPageInput = {
       username: user,

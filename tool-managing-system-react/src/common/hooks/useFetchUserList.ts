@@ -22,7 +22,12 @@ export const useFetchUserList = function (username: string) {
 
     const fetchUserList = async () => {
       console.log(`fetchUserList called in effect`);
+
+      console.log("before getUserList async function called");
+
       const output = await getUserList();
+
+      console.log("after getUserList async function called");
 
       console.log("userList in useFetchUserList");
       console.log(output.success.data.userList);
