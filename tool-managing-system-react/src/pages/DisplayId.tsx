@@ -17,8 +17,7 @@ type IdProps = {
 };
 
 export function DisplayId({ user, userList, refetchForUserList }: IdProps) {
-  const [notLocked, setNotLocked] = useState(() => user.notLocked);
-  const [isApproved, setIsApproved] = useState(() => user.approved);
+  const { notLocked, approved: isApproved } = user;
   const [newPassword, setNewPassword] = useState("");
 
   const changeHandler = function (e: React.ChangeEvent<HTMLInputElement>) {
@@ -52,7 +51,7 @@ export function DisplayId({ user, userList, refetchForUserList }: IdProps) {
 
           if (json.passwordReset) {
             alert(`초기화 되었습니다.`);
-            setNotLocked(true);
+            refetchForUserList();
           } else if (!json.passwordLongEnough) {
             alert(`입력된 비밀번호의 길이가 6자리 미만 입니다.`);
           } else if (!json.passwordSameWithCurrentPassword) {

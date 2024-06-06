@@ -11,6 +11,9 @@ import { createMyPage } from "@/common/actions/user/myPage";
 import { MyPageInput, MyPageOutput } from "@/common/actions/user/myPage";
 
 import { User, useFetchUserList } from "@/common/hooks/useFetchUserList";
+import { BusinessError } from "@/common/error";
+
+// 함수 선언.
 
 export const MyPage = () => {
   console.log("==========MyPage Component called==========");
@@ -35,15 +38,30 @@ export const MyPage = () => {
     try {
       console.log("before createMyPage async function called");
 
-      const output = await createMyPage(body);
+      const { userRole } = await createMyPage(body);
 
-      console.log("after createMyPage async function called");
+      // await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      if (output.success.data.userRole === "ADMIN") {
+      console.log(
+        "%c after createMyPage async function called",
+        "background: #eeeeee; color: #ff0000"
+      );
+
+      if (userRole === "ADMIN") {
         setIsAdmin(true);
       }
     } catch (error) {
-      alert(error.message);
+      let isHandled = false;
+      if (error instanceof BusinessError) {
+        if (error.code === "USER_IS_NOT_EXIST") {
+          isHandled = true;
+          alert("user가 존재 하지 않습니다.");
+        }
+      }
+
+      if (!isHandled) {
+        alert("알 수 없는 오류가 발생했습니다.");
+      }
     }
   };
 
@@ -55,6 +73,10 @@ export const MyPage = () => {
     };
 
     fetchData(body);
+
+    return () => {
+      console.log("cleanup in MyPage called");
+    };
   }, [user]);
 
   if (userList.length == 0) {

@@ -6,13 +6,13 @@ export type MyPageInput = {
 };
 
 export type MyPageOutput = {
-  success: Record<string, string>;
+  userRole: string;
 };
 
 export const createMyPage = async (
   input: MyPageInput
 ): Promise<MyPageOutput> => {
-  let output;
+  let output: unknown;
 
   try {
     output = await request.post(

@@ -27,7 +27,10 @@ export const useFetchUserList = function (username: string) {
 
       const output = await getUserList();
 
-      console.log("after getUserList async function called");
+      console.log(
+        "%c after getUserList async function called",
+        "background: #eeeeee; color: #0000ff"
+      );
 
       console.log("userList in useFetchUserList");
       console.log(output.success.data.userList);
@@ -35,6 +38,10 @@ export const useFetchUserList = function (username: string) {
     };
 
     fetchUserList();
+
+    return () => {
+      console.log("cleanup in useFetchUserList called");
+    };
   }, [username, key]);
 
   const refetchForUserList = useCallback(() => {

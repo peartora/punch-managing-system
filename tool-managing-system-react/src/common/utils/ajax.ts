@@ -1,5 +1,19 @@
 import { BusinessError } from "../error";
 
+export type ResponseDTO =
+  | {
+      success: unknown;
+      errro?: undefined;
+    }
+  | {
+      success?: undefined;
+      error: {
+        code: string;
+        message: string;
+        detail?: unknown;
+      };
+    };
+
 export const request = {
   get: async (url: string) => {
     const res = await fetch(url);
@@ -7,7 +21,7 @@ export const request = {
 
     return jsonRes;
   },
-  post: async (url: string, payload: unknown) => {
+  post: async (url: string, payload: unknown): Promise<unknown> => {
     let res: Response;
     if (payload instanceof FormData) {
       res = await fetch(url, {
@@ -24,17 +38,25 @@ export const request = {
       });
     }
 
-    const resJson = await res.json();
+    const dto = (await res.json()) as ResponseDTO;
 
     if (!res.ok) {
       console.log("res.ok is false");
+      console.log(dto.error);
 
-      const { code, message, detail } = resJson.error;
-      console.log(resJson.error);
+      if (!dto.error) {
+        throw new BusinessError("UNKNOWN_ERROR", "Unknown error occurred");
+      }
+
+      const { code, message, detail } = dto.error;
       throw new BusinessError(code, message, detail);
     }
 
-    return resJson;
+    if (!dto.success) {
+      throw new BusinessError("UNKNOWN_ERROR", "Unknown error occurred");
+    }
+
+    return dto.success.data;
   },
   delete(url: string) {
     return fetch(url, { method: "DELETE" });
