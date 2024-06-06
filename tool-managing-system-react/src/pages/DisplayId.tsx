@@ -5,6 +5,8 @@ import { request } from "@/common/utils/ajax";
 import { approveId } from "@/common/actions/admin/approveId";
 
 import { User } from "@/common/hooks/useFetchUserList";
+import { deleteUser } from "@/common/actions/admin/deleteId";
+import { BusinessError } from "@/common/error";
 
 type UserReftch = () => void;
 
@@ -64,7 +66,9 @@ export function DisplayId({ user, userList, refetchForUserList }: IdProps) {
     }
   };
 
-  const clickHandler = async function (e: React.MouseEvent<HTMLButtonElement>) {
+  const approveUserHandler = async function (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) {
     console.log(`** clickHandler in DisplayId called`);
 
     const body = {
@@ -84,33 +88,24 @@ export function DisplayId({ user, userList, refetchForUserList }: IdProps) {
     alert(`${output.success.data.username} 이/가 승인 되었습니다.`);
   };
 
-  const deleteUser = function () {
+  const deleteUserHandler = async function () {
     const candidateId = user.username;
 
     const body = {
       username: candidateId,
     };
 
-    request
-      .post(`/api/tool-managing-system/delete_user`, body)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(
-            `${user.username} 계정 삭제 중 error 발생 하였습니다.`
-          );
-        }
-        return response.text();
-      })
-      .then((result) => {
-        if (result === "OK") {
-          const newIdList = userList.filter(
-            (id) => id.username !== candidateId
-          );
-          refetchForUserList();
-          alert(`${candidateId} 계정이 삭제 되었습니다.`);
-        }
-      })
-      .catch((error) => console.error(error));
+    let output;
+
+    try {
+      output = await deleteUser(body);
+    } catch (error) {
+      if (error instanceof BusinessError) {
+        alert(error.message);
+      }
+    }
+    refetchForUserList();
+    alert(`${output} 은/는 삭제 되었습니다.`);
   };
 
   return (
@@ -136,13 +131,13 @@ export function DisplayId({ user, userList, refetchForUserList }: IdProps) {
       {!isApproved ? <td>미승인</td> : <td>승인</td>}
       {!isApproved ? (
         <td>
-          <button onClick={clickHandler}>승인!</button>
+          <button onClick={approveUserHandler}>승인!</button>
         </td>
       ) : (
         <td>해당없음</td>
       )}
       <td>
-        <button onClick={deleteUser}>삭제!</button>
+        <button onClick={deleteUserHandler}>삭제!</button>
       </td>
     </tr>
   );

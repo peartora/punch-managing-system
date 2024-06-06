@@ -111,21 +111,19 @@ public class AdminApiController
     }
 
     @PostMapping("/delete_user")
-    public String deleteUser(@RequestBody Map<String, Object> params)
+    public ApiResponse deleteUser(@RequestBody Map<String, Object> params)
     {
         System.out.println("deleteUser");
         System.out.println(params);
 
         User user = this.userRepository.findByUsername(params.get("username").toString());
-        try
-        {
-            this.userRepository.delete(user);
-            return "OK";
-        }
-        catch (Exception e)
-        {
-            return "NOK";
-        }
-    }
 
+        if (user == null)
+        {
+            throw new UserIsNotExistException();
+        }
+
+        this.userRepository.delete(user);
+        return ApiResponse.success(params.get("username"));
+    }
 }

@@ -38,7 +38,7 @@ export const LoginFormPage = () => {
 
     console.log(`output`, output);
 
-    login(output.success.data.username);
+    login(username);
   };
 
   return (
