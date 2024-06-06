@@ -106,13 +106,14 @@ export const MyPage = () => {
             </tr>
           </thead>
           <tbody>
-            {userList.map((user: User) =>
-              user.userRole === "ADMIN" ? (
-                <DisplayAdminId key={user.username} user={user} />
+            {userList.map((u: User) =>
+              u.userRole === "ADMIN" ? (
+                <DisplayAdminId key={u.username} user={u} />
               ) : (
                 <DisplayId
-                  key={user.username}
-                  user={user}
+                  key={u.username}
+                  user={u}
+                  loginUser={user}
                   refetchForUserList={refetchForUserList}
                 />
               )

@@ -74,6 +74,7 @@ public class AdminApiController
         System.out.println(requestDto);
 
         User user = this.userRepository.findByUsername(requestDto.getUsername());
+        User loginUser = this.userRepository.findByUsername(requestDto.getLoginUsername());
 
         if (user == null)
         {
@@ -81,7 +82,7 @@ public class AdminApiController
             throw new UserIsNotExistException();
         }
 
-        if (!Objects.equals(user.getUserRole().toString(), "ADMIN"))
+        if (!Objects.equals(loginUser.getUserRole().toString(), "ADMIN"))
         {
             System.out.println("not authorized");
             throw new NotAuthorizeRequestException();

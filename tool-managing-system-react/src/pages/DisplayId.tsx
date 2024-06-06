@@ -14,10 +14,11 @@ type UserReftch = () => void;
 
 type IdProps = {
   user: User;
+  loginUser: string;
   refetchForUserList: UserReftch;
 };
 
-export function DisplayId({ user, refetchForUserList }: IdProps) {
+export function DisplayId({ user, loginUser, refetchForUserList }: IdProps) {
   const { notLocked, approved: isApproved } = user;
   const [newPassword, setNewPassword] = useState("");
 
@@ -28,13 +29,14 @@ export function DisplayId({ user, refetchForUserList }: IdProps) {
   const resetPasswordHandler = function (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (newPassword.length < 6) {
-      alert("비밀번호는 6자 이상으로 설정 되어야 합니다.");
-      return;
-    }
+    //  if (newPassword.length < 6) {
+    //    alert("비밀번호는 6자 이상으로 설정 되어야 합니다.");
+    //    return;
+    //  }
 
     const body: ResetPasswordInput = {
       username: user.username,
+      loginUsername: loginUser,
       newPassword: newPassword,
     };
 
@@ -43,6 +45,7 @@ export function DisplayId({ user, refetchForUserList }: IdProps) {
     try {
       output = resetPassword(body);
     } catch (error) {
+      console.log(`this is catch state`);
       alert(error.message);
     }
 

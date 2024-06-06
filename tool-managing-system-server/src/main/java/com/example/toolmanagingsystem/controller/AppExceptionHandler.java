@@ -19,8 +19,6 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler
         System.out.println("Exception Handler for Business Error");
         System.out.println(businessError);
 
-
-
         return ResponseEntity.badRequest().body(ApiResponse.error(businessError));
     }
 
