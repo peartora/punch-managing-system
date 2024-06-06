@@ -64,10 +64,7 @@ public class AdminApiController
 
         this.userRepository.save(user);
 
-        Map<String, String> usernameMap = new HashMap<>();
-        usernameMap.put("username", (String) params.get("username"));
-
-        return ApiResponse.success(usernameMap);
+        return ApiResponse.success(params.get("username"));
     }
 
     @PostMapping("/resetPassword")
@@ -80,19 +77,26 @@ public class AdminApiController
 
         if (user == null)
         {
+            System.out.println("user is null");
             throw new UserIsNotExistException();
         }
 
         if (!Objects.equals(user.getUserRole().toString(), "ADMIN"))
         {
+            System.out.println("not authorized");
             throw new NotAuthorizeRequestException();
         }
 
         String currentPassword = user.getPassword();
         String newPassword = requestDto.getNewPassword();
 
+        System.out.println("currentPassword: " + currentPassword);
+        System.out.println("newPassword: " + newPassword);
+
+
         if (currentPassword.equals(newPassword))
         {
+            System.out.println("password is same for resetPassword");
             throw new NewPasswordSameWithCurrentPasswordException();
         }
 
@@ -104,10 +108,7 @@ public class AdminApiController
         user = userService.initializeUser(user);
         this.userRepository.save(user);
 
-        Map<String, String> usernameMap = new HashMap<>();
-        usernameMap.put("username", user.getUsername());
-
-        return ApiResponse.success(usernameMap);
+        return ApiResponse.success(requestDto.getUsername());
     }
 
     @PostMapping("/delete_user")

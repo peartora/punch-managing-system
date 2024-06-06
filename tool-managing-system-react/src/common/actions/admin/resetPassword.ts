@@ -2,12 +2,13 @@ import { BusinessError } from "@/common/error";
 import { request } from "@/common/utils/ajax";
 
 export type ResetPasswordInput = {
-  username: string;
+  loginUsername: string;
+  targetUsername: string;
   newPassword: string;
 };
 
 export type ResetPasswordOutput = {
-  success: Record<string, string>;
+  username: string;
 };
 
 export const resetPassword = async (

@@ -13,8 +13,6 @@ import { MyPageInput, MyPageOutput } from "@/common/actions/user/myPage";
 import { User, useFetchUserList } from "@/common/hooks/useFetchUserList";
 import { BusinessError } from "@/common/error";
 
-// 함수 선언.
-
 export const MyPage = () => {
   console.log("==========MyPage Component called==========");
 
@@ -115,7 +113,6 @@ export const MyPage = () => {
                 <DisplayId
                   key={user.username}
                   user={user}
-                  userList={userList}
                   refetchForUserList={refetchForUserList}
                 />
               )
