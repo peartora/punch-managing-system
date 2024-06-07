@@ -31,12 +31,13 @@ export const resetPassword = async (
         throw new Error("==user is not authorized for this request==");
       } else if (error.code === "USER_PASSWORD_SHORT") {
         throw new Error("==password is short==");
+      } else if (error.code === "NEW_PASSWORD_SAME_WITH_CURRENT_PASSWORD") {
+        throw new Error("==초기화 비밀번호는 기존 비밀번호와 달라야 합니다.==");
       } else {
         throw new Error("==알 수 없는 오류가 발생했습니다.==");
       }
     }
     console.log("if state exited");
-
     throw new Error("==알 수 없는 오류가 발생했습니다.==");
   }
 

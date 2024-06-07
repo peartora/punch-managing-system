@@ -45,9 +45,11 @@ export const request = {
       console.log(dto.error);
 
       if (!dto.error) {
+        console.log("!dto.error, UNKNOWN_ERROR is thrown");
         throw new BusinessError("UNKNOWN_ERROR", "Unknown error occurred");
       }
 
+      console.log("dto.error, MENTIONED ERROR is THROWN");
       const { code, message, detail } = dto.error;
       throw new BusinessError(code, message, detail);
     }

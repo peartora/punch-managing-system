@@ -26,7 +26,9 @@ export function DisplayId({ user, loginUser, refetchForUserList }: IdProps) {
     setNewPassword(e.target.value);
   };
 
-  const resetPasswordHandler = function (e: React.FormEvent<HTMLFormElement>) {
+  const resetPasswordHandler = async function (
+    e: React.FormEvent<HTMLFormElement>
+  ) {
     e.preventDefault();
 
     //  if (newPassword.length < 6) {
@@ -43,10 +45,12 @@ export function DisplayId({ user, loginUser, refetchForUserList }: IdProps) {
     let output;
 
     try {
-      output = resetPassword(body);
+      console.log(`inside of try statement`);
+
+      output = await resetPassword(body);
     } catch (error) {
-      console.log(`this is catch state`);
       alert(error.message);
+      return;
     }
 
     refetchForUserList();
