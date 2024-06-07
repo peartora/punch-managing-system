@@ -6,9 +6,9 @@ import com.example.toolmanagingsystem.dto.request.*;
 
 import com.example.toolmanagingsystem.dto.response.MyPageResponseDto;
 import com.example.toolmanagingsystem.entity.user.User;
+import com.example.toolmanagingsystem.error.user.*;
 import com.example.toolmanagingsystem.repository.UserRepository;
 import com.example.toolmanagingsystem.service.userService.UserService;
-import com.example.toolmanagingsystem.error.user.DuplicatedUsernameException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -105,5 +105,44 @@ public class UserApiController
         MyPageResponseDto responseDto = new MyPageResponseDto(user.getUsername(), user.getUserRole(), user.getPasswordSetDate());
 
         return ApiResponse.success(responseDto);
+    }
+
+    @PostMapping("/passwordChange")
+    public ApiResponse passwordChange(@RequestBody PasswordChangeRequestDto requestDto) {
+        System.out.println("passwordChange");
+        System.out.println(requestDto);
+
+        String username = requestDto.getUsername();
+        String newPassword = requestDto.getNewPassword();
+        String newPasswordForConfirmation = requestDto.getNewPasswordForConfirmation();
+
+        if (!Objects.equals(newPassword, newPasswordForConfirmation))
+        {
+            throw new PasswordNotSameException();
+        }
+
+        if (newPassword.length() < 6)
+        {
+            throw new PasswordLengthIsNotEnoughException();
+        }
+
+        User user = this.userRepository.findByUsername(username);
+
+        if (user == null)
+        {
+            throw new UserIsNotExistException();
+        }
+
+        if (Objects.equals(user.getPassword(), newPassword))
+        {
+            throw new NewPasswordSameWithCurrentPasswordException();
+        }
+
+        user.setPassword(newPassword);
+        user = this.userService.initializeUser(user);
+
+        this.userRepository.save(user);
+
+        return ApiResponse.success(username);
     }
 }

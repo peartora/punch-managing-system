@@ -1,66 +1,36 @@
 import { BusinessError } from "@/common/error";
 import { request } from "@/common/utils/ajax";
 
-
-type ResetPasswordInput = {
+export type PasswordChangeInput = {
   username: string;
   password: string;
   passwordConfirmation?: string;
 };
 
-type ResetPasswordOutput = {
+export type PasswordChangeOutput = {
   username: string;
 };
 
+export const passwordChange = async function (input: PasswordChangeInput) {
+  let output;
 
-
-
-// const resetPassword = async (body: ResetPasswordInput) => {
-//   let output: ResetPasswordOutput;
-
-//   try {
-//     output = await request.post(`/api/tool-managing-system/resetPassword`, body)
-//   } catch (error) {
-//     if (error instanceof BusinessError) {
-//       if (error.code === "")
-//     }
-//   }
-// }
-
-
-
-
-
-
-
-
-
-
-
-request
-        .post(`/api/tool-managing-system/resetPassword`, body)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(
-              `${resetId} 계정의 잠금상태 초기화 중 error 발생 하였습니다.`
-            );
-          }
-          return response.json();
-        })
-        .then((json) => {
-          console.log("json");
-          console.log(json);
-
-          if (json.passwordReset) {
-            alert(`초기화 되었습니다.`);
-            setNotLocked(true);
-          } else if (!json.passwordLongEnough) {
-            alert(`입력된 비밀번호의 길이가 6자리 미만 입니다.`);
-          } else if (!json.passwordSameWithCurrentPassword) {
-            alert(`입력된 비밀번호가 현재 비밀번호와 동일 합니다.`);
-          }
-        })
-        .catch((error) => console.error(error));
+  try {
+    output = await request.post(
+      "/api/tool-managing-system/users/passwordChange",
+      input
+    );
+  } catch (error) {
+    if (error.code === "USER_PASSWORD_NOT_SAME") {
+      throw new Error("==입력 된 2개의 비밀번호가 다릅니다.==");
+    } else if (error.code === "USER_PASSWORD_SHORT") {
+      throw new Error("==입력 된 비밀번호가 6자리 미만 입니다.==");
+    } else if (error.code === "USER_IS_NOT_EXIST") {
+      throw new Error("==해당 user Id가 존재 하지 않습니다.==");
+    } else if (error.code === "NEW_PASSWORD_SAME_WITH_CURRENT_PASSWORD") {
+      throw new Error("==신규 비밀번호가 기존 비밀번호와 동일 합니다.==");
     } else {
-      alert(`password의 길이는 최소 6자리 이상 입니다.`);
+      throw new Error("==알 수 없는 오류가 발생했습니다.==");
     }
+  }
+  return output;
+};

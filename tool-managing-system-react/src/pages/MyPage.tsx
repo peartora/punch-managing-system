@@ -17,6 +17,7 @@ export const MyPage = () => {
   console.log("==========MyPage Component called==========");
 
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [userObject, setUserObject] = useState();
 
   const { user, logout } = useAuth();
 
@@ -36,17 +37,17 @@ export const MyPage = () => {
     try {
       console.log("before createMyPage async function called");
 
-      const { userRole } = await createMyPage(body);
-
-      // await new Promise((resolve) => setTimeout(resolve, 2000));
+      const userObject: User = await createMyPage(body);
 
       console.log(
         "%c after createMyPage async function called",
         "background: #eeeeee; color: #ff0000"
       );
 
-      if (userRole === "ADMIN") {
+      if (userObject.userRole === "ADMIN") {
         setIsAdmin(true);
+      } else {
+        setUserObject(userObject);
       }
     } catch (error) {
       let isHandled = false;
@@ -132,9 +133,9 @@ export const MyPage = () => {
           </thead>
           <tbody>
             <tr key={user}>
-              <td>{userList.userRole}</td>
-              <td>{userList.passwordSetDate}</td>
-              <td>{userList.passwordValidDate}</td>
+              <td>{userObject.userRole}</td>
+              <td>{userObject.passwordSetDate}</td>
+              <td>{userObject.passwordValidUntil}</td>
               <td>
                 <Link to={`/password-change`} style={{ marginRight: "20px" }}>
                   비밀번호 변경
