@@ -1,9 +1,9 @@
 package com.example.toolmanagingsystem.service.userService;
 
 import com.example.toolmanagingsystem.dto.ApiResponse;
-import com.example.toolmanagingsystem.dto.request.LoginRequestDto;
-import com.example.toolmanagingsystem.dto.request.UserRegisterRequestDto;
-import com.example.toolmanagingsystem.dto.response.LoginResponseDto;
+import com.example.toolmanagingsystem.dto.request.user.LoginRequestDto;
+import com.example.toolmanagingsystem.dto.request.user.UserRegisterRequestDto;
+import com.example.toolmanagingsystem.dto.response.user.LoginResponseDto;
 import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.error.user.*;
 import com.example.toolmanagingsystem.repository.UserRepository;

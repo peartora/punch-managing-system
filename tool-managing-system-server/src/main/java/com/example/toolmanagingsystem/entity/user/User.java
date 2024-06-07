@@ -1,6 +1,6 @@
 package com.example.toolmanagingsystem.entity.user;
 
-import com.example.toolmanagingsystem.dto.request.UserRegisterRequestDto;
+import com.example.toolmanagingsystem.dto.request.user.UserRegisterRequestDto;
 import jakarta.persistence.*;
 import lombok.Data;
 

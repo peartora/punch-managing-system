@@ -1,7 +1,7 @@
 package com.example.toolmanagingsystem.controller.user;
 
 import com.example.toolmanagingsystem.dto.ApiResponse;
-import com.example.toolmanagingsystem.dto.request.ResetPasswordRequestDto;
+import com.example.toolmanagingsystem.dto.request.user.ResetPasswordRequestDto;
 import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.error.user.NewPasswordSameWithCurrentPasswordException;
 import com.example.toolmanagingsystem.error.user.NotAuthorizeRequestException;

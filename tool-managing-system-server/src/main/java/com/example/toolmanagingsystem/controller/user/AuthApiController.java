@@ -2,9 +2,9 @@ package com.example.toolmanagingsystem.controller.user;
 
 
 import com.example.toolmanagingsystem.dto.ApiResponse;
-import com.example.toolmanagingsystem.dto.request.LoginRequestDto;
-import com.example.toolmanagingsystem.dto.request.PasswordChangeRequestDto;
-import com.example.toolmanagingsystem.dto.response.PasswordChangeResponseDto;
+import com.example.toolmanagingsystem.dto.request.user.LoginRequestDto;
+import com.example.toolmanagingsystem.dto.request.user.PasswordChangeRequestDto;
+import com.example.toolmanagingsystem.dto.response.user.PasswordChangeResponseDto;
 import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.repository.UserRepository;
 import com.example.toolmanagingsystem.service.userService.UserApiService;

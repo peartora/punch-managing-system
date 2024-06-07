@@ -44,12 +44,6 @@ public class PunchApiController
     private final InsepctionRepository inspectionRepository;
     private final PunchDao dao;
 
-//    @ExceptionResponse(BusinessError.class)
-//    public UserApiResponse handleBusinessError(BusinessError error)
-//    {
-//        return UserApiResponse.error(error);
-//    }
-
     @Value("${TOOL_MANAGING_SYSTEM_STATIC_PATH}")
     private String staticPath;
 
