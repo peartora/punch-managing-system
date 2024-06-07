@@ -1,7 +1,6 @@
 package com.example.toolmanagingsystem.error.user;
 
 import com.example.toolmanagingsystem.error.BusinessError;
-import com.example.toolmanagingsystem.service.userService.UserService;
 
 public class PasswordLengthIsNotEnoughException extends BusinessError
 {

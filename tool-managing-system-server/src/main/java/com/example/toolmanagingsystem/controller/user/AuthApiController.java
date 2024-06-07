@@ -4,11 +4,10 @@ package com.example.toolmanagingsystem.controller.user;
 import com.example.toolmanagingsystem.dto.ApiResponse;
 import com.example.toolmanagingsystem.dto.request.LoginRequestDto;
 import com.example.toolmanagingsystem.dto.request.PasswordChangeRequestDto;
-import com.example.toolmanagingsystem.dto.response.LoginResponseDto;
 import com.example.toolmanagingsystem.dto.response.PasswordChangeResponseDto;
 import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.repository.UserRepository;
-import com.example.toolmanagingsystem.service.userService.UserService;
+import com.example.toolmanagingsystem.service.userService.UserApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,12 +23,12 @@ import java.util.Objects;
 public class AuthApiController
 {
     private final UserRepository userRepository;
-    private final UserService userService;
+    private final UserApiService userApiService;
 
     @PostMapping("/login")
     public ApiResponse login (@RequestBody LoginRequestDto requestDto)
     {
-        return this.userService.login(requestDto);
+        return this.userApiService.login(requestDto);
     }
 
     @PostMapping("/password_change")

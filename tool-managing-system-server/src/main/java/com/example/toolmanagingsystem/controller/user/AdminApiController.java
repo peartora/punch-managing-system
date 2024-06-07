@@ -2,18 +2,16 @@ package com.example.toolmanagingsystem.controller.user;
 
 import com.example.toolmanagingsystem.dto.ApiResponse;
 import com.example.toolmanagingsystem.dto.request.ResetPasswordRequestDto;
-import com.example.toolmanagingsystem.dto.response.ResetPasswordResponseDto;
 import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.error.user.NewPasswordSameWithCurrentPasswordException;
 import com.example.toolmanagingsystem.error.user.NotAuthorizeRequestException;
 import com.example.toolmanagingsystem.error.user.PasswordLengthIsNotEnoughException;
 import com.example.toolmanagingsystem.error.user.UserIsNotExistException;
 import com.example.toolmanagingsystem.repository.UserRepository;
-import com.example.toolmanagingsystem.service.userService.UserService;
+import com.example.toolmanagingsystem.service.userService.UserApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -22,7 +20,7 @@ import java.util.*;
 public class AdminApiController
 {
     private final UserRepository userRepository;
-    private final UserService userService;
+    private final UserApiService userApiService;
 
     @GetMapping("/idList")
     public List<Map<String, Object>> returnIdList()
@@ -106,7 +104,7 @@ public class AdminApiController
         }
 
         user.setPassword(newPassword);
-        user = userService.initializeUser(user);
+        user = userApiService.initializeUser(user);
         this.userRepository.save(user);
 
         return ApiResponse.success(requestDto.getUsername());

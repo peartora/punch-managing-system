@@ -10,17 +10,15 @@ import com.example.toolmanagingsystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
 @Service
-public class UserService
+public class UserApiService
 {
     @Autowired
     UserRepository userRepository;
     LoginResponseDto responseDto;
-
 
     public boolean isPasswordSame(UserRegisterRequestDto requestDto) throws PasswordNotSameException
     {
@@ -31,7 +29,6 @@ public class UserService
         {
             throw new PasswordNotSameException();
         }
-
         return true;
     }
 
@@ -43,7 +40,6 @@ public class UserService
         {
             throw new PasswordLengthIsNotEnoughException();
         }
-
         return true;
     }
 

@@ -8,7 +8,7 @@ import com.example.toolmanagingsystem.dto.response.MyPageResponseDto;
 import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.error.user.*;
 import com.example.toolmanagingsystem.repository.UserRepository;
-import com.example.toolmanagingsystem.service.userService.UserService;
+import com.example.toolmanagingsystem.service.userService.UserApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +20,7 @@ import java.util.*;
 public class UserApiController
 {
     private final UserRepository userRepository;
-    private final UserService userService;
+    private final UserApiService userApiService;
 
     @GetMapping
     public ApiResponse returnUserList()
@@ -46,8 +46,8 @@ public class UserApiController
         System.out.println("registerUser");
         System.out.println(requestDto);
 
-        boolean isPasswordSame = this.userService.isPasswordSame(requestDto);
-        boolean isPasswordLongEnough = this.userService.isPasswordLongEnough(requestDto);
+        boolean isPasswordSame = this.userApiService.isPasswordSame(requestDto);
+        boolean isPasswordLongEnough = this.userApiService.isPasswordLongEnough(requestDto);
 
         if (isPasswordSame && isPasswordLongEnough)
         {
@@ -77,7 +77,7 @@ public class UserApiController
         System.out.println("loginUser");
         System.out.println(requestDto);
 
-        return this.userService.login(requestDto);
+        return this.userApiService.login(requestDto);
     }
 
 
@@ -139,7 +139,7 @@ public class UserApiController
         }
 
         user.setPassword(newPassword);
-        user = this.userService.initializeUser(user);
+        user = this.userApiService.initializeUser(user);
 
         this.userRepository.save(user);
 
