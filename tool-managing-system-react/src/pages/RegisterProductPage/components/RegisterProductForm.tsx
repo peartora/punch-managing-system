@@ -1,50 +1,38 @@
 import { useState } from "react";
 
-import { request } from "@/common/utils/ajax";
+import { addMedicine } from "@/common/actions/medicine/addMedicine";
 
 export function RegisterProductForm() {
   const [productName, setProductName] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const query = new URLSearchParams();
-  query.append("medicineName", productName);
-
-  function handleSubmit(event: any) {
+  async function handleSubmit(event: any) {
     event.preventDefault();
 
-    request
-      .get(`/api/tool-managing-system/duplicateMedicine?${query}`)
-      .then((response) => {
-        if (!response.ok) throw new Error(`duplicate error`);
-        return response.text();
-      })
-      .then((response) => {
-        if (response === "OK") {
-          const formData = new FormData();
-          formData.append("medicine", productName);
-          if (selectedFile) formData.append("specificationFile", selectedFile);
+    if (productName === null || productName === "") {
+      alert("제품명이 누락 되었습니다.");
+      return;
+    }
 
-          request
-            .post(`/api/tool-managing-system/registerMedicine`, formData)
-            .then((response) => {
-              if (!response.ok) throw new Error(`register error`);
-              return response.text();
-            })
-            .then((result) => {
-              if (result === "OK") {
-                alert(`${productName}이 정상적으로 등록 되었습니다.`);
-              } else {
-                throw new Error(
-                  `${productName}이 정상적으로 등록 되지 않았습니다. 관리자에게 문의 하십시오.`
-                );
-              }
-            })
-            .catch((error) => alert(error));
-        } else {
-          throw new Error(`${productName} is duplicated`);
-        }
-      })
-      .catch((error) => alert(error));
+    if (selectedFile === null) {
+      alert("사양서 파일이 누락 되었습니다.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("medicine", productName);
+    formData.append("specificationFile", selectedFile as File);
+
+    let output;
+
+    try {
+      output = await addMedicine(formData);
+    } catch (error) {
+      alert(`${error.message}`);
+      return;
+    }
+
+    alert(`제품: ${output}이(가) 등록 되었습니다.`);
   }
 
   return (

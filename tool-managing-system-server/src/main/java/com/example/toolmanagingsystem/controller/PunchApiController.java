@@ -11,6 +11,7 @@ import com.example.toolmanagingsystem.error.BusinessError;
 import com.example.toolmanagingsystem.repository.*;
 import com.example.toolmanagingsystem.repository.punch.PunchDeleteRepository;
 import com.example.toolmanagingsystem.repository.punch.PunchRepository;
+import com.example.toolmanagingsystem.utils.FileHandling;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -233,72 +234,8 @@ public class PunchApiController
         return this.dao.retrievSpecification(punchId);
     }
 
-    @GetMapping("/getMedicine")
-    public List<String> returnMedicine()
-    {
-        List<Medicine> medicineList = this.medicineRepository.findAll();
 
-        List<String> medicineNameList = new ArrayList<>();
 
-        for (Medicine medicine: medicineList)
-        {
-            medicineNameList.add(medicine.getMedicine());
-        }
-        return medicineNameList;
-    }
-
-    @PostMapping("/updateBatchInfor")
-    public int updateBatchSize(
-            @RequestParam(value = "product") String productName,
-            @RequestParam(value = "specificationFile", required = false) MultipartFile specificationFile
-    )
-    {
-        String strFilePath = saveSpecificationFile(specificationFile);
-
-        Medicine medicineBeforeUpdate = this.medicineRepository.findByMedicine(productName);
-        medicineBeforeUpdate.setSpecificationPath(strFilePath);
-
-        try
-        {
-            this.medicineRepository.save(medicineBeforeUpdate);
-            return 1;
-        }
-        catch (Exception e)
-        {
-            return 0;
-        }
-    }
-
-    @GetMapping("/duplicateMedicine")
-    public String returnCheckResultForMedicine(@RequestParam String medicineName)
-    {
-        Medicine medicine = this.medicineRepository.findByMedicine(medicineName);
-        if (medicine == null)
-        {
-            return "OK";
-        }
-        else
-        {
-            return "NOK";
-        }
-    }
-
-    @PostMapping("/registerMedicine")
-    public String registerMedicine(@RequestParam("medicine") String medicineName, @RequestParam("specificationFile") MultipartFile specificationFile)
-    {
-        String strFilePath = this.saveSpecificationFile(specificationFile);
-        Medicine medicine = new Medicine(medicineName, LocalDateTime.now(), strFilePath);
-
-        try
-        {
-            this.medicineRepository.save(medicine);
-            return "OK";
-        }
-        catch (Exception e)
-        {
-            return "NOK";
-        }
-    }
 
     @Transactional
     @PostMapping("updateInspectionResultAndStatus")
@@ -334,50 +271,6 @@ public class PunchApiController
         this.punchRepository.saveAll(punchList);
     }
 
-    @PostMapping("/addSupplier")
-    public int addSupplier(@RequestBody Supplier supplier)
-    {
-        System.out.println("addSupplier");
-        System.out.println(supplier.getSupplier());
-
-        try
-        {
-            this.punchSupplierRepository.save(supplier);
-            return 1;
-        }
-        catch (Exception e)
-        {
-            return 0;
-        }
-    }
-
-    @GetMapping("/duplicateSupplier")
-    public int returnCheckResultForSupplier(@RequestParam String supplier)
-    {
-        return this.dao.checkDuplicateSupplier(supplier);
-    }
-
-    @GetMapping("/getSuppliers")
-    public List<String> returnSuppliers()
-    {
-        return this.dao.returnSuppliers();
-    }
-
-    @GetMapping("/display-scrapped")
-    public List<PunchDelete> returnScrappedPunchList(@RequestParam Map<String, Object> params)
-    {
-        System.out.println("returnScrappedPunchList");
-        System.out.println(params);
-
-        List<PunchDelete> punchDeleteList = this.punchDeleteRepository.findAll();
-
-        System.out.println(punchDeleteList);
-
-        return punchDeleteList;
-//        return dao.getScrappedPunchList(params);
-    }
-
-
 
 
 
@@ -412,42 +305,17 @@ public class PunchApiController
     }
 
 
-
-    private String saveSpecificationFile(MultipartFile specificationFile)
-    {
-        String fileName = specificationFile.getOriginalFilename();
-        // String strFilePath = "C:\\Users\\lsm1dae\\Desktop\\specifications\\" + fileName;
-        String strFilePath = this.staticPath + "resources\\pdf\\specification\\" + fileName;
-
-
-        fileHandling(strFilePath, specificationFile);
-
-        return strFilePath;
-    }
-
     private String saveInspectionFile(MultipartFile specificationFile)
     {
         String fileName = specificationFile.getOriginalFilename();
         // String strFilePath = "C:\\Users\\lsm1dae\\Desktop\\inspection\\" + fileName;
         String strFilePath = this.staticPath + "resources\\pdf\\inspection\\" + fileName;
 
-        fileHandling(strFilePath, specificationFile);
+        FileHandling.fileHandling(strFilePath, specificationFile);
 
         return strFilePath;
     }
-    private void fileHandling(String strFilePath, MultipartFile specificationFile)
-    {
-        try
-        {
-            byte[] fileBytes = specificationFile.getBytes();
-            Path filePath = Paths.get(strFilePath);
-            Files.write(filePath, fileBytes);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
+
 
 
 
