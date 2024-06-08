@@ -17,9 +17,20 @@ export type ResponseDTO =
 export const request = {
   get: async (url: string) => {
     const res = await fetch(url);
-    const jsonRes = await res.json();
 
-    return jsonRes;
+    const dto = (await res.json()) as ResponseDTO;
+
+    if (!res.ok) {
+      if (!dto.error) {
+        throw new BusinessError("UNKNOWN_ERROR", "Unknown error occurred");
+      }
+
+      const { code, message, detail } = dto.error;
+      throw new BusinessError(code, message, detail);
+    }
+
+    console.log("json", res);
+    return dto.success.data;
   },
   post: async (url: string, payload: unknown): Promise<unknown> => {
     let res: Response;

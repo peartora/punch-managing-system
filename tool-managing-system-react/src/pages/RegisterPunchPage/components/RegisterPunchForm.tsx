@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useBringProductList } from "@/common/hooks/useBringProductList";
+import { useBringMedicineList } from "@/common/hooks/useBringMedicineList";
 import { useBringSupplierList } from "@/common/hooks/useBringSupplierList";
 import { request } from "@/common/utils/ajax";
 
@@ -22,7 +22,7 @@ export function RegisterPunchForm() {
   const [productName, setProductName] = useState("");
   const [productType, setProductType] = useState("");
 
-  const { medicineNameList } = useBringProductList();
+  const { medicineNameList } = useBringMedicineList();
   const { supplierList } = useBringSupplierList();
 
   async function handleSubmit(event: any) {

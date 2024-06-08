@@ -1,4 +1,4 @@
-import { useBringProductList } from "@/common/hooks/useBringProductList";
+import { useBringMedicineList } from "@/common/hooks/useBringMedicineList";
 import { useBringSupplierList } from "@/common/hooks/useBringSupplierList";
 
 import { Filter } from "./components/Filter";
@@ -8,7 +8,7 @@ type Props = {
 };
 
 export function FilterController(props: Props) {
-  const { medicineNameList, isLoading } = useBringProductList();
+  const { medicineNameList, isLoading } = useBringMedicineList();
   const { supplierList } = useBringSupplierList();
 
   if (isLoading) {

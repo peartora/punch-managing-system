@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useBringProductList } from "@/common/hooks/useBringProductList";
+import { useBringMedicineList } from "@/common/hooks/useBringMedicineList";
 import { request } from "@/common/utils/ajax";
 import { NavBar } from "@/common/components/NavBar";
 
@@ -11,7 +11,7 @@ export function PunchDeleteHistory() {
 
   let selectedMedicine = "";
 
-  const { medicineNameList } = useBringProductList();
+  const { medicineNameList } = useBringMedicineList();
 
   function selectMedicine(event: React.ChangeEvent<HTMLSelectElement>) {
     selectedMedicine = event.target.value;

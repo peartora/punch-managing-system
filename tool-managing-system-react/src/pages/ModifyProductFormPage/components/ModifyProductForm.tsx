@@ -1,42 +1,46 @@
 import { useState } from "react";
 
-import { useBringProductList } from "@/common/hooks/useBringProductList";
-import { request } from "@/common/utils/ajax";
+import { useBringMedicineList } from "@/common/hooks/useBringMedicineList";
+
+import { updateSpecification } from "@/common/actions/medicine/updateSpecification";
 
 export function ModifyProductForm() {
   const [productName, setProductName] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const { medicineNameList, isLoading } = useBringProductList();
+  const { medicineNameList, isLoading } = useBringMedicineList();
 
-  function handleSubmit(event: any) {
+  async function handleSubmit(event: any) {
     event.preventDefault();
 
-    if (selectedFile === null) {
-      alert(`변경 할 정보가 없습니다.`);
-    } else {
-      const formData = new FormData();
-      formData.append("product", productName);
-      if (selectedFile) formData.append("specificationFile", selectedFile);
-
-      request
-        .post(`/api/tool-managing-system/updateBatchInfor`, formData)
-        .then((response) => {
-          if (!response.ok)
-            throw new Error(`제품 정보 변경 중 error가 발생 하였습니다.`);
-          return response.text();
-        })
-        .then((result) => {
-          if (result === "1") {
-            alert(`${productName}의 정보가 변경 되었습니다.`);
-          } else {
-            alert(
-              `${productName}의 정보가 변경 되지 않았습니다. 관리자에게 문의 하십시오.`
-            );
-          }
-        })
-        .catch((error) => console.error(error));
+    if (productName === null || productName === "") {
+      alert("제품명이 누락 되었습니다.");
+      return;
     }
+
+    if (selectedFile === null) {
+      alert("사양서 파일이 누락 되었습니다.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("medicine", productName);
+    formData.append("specificationFile", selectedFile as File);
+
+    let output;
+
+    try {
+      output = await updateSpecification(formData);
+    } catch (error) {
+      alert(`${error.message}`);
+      return;
+    }
+
+    alert(`${output}의 사양서가 변경 되었습니다.`);
+  }
+
+  if (medicineNameList.length === 0 && !isLoading) {
+    return <div>제품이 없습니다.</div>;
   }
 
   return (
