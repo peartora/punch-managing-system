@@ -24,7 +24,6 @@ export type Data = {
   date: string;
   punchPosition: string;
   supplier: string;
-  storageLocation: string;
   medicine: string;
   medicineType: string;
 };

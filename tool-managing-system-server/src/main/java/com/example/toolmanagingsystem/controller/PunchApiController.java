@@ -1,6 +1,7 @@
 package com.example.toolmanagingsystem.controller;
 
 import com.example.toolmanagingsystem.dao.PunchDao;
+import com.example.toolmanagingsystem.dto.ApiResponse;
 import com.example.toolmanagingsystem.dto.request.*;
 import com.example.toolmanagingsystem.dto.response.*;
 import com.example.toolmanagingsystem.entity.*;
@@ -8,6 +9,7 @@ import com.example.toolmanagingsystem.entity.punch.Punch;
 import com.example.toolmanagingsystem.entity.punch.PunchDelete;
 import com.example.toolmanagingsystem.entity.punch.PunchStatus;
 import com.example.toolmanagingsystem.error.BusinessError;
+import com.example.toolmanagingsystem.error.punch.PunchIdAlreadyExistedException;
 import com.example.toolmanagingsystem.repository.*;
 import com.example.toolmanagingsystem.repository.punch.PunchDeleteRepository;
 import com.example.toolmanagingsystem.repository.punch.PunchRepository;
@@ -23,16 +25,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/tool-managing-system/punchs")
+@RequestMapping("/api/tool-managing-system/punch")
 @RequiredArgsConstructor
 public class PunchApiController
 {
@@ -48,9 +46,8 @@ public class PunchApiController
     @Value("${TOOL_MANAGING_SYSTEM_STATIC_PATH}")
     private String staticPath;
 
-
-    @PostMapping("/register")
-    public PunchRegisterResponseDto registerPunch(@RequestBody List<PunchRegisterRequestDto> punchRegisterRequestDtoList)
+    @PostMapping()
+    public ApiResponse registerPunch(@RequestBody List<PunchRegisterRequestDto> punchRegisterRequestDtoList)
     {
         System.out.println("registerPunch");
         System.out.println(punchRegisterRequestDtoList);
@@ -71,15 +68,18 @@ public class PunchApiController
             entityList.add(entity);
         }
 
+        List<Punch> registeredPunchList = new ArrayList<>();
+
         try
         {
-            this.punchRepository.saveAll(entityList);
-            return new PunchRegisterResponseDto(entityList.size(), "OK");
+            registeredPunchList = this.punchRepository.saveAll(entityList);
         }
         catch (Exception e)
         {
-            return new PunchRegisterResponseDto(0, "NOK");
+            throw new PunchIdAlreadyExistedException();
         }
+
+        return ApiResponse.success(registeredPunchList.size());
     }
 
     @GetMapping("/display")
@@ -233,9 +233,6 @@ public class PunchApiController
         System.out.println(result);
         return this.dao.retrievSpecification(punchId);
     }
-
-
-
 
     @Transactional
     @PostMapping("updateInspectionResultAndStatus")
@@ -394,12 +391,6 @@ public class PunchApiController
             {
                 return false;
             }
-        }
-
-
-        if (!Objects.equals(punch.getStorageLocation(), storageLocation))
-        {
-            return false;
         }
 
         if (!Objects.equals(medicine, "All"))

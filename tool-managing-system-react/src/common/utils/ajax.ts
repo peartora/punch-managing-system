@@ -16,11 +16,17 @@ export type ResponseDTO =
 
 export const request = {
   get: async (url: string) => {
-    const res = await fetch(url);
+    console.log("get called");
 
+    const res = await fetch(url);
     const dto = (await res.json()) as ResponseDTO;
 
+    console.log("==========res==========", res);
+    console.log("==========dto==========", dto);
+
     if (!res.ok) {
+      console.log("!res.ok");
+
       if (!dto.error) {
         throw new BusinessError("UNKNOWN_ERROR", "Unknown error occurred");
       }
@@ -29,7 +35,6 @@ export const request = {
       throw new BusinessError(code, message, detail);
     }
 
-    console.log("json", res);
     return dto.success.data;
   },
   post: async (url: string, payload: unknown): Promise<unknown> => {

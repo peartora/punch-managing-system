@@ -33,8 +33,8 @@ export const useFetchUserList = function (username: string) {
       );
 
       console.log("userList in useFetchUserList");
-      console.log(output.success.data.userList);
-      setUserList(output.success.data.userList);
+      console.log(output);
+      setUserList(output);
     };
 
     fetchUserList();
