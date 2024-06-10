@@ -5,10 +5,12 @@ import { getUserList } from "@/common/actions/user/getUserList";
 export type User = {
   username: string;
   userRole: string;
-  notLocked: boolean;
-  approved: boolean;
-  notExpired: boolean;
-  createdDate: string;
+  notLocked?: boolean;
+  approved?: boolean;
+  notExpired?: boolean;
+  createdDate?: string;
+  passwordSetDate?: string;
+  passwordValidUntil?: string;
 };
 
 export const useFetchUserList = function (username: string) {

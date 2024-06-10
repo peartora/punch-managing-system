@@ -31,10 +31,10 @@ export function DisplayId({ user, loginUser, refetchForUserList }: IdProps) {
   ) {
     e.preventDefault();
 
-    //  if (newPassword.length < 6) {
-    //    alert("비밀번호는 6자 이상으로 설정 되어야 합니다.");
-    //    return;
-    //  }
+    if (newPassword.length < 6) {
+      alert("비밀번호는 6자 이상으로 설정 되어야 합니다.");
+      return;
+    }
 
     const body: ResetPasswordInput = {
       username: user.username,
@@ -45,8 +45,6 @@ export function DisplayId({ user, loginUser, refetchForUserList }: IdProps) {
     let output;
 
     try {
-      console.log(`inside of try statement`);
-
       output = await resetPassword(body);
     } catch (error) {
       alert(error.message);
@@ -60,8 +58,6 @@ export function DisplayId({ user, loginUser, refetchForUserList }: IdProps) {
   const approveUserHandler = async function (
     e: React.MouseEvent<HTMLButtonElement>
   ) {
-    console.log(`** clickHandler in DisplayId called`);
-
     const body = {
       username: user.username,
     };

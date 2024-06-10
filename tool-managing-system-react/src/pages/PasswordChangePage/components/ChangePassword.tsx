@@ -21,15 +21,15 @@ export function ChangePassword() {
   ) {
     event.preventDefault();
 
-    // if (newPassword !== newPasswordForConfirmation) {
-    //   alert(`입력된 2개의 비밀번호가 다릅니다.`);
-    //   return;
-    // }
+    if (newPassword !== newPasswordForConfirmation) {
+      alert(`입력된 2개의 비밀번호가 다릅니다.`);
+      return;
+    }
 
-    // if (newPassword.length < 6) {
-    //   alert(`입력된 비밀번호가 짧습니다.`);
-    //   return;
-    // }
+    if (newPassword.length < 6) {
+      alert(`입력된 비밀번호가 짧습니다.`);
+      return;
+    }
 
     const body: PasswordChangeInput = {
       username,

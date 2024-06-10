@@ -6,7 +6,10 @@ export type MyPageInput = {
 };
 
 export type MyPageOutput = {
+  username: string;
   userRole: string;
+  passwordSetDate: string;
+  passwordValidUntil: string;
 };
 
 export const createMyPage = async (
