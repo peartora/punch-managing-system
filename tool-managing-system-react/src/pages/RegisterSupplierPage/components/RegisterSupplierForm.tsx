@@ -1,57 +1,28 @@
 import { useState } from "react";
 
-import { request } from "@/common/utils/ajax";
+import { addSupplier } from "@/common/actions/supplier/addSupplier";
 
 export function RegisterSupplierForm() {
   const [supplier, setSupplier] = useState(``);
 
-  function handleSubmit(event: any) {
+  const handleSubmit = async function (event: any) {
     event.preventDefault();
 
-    const query = new URLSearchParams();
-    query.append("supplier", supplier);
+    const body = {
+      supplier,
+    };
 
-    request
-      .get(`/api/tool-managing-system/duplicateSupplier?${query}`)
-      .then((response) => {
-        if (!response.ok)
-          throw new Error(
-            `${supplier} 업체명 중복 확인 중 error가 발생 하였습니다.`
-          );
-        return response.text();
-      })
-      .then((returnValue) => {
-        if (returnValue === "0") {
-          const body = {
-            supplier: supplier,
-          };
+    let output;
 
-          request
-            .post(`/api/tool-managing-system/addSupplier`, body)
-            .then((response) => {
-              if (!response.ok)
-                throw new Error(`업체명 등록 중 error가 발생 하였습니다.`);
-              return response.text();
-            })
-            .then((result) => {
-              if (result === "1") {
-                alert(`${supplier}가 등록 되었습니다.`);
-              } else {
-                alert(
-                  `${supplier}가 등록 되지 않았습니다. 관리자에게 문의 하십시오.`
-                );
-              }
-              setSupplier("");
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-        } else {
-          alert(`해당 업체명은 중복 되어 등록 될 수 없습니다.`);
-        }
-      })
-      .catch((error) => console.error(error));
-  }
+    try {
+      output = await addSupplier(body);
+    } catch (error) {
+      alert(`${error.message}`);
+      return;
+    }
+
+    alert(`업체: ${output}가 등록 되었습니다.`);
+  };
 
   return (
     <form onSubmit={handleSubmit}>

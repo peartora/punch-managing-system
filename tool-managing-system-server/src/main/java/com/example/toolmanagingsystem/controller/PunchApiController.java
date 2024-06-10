@@ -1,6 +1,7 @@
 package com.example.toolmanagingsystem.controller;
 
 import com.example.toolmanagingsystem.dao.PunchDao;
+import com.example.toolmanagingsystem.dto.ApiResponse;
 import com.example.toolmanagingsystem.dto.request.*;
 import com.example.toolmanagingsystem.dto.response.*;
 import com.example.toolmanagingsystem.entity.*;
@@ -8,9 +9,11 @@ import com.example.toolmanagingsystem.entity.punch.Punch;
 import com.example.toolmanagingsystem.entity.punch.PunchDelete;
 import com.example.toolmanagingsystem.entity.punch.PunchStatus;
 import com.example.toolmanagingsystem.error.BusinessError;
+import com.example.toolmanagingsystem.error.punch.PunchIdAlreadyExistedException;
 import com.example.toolmanagingsystem.repository.*;
 import com.example.toolmanagingsystem.repository.punch.PunchDeleteRepository;
 import com.example.toolmanagingsystem.repository.punch.PunchRepository;
+import com.example.toolmanagingsystem.utils.FileHandling;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -22,16 +25,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/tool-managing-system/punchs")
+@RequestMapping("/api/tool-managing-system/punch")
 @RequiredArgsConstructor
 public class PunchApiController
 {
@@ -44,18 +43,11 @@ public class PunchApiController
     private final InsepctionRepository inspectionRepository;
     private final PunchDao dao;
 
-//    @ExceptionResponse(BusinessError.class)
-//    public UserApiResponse handleBusinessError(BusinessError error)
-//    {
-//        return UserApiResponse.error(error);
-//    }
-
     @Value("${TOOL_MANAGING_SYSTEM_STATIC_PATH}")
     private String staticPath;
 
-
-    @PostMapping("/register")
-    public PunchRegisterResponseDto registerPunch(@RequestBody List<PunchRegisterRequestDto> punchRegisterRequestDtoList)
+    @PostMapping()
+    public ApiResponse registerPunch(@RequestBody List<PunchRegisterRequestDto> punchRegisterRequestDtoList)
     {
         System.out.println("registerPunch");
         System.out.println(punchRegisterRequestDtoList);
@@ -76,15 +68,18 @@ public class PunchApiController
             entityList.add(entity);
         }
 
+        List<Punch> registeredPunchList = new ArrayList<>();
+
         try
         {
-            this.punchRepository.saveAll(entityList);
-            return new PunchRegisterResponseDto(entityList.size(), "OK");
+            registeredPunchList = this.punchRepository.saveAll(entityList);
         }
         catch (Exception e)
         {
-            return new PunchRegisterResponseDto(0, "NOK");
+            throw new PunchIdAlreadyExistedException();
         }
+
+        return ApiResponse.success(registeredPunchList.size());
     }
 
     @GetMapping("/display")
@@ -239,73 +234,6 @@ public class PunchApiController
         return this.dao.retrievSpecification(punchId);
     }
 
-    @GetMapping("/getMedicine")
-    public List<String> returnMedicine()
-    {
-        List<Medicine> medicineList = this.medicineRepository.findAll();
-
-        List<String> medicineNameList = new ArrayList<>();
-
-        for (Medicine medicine: medicineList)
-        {
-            medicineNameList.add(medicine.getMedicine());
-        }
-        return medicineNameList;
-    }
-
-    @PostMapping("/updateBatchInfor")
-    public int updateBatchSize(
-            @RequestParam(value = "product") String productName,
-            @RequestParam(value = "specificationFile", required = false) MultipartFile specificationFile
-    )
-    {
-        String strFilePath = saveSpecificationFile(specificationFile);
-
-        Medicine medicineBeforeUpdate = this.medicineRepository.findByMedicine(productName);
-        medicineBeforeUpdate.setSpecificationPath(strFilePath);
-
-        try
-        {
-            this.medicineRepository.save(medicineBeforeUpdate);
-            return 1;
-        }
-        catch (Exception e)
-        {
-            return 0;
-        }
-    }
-
-    @GetMapping("/duplicateMedicine")
-    public String returnCheckResultForMedicine(@RequestParam String medicineName)
-    {
-        Medicine medicine = this.medicineRepository.findByMedicine(medicineName);
-        if (medicine == null)
-        {
-            return "OK";
-        }
-        else
-        {
-            return "NOK";
-        }
-    }
-
-    @PostMapping("/registerMedicine")
-    public String registerMedicine(@RequestParam("medicine") String medicineName, @RequestParam("specificationFile") MultipartFile specificationFile)
-    {
-        String strFilePath = this.saveSpecificationFile(specificationFile);
-        Medicine medicine = new Medicine(medicineName, LocalDateTime.now(), strFilePath);
-
-        try
-        {
-            this.medicineRepository.save(medicine);
-            return "OK";
-        }
-        catch (Exception e)
-        {
-            return "NOK";
-        }
-    }
-
     @Transactional
     @PostMapping("updateInspectionResultAndStatus")
     public void updateInspectionResult(MultipartHttpServletRequest params) throws JsonProcessingException
@@ -339,50 +267,6 @@ public class PunchApiController
         this.inspectionRepository.saveAll(inspectionList);
         this.punchRepository.saveAll(punchList);
     }
-
-    @PostMapping("/addSupplier")
-    public int addSupplier(@RequestBody Supplier supplier)
-    {
-        System.out.println("addSupplier");
-        System.out.println(supplier.getSupplier());
-
-        try
-        {
-            this.punchSupplierRepository.save(supplier);
-            return 1;
-        }
-        catch (Exception e)
-        {
-            return 0;
-        }
-    }
-
-    @GetMapping("/duplicateSupplier")
-    public int returnCheckResultForSupplier(@RequestParam String supplier)
-    {
-        return this.dao.checkDuplicateSupplier(supplier);
-    }
-
-    @GetMapping("/getSuppliers")
-    public List<String> returnSuppliers()
-    {
-        return this.dao.returnSuppliers();
-    }
-
-    @GetMapping("/display-scrapped")
-    public List<PunchDelete> returnScrappedPunchList(@RequestParam Map<String, Object> params)
-    {
-        System.out.println("returnScrappedPunchList");
-        System.out.println(params);
-
-        List<PunchDelete> punchDeleteList = this.punchDeleteRepository.findAll();
-
-        System.out.println(punchDeleteList);
-
-        return punchDeleteList;
-//        return dao.getScrappedPunchList(params);
-    }
-
 
 
 
@@ -418,42 +302,17 @@ public class PunchApiController
     }
 
 
-
-    private String saveSpecificationFile(MultipartFile specificationFile)
-    {
-        String fileName = specificationFile.getOriginalFilename();
-        // String strFilePath = "C:\\Users\\lsm1dae\\Desktop\\specifications\\" + fileName;
-        String strFilePath = this.staticPath + "resources\\pdf\\specification\\" + fileName;
-
-
-        fileHandling(strFilePath, specificationFile);
-
-        return strFilePath;
-    }
-
     private String saveInspectionFile(MultipartFile specificationFile)
     {
         String fileName = specificationFile.getOriginalFilename();
         // String strFilePath = "C:\\Users\\lsm1dae\\Desktop\\inspection\\" + fileName;
         String strFilePath = this.staticPath + "resources\\pdf\\inspection\\" + fileName;
 
-        fileHandling(strFilePath, specificationFile);
+        FileHandling.fileHandling(strFilePath, specificationFile);
 
         return strFilePath;
     }
-    private void fileHandling(String strFilePath, MultipartFile specificationFile)
-    {
-        try
-        {
-            byte[] fileBytes = specificationFile.getBytes();
-            Path filePath = Paths.get(strFilePath);
-            Files.write(filePath, fileBytes);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
+
 
 
 
@@ -532,12 +391,6 @@ public class PunchApiController
             {
                 return false;
             }
-        }
-
-
-        if (!Objects.equals(punch.getStorageLocation(), storageLocation))
-        {
-            return false;
         }
 
         if (!Objects.equals(medicine, "All"))

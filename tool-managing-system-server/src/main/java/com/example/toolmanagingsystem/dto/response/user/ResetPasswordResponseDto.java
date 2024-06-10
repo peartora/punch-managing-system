@@ -1,4 +1,4 @@
-package com.example.toolmanagingsystem.dto.response;
+package com.example.toolmanagingsystem.dto.response.user;
 
 import lombok.Data;
 

@@ -1,9 +1,9 @@
 package com.example.toolmanagingsystem.service.userService;
 
 import com.example.toolmanagingsystem.dto.ApiResponse;
-import com.example.toolmanagingsystem.dto.request.LoginRequestDto;
-import com.example.toolmanagingsystem.dto.request.UserRegisterRequestDto;
-import com.example.toolmanagingsystem.dto.response.LoginResponseDto;
+import com.example.toolmanagingsystem.dto.request.user.LoginRequestDto;
+import com.example.toolmanagingsystem.dto.request.user.UserRegisterRequestDto;
+import com.example.toolmanagingsystem.dto.response.user.LoginResponseDto;
 import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.error.user.*;
 import com.example.toolmanagingsystem.repository.UserRepository;
@@ -44,8 +44,6 @@ public class UserApiService
     }
 
     public ApiResponse login(LoginRequestDto requestDto) {
-        System.out.println("login method called in UserService");
-
         User user;
 
         try
@@ -57,69 +55,42 @@ public class UserApiService
             throw new UserIsNotExistException();
         }
 
-        System.out.println("user");
-        System.out.println(user);
-
         this.isUserApproved(user);
-        System.out.println("isUserApproved");
-
         this.isUserNotLocked(user);
-        System.out.println("isUserNotLocked");
-
         this.isUserNotExpired(user);
-        System.out.println("isUserNotExpired");
-
         this.isPasswordSame(user, requestDto.getPassword());
-        System.out.println("isPasswordSame");
-
-        System.out.println("before call final success of user");
 
         Map<String, String> usernameMap = new HashMap<>();
         usernameMap.put("username", user.getUsername());
-
-        System.out.println("usernameMap");
-        System.out.println(usernameMap.get("username"));
 
         return ApiResponse.success(usernameMap);
     }
 
     private void isUserApproved(User user)
     {
-        System.out.println("isUserApproved called");
-
         if (!user.isApproved())
         {
-            System.out.println("user is not Approved");
             throw new UserIsNotApprovedException();
         }
     }
 
     private void isUserNotLocked(User user) {
-        System.out.println("isUserNotLocked called");
-
         if (!user.isNotLocked())
         {
-            System.out.println("user is Locked");
             throw new UserIsLockedException();
         }
     }
 
     private void isUserNotExpired(User user) {
-        System.out.println("isUserNotExpired called");
-
         if (!user.isNotExpired())
         {
-            System.out.println("user is expired");
             throw new UserIsExpiredException();
         }
     }
 
     private void isPasswordSame(User user, String password) {
-        System.out.println("isPasswordSame called");
-
         if (!Objects.equals(user.getPassword(), password))
         {
-            System.out.println("password is not same!");
             this.increaseTrialcount(user);
             throw new PasswordNotSameException();
         }
@@ -131,8 +102,6 @@ public class UserApiService
     }
 
     private void increaseTrialcount(User user) {
-        System.out.println("increaseTrialcount called");
-
         int trialCount = user.getTrialCount();
 
         if (trialCount == 4) {

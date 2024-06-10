@@ -27,8 +27,7 @@ public class Punch
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private PunchStatus punchStatus;
-    @Column(name = "storage_location")
-    private String storageLocation;
+
     private String specification;
     @ManyToOne
     @JoinColumn(name = "medicine_id")
@@ -45,7 +44,6 @@ public class Punch
                 ", punchPosition='" + punchPosition + '\'' +
                 ", supplier='" + supplier + '\'' +
                 ", St=" + punchStatus +
-                ", location='" + storageLocation + '\'' +
                 ", product=" + medicineType +
                 ", ptype='" + medicineType + '\'' +
                 '}';
@@ -56,7 +54,6 @@ public class Punch
         this.date = requestDto.getDate();
         this.punchPosition = requestDto.getPunchPosition();
         this.supplier = supplier;
-        this.storageLocation = requestDto.getStorageLocation();
         this.punchStatus = PunchStatus.사용대기;
         this.medicine = medicine;
         this.medicineType = requestDto.getMedicineType();

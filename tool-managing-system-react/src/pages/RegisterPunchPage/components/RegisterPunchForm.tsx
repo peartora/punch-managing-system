@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useBringProductList } from "@/common/hooks/useBringProductList";
+import { useBringMedicineList } from "@/common/hooks/useBringMedicineList";
 import { useBringSupplierList } from "@/common/hooks/useBringSupplierList";
 import { request } from "@/common/utils/ajax";
 
@@ -18,18 +18,16 @@ export function RegisterPunchForm() {
   );
   const [punchType, setPunchType] = useState("");
   const [supplier, setSupplier] = useState("");
-  const [storageLocation, setStorageLocation] = useState("");
   const [productName, setProductName] = useState("");
   const [productType, setProductType] = useState("");
 
-  const { medicineNameList } = useBringProductList();
+  const { medicineNameList } = useBringMedicineList();
   const { supplierList } = useBringSupplierList();
 
   async function handleSubmit(event: any) {
     event.preventDefault();
 
     const punchIdArrays: Data[] = []; // 빈 배열로 초기화
-    let count = 0;
 
     if (Number(endNumber) - Number(startNumber) >= 0) {
       for (let i = Number(startNumber); i <= Number(endNumber); i++) {
@@ -39,69 +37,21 @@ export function RegisterPunchForm() {
           productName,
           punchType
         );
-        const query = new URLSearchParams();
-        query.append("punchId", punchId);
 
-        try {
-          const response = await request.get(
-            `/api/tool-managing-system/duplicate?${query}`
-          );
-          if (!response.ok)
-            throw new Error(`${punchId} 중복 확인 중 error 발생 하였습니다.`);
-          const result = await response.text();
+        const data: Data = {
+          punchId: punchId,
+          date: registerDate,
+          punchPosition: punchType,
+          supplier: supplier,
+          medicine: productName,
+          medicineType: productType,
+        };
 
-          if (result === "0") {
-            const data: Data = {
-              punchId: punchId,
-              date: registerDate,
-              punchPosition: punchType,
-              supplier: supplier,
-              storageLocation: storageLocation,
-              medicine: productName,
-              medicineType: productType,
-            };
-
-            punchIdArrays.push(data);
-          } else {
-            count++;
-            alert(`중복 된 punchId가 존재 합니다.`);
-          }
-        } catch (error) {
-          console.error(error);
-          alert("오류가 발생했습니다.");
-          return;
-        }
+        punchIdArrays.push(data);
       }
     } else {
       alert(`시작 번호는 마지막 번호 보다 작아야 합니다.`);
       return;
-    }
-
-    if (count === 0) {
-      console.log(punchIdArrays);
-
-      try {
-        const response = await request.post(
-          `/api/tool-managing-system/register`,
-          punchIdArrays
-        );
-
-        if (!response.ok) {
-          console.log(response);
-          throw new Error(`펀치 id 등록중 error가 발생 하였습니다.`);
-        }
-
-        const result: Reponse = await response.json();
-
-        if (result.count === punchIdArrays.length) {
-          alert(`펀치 ${result.count}개가 성공적으로 등록되었습니다.`);
-        } else if (result.count == 0) {
-          alert(`펀치 등록에 실패 하였습니다.`);
-        }
-      } catch (error) {
-        console.error(error);
-        alert("오류가 발생했습니다.");
-      }
     }
   }
 

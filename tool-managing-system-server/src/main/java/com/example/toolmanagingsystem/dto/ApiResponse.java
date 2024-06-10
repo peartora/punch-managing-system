@@ -46,7 +46,6 @@ public final class ApiResponse
         System.out.println("res.success");
         System.out.println(res.success);
 
-
         return res;
     }
 

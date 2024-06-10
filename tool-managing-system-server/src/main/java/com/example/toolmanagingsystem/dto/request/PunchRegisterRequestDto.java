@@ -11,7 +11,6 @@ public class PunchRegisterRequestDto
     private LocalDate date;
     private String punchPosition;
     private String supplier;
-    private String storageLocation;
     private String medicine;
     private String medicineType;
 
@@ -22,7 +21,6 @@ public class PunchRegisterRequestDto
                 ", date=" + date +
                 ", punchPosition='" + punchPosition + '\'' +
                 ", supplier='" + supplier + '\'' +
-                ", storageLocation='" + storageLocation + '\'' +
                 ", medicine='" + medicine + '\'' +
                 ", medicineType='" + medicineType + '\'' +
                 '}';

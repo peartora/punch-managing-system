@@ -1,5 +1,6 @@
 package com.example.toolmanagingsystem.entity;
 
+import com.example.toolmanagingsystem.dto.request.MedicineRegisterRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,7 +9,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Entity(name = "size-control")
+@Entity(name = "medicine")
 @Data
 public class Medicine
 {
@@ -21,11 +22,11 @@ public class Medicine
     @Column(name = "specification_path")
     private String specificationPath;
 
-    public Medicine(String medicine, LocalDateTime date, String specificationPath)
+    public Medicine(String medicine, String filePath)
     {
         this.medicine = medicine;
-        this.dateTime = date;
-        this.specificationPath = specificationPath;
+        this.dateTime = LocalDateTime.now();
+        this.specificationPath = filePath;
     }
 
     public Medicine() {}
