@@ -78,7 +78,6 @@ public class PunchApiController
         {
             throw new PunchIdAlreadyExistedException();
         }
-
         return ApiResponse.success(registeredPunchList.size());
     }
 

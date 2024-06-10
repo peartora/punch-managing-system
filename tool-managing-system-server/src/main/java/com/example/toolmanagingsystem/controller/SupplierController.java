@@ -10,6 +10,7 @@ import com.example.toolmanagingsystem.service.supplierService.SupplierApiService
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,7 +33,14 @@ public class SupplierController
             throw new SupplierNotExistedException();
         }
 
-        return ApiResponse.success(supplierList);
+        List<String> supplierNameList = new ArrayList<>();
+
+        for (Supplier supplier: supplierList)
+        {
+            supplierNameList.add(supplier.getSupplier());
+        }
+
+        return ApiResponse.success(supplierNameList);
     }
 
     @PostMapping

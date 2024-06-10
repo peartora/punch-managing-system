@@ -2,7 +2,7 @@ import { request } from "@/common/utils/ajax";
 import { BusinessError } from "@/common/error";
 import { Data } from "@/common/types";
 
-const registerPunch = async (punchIdArrays: Data[]) => {
+export const registerPunch = async (punchIdArrays: Data[]) => {
   let output;
 
   try {

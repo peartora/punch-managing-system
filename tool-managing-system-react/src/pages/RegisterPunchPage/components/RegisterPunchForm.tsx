@@ -2,10 +2,11 @@ import { useState } from "react";
 
 import { useBringMedicineList } from "@/common/hooks/useBringMedicineList";
 import { useBringSupplierList } from "@/common/hooks/useBringSupplierList";
-import { request } from "@/common/utils/ajax";
 
 import { Data } from "@/common/types";
 import { Reponse } from "@/common/types";
+
+import { registerPunch } from "@/common/actions/punch/registerPunch";
 
 const options = ["상부", "하부", "다이"];
 const productTypeoptions = ["BB", "B", "D"];
@@ -53,6 +54,17 @@ export function RegisterPunchForm() {
       alert(`시작 번호는 마지막 번호 보다 작아야 합니다.`);
       return;
     }
+
+    let output;
+
+    try {
+      output = await registerPunch(punchIdArrays);
+    } catch (error) {
+      alert(`${error.message}`);
+      return;
+    }
+
+    alert(`${output}개의 펀치가 등록 되었습니다.`);
   }
 
   function generatePunchId(
@@ -148,6 +160,7 @@ export function RegisterPunchForm() {
             아래 list 에서 선택 하세요.
           </option>
           {supplierList.map((supplier) => {
+            console.log(supplier);
             return (
               <option key={supplier} value={supplier}>
                 {supplier}
@@ -155,21 +168,6 @@ export function RegisterPunchForm() {
             );
           })}
         </select>
-      </div>
-
-      <div className="input-group mb-3">
-        <label htmlFor="storageLocation" className="form-label">
-          보관위치:
-        </label>
-        <input
-          id="storageLocation"
-          className="form-control"
-          type="text"
-          placeholder="보관위치"
-          value={storageLocation}
-          onChange={(event) => setStorageLocation(event.target.value)}
-          required
-        />
       </div>
 
       <div className="input-group mb-3">
