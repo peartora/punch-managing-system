@@ -20,7 +20,6 @@ export function TableHeader() {
         <th>규격</th>
         <th>검수이력 결과</th>
         <th>펀치상태</th>
-        <th>보관위치</th>
         <th>제품</th>
         <th>제품 type</th>
         <th>최근 청소이력</th>

@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
 import { type PunchRow as PunchRowType } from "@/common/types";
-import { request } from "@/common/utils/ajax";
 
 import { getPunchList } from "@/common/actions/punch/getPunchList";
 
@@ -11,7 +10,7 @@ export const useDisplay = function (params?: URLSearchParams) {
   const [isLoading, setLoading] = useState(true);
   const [rows, setRows] = useState<Array<PunchRowType>>([]);
 
-  console.log(`useDisplay called`);
+  console.log(`params in useDisplay called`, `${params}`);
 
   useEffect(() => {
     console.log(`effect happen`);
@@ -24,13 +23,13 @@ export const useDisplay = function (params?: URLSearchParams) {
       query = params.toString();
     }
 
-    const fetchPunchList = async function () {
+    const fetchPunchList = async function (query) {
       console.log(`fetchPunchList called`);
 
       let output;
 
       try {
-        output = await getPunchList();
+        output = await getPunchList(query);
       } catch (error) {
         alert(`${error.message}`);
         return;
@@ -42,7 +41,7 @@ export const useDisplay = function (params?: URLSearchParams) {
       }
     };
 
-    fetchPunchList();
+    fetchPunchList(query);
     setLoading(false);
   }, [params, key, isFirst]);
 

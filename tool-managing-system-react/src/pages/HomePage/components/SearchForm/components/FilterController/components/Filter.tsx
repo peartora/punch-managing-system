@@ -15,7 +15,6 @@ export function Filter(props: Props) {
     punchPosition: "",
     supplier: "",
     status: "",
-    storageLocation: "",
     medicine: "",
     medicineType: "",
   });
@@ -51,6 +50,9 @@ export function Filter(props: Props) {
         newParams.append(key, value.toString());
       }
     }
+
+    console.log(`filter component`);
+    console.log(`newParams`, newParams);
 
     props.setParams(newParams);
   }
@@ -176,24 +178,6 @@ export function Filter(props: Props) {
             <option value="사용중">사용중</option>
             <option value="All">All</option>
           </select>
-        </div>
-
-        <div className="col">
-          <label htmlFor="storage" className="form-label">
-            펀치 보관위치:{" "}
-          </label>
-          <input
-            id="storage"
-            className="form-control"
-            type="text"
-            placeholder="펀치 보관위치"
-            onChange={(event) => {
-              setFormData((prevState) => ({
-                ...prevState,
-                storageLocation: event.target.value,
-              }));
-            }}
-          />
         </div>
 
         <div className="col">

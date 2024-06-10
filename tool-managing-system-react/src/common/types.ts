@@ -39,7 +39,6 @@ export type FormData = {
   punchPosition: string;
   supplier: string;
   status: string;
-  storageLocation: string;
   medicine: string;
   medicineType: string;
 };

@@ -10,6 +10,9 @@ export function SearchForm() {
     () => new URLSearchParams()
   );
 
+  console.log(`in SearchForm`);
+  console.log(`${params}`);
+
   return (
     <>
       <FilterController setParams={setParams} />
