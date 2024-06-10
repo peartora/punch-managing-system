@@ -12,10 +12,10 @@ export const registerPunch = async (punchIdArrays: Data[]) => {
     );
   } catch (error) {
     if (error instanceof BusinessError) {
-      if (error.code === "PUNCH_REGISTER_FAILED") {
+      if (error.code === "PUNCH_ID_ALREADY_EXISTED") {
         throw new BusinessError(
           "PUNCH_REGISTER_FAILED",
-          "Punch register failed"
+          "펀치 ID가 이미 존재 합니다."
         );
       } else {
         throw new BusinessError("UNKNOWN_ERROR", "Unknown error occurred");
