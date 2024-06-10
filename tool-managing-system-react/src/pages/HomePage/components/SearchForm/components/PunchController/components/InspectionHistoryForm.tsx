@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 
 import { request } from "@/common/utils/ajax";
 import { usePunchRows } from "@/common/contexts/punch-rows-context";
+import { updateInspectionResultAndStatus } from "@/common/actions/punch/updateInspectionResultAndStatus";
 
 export function InspectionHistoryForm() {
   const { selectedIds, punchRowsById, refetch } = usePunchRows();
@@ -29,6 +30,8 @@ export function InspectionHistoryForm() {
 
           const punchStatusUpdateDto: Record<string, string>[] = [];
 
+          let output;
+
           try {
             for (const id of selectedIds) {
               const selectedPunch = punchRowsById[id];
@@ -50,16 +53,17 @@ export function InspectionHistoryForm() {
             );
 
             // validation.
-
-            await request.post(
-              `/api/tool-managing-system/updateInspectionResultAndStatus`,
-              formData
-            );
+            try {
+              output = await updateInspectionResultAndStatus(formData);
+            } catch (error) {
+              alert(`${error.message}`);
+              return;
+            }
 
             setSelectedFile(null);
             formRef.current.reset();
             refetch();
-            alert(`사용가능 상태로 변경 되었습니다.`);
+            alert(`${output}개의 펀치에 검수이력이 반영 되었습니다.`);
           } catch (error) {
             console.error(error);
           }

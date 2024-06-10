@@ -10,6 +10,7 @@ import com.example.toolmanagingsystem.entity.punch.PunchDelete;
 import com.example.toolmanagingsystem.entity.punch.PunchStatus;
 import com.example.toolmanagingsystem.error.BusinessError;
 import com.example.toolmanagingsystem.error.punch.PunchIdAlreadyExistedException;
+import com.example.toolmanagingsystem.error.punch.PunchIdNotExistedException;
 import com.example.toolmanagingsystem.repository.*;
 import com.example.toolmanagingsystem.repository.punch.PunchDeleteRepository;
 import com.example.toolmanagingsystem.repository.punch.PunchRepository;
@@ -234,8 +235,8 @@ public class PunchApiController
     }
 
     @Transactional
-    @PostMapping("updateInspectionResultAndStatus")
-    public void updateInspectionResult(MultipartHttpServletRequest params) throws JsonProcessingException
+    @PostMapping("/updateInspectionResultAndStatus")
+    public ApiResponse updateInspectionResult(MultipartHttpServletRequest params) throws JsonProcessingException
     {
         System.out.println("updateInspectionResult");
 
@@ -259,12 +260,19 @@ public class PunchApiController
             inspectionList.add(inspection);
 
             Punch punch = this.punchRepository.findByPunchId(punchId);
+
+            if (punch == null) {
+                throw new PunchIdNotExistedException();
+            }
+
             punch.setPunchStatus(PunchStatus.사용가능);
             punchList.add(punch);
         }
 
         this.inspectionRepository.saveAll(inspectionList);
-        this.punchRepository.saveAll(punchList);
+        List<Punch> savedPunchList = this.punchRepository.saveAll(punchList);
+
+        return ApiResponse.success(savedPunchList.size());
     }
 
 
