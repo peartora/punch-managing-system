@@ -3,6 +3,8 @@ import { useState, useEffect, useCallback } from "react";
 import { type PunchRow as PunchRowType } from "@/common/types";
 import { request } from "@/common/utils/ajax";
 
+import { getPunchList } from "@/common/actions/punch/getPunchList";
+
 export const useDisplay = function (params?: URLSearchParams) {
   const [key, setKey] = useState(() => Date.now());
   const [isFirst, setIsFirst] = useState(true);
@@ -22,26 +24,26 @@ export const useDisplay = function (params?: URLSearchParams) {
       query = params.toString();
     }
 
-    request
-      .get(`/api/tool-managing-system/display?${query}`)
-      .then((response) => {
-        if (!response.ok) {
-          console.error(response.statusText);
-          throw new Error(`Punch 리스트 로딩 중 error가 발생 하였습니다.`);
-        }
-        return response.json();
-      })
-      .then((response) => {
-        console.log("response");
-        console.log(response);
+    const fetchPunchList = async function () {
+      console.log(`fetchPunchList called`);
 
-        setRows(response);
-        if (isFirst) {
-          setIsFirst(false);
-        }
-      })
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
+      let output;
+
+      try {
+        output = await getPunchList();
+      } catch (error) {
+        alert(`${error.message}`);
+        return;
+      }
+
+      setRows(output);
+      if (isFirst) {
+        setIsFirst(false);
+      }
+    };
+
+    fetchPunchList();
+    setLoading(false);
   }, [params, key, isFirst]);
 
   const refetch = useCallback(() => {

@@ -10,6 +10,9 @@ import { PunchTable } from "./components/PunchTable";
 export function PunchController() {
   const { isLoading } = usePunchRows();
 
+  console.log("isLoading");
+  console.log(isLoading);
+
   if (isLoading) {
     return (
       <table className="table table-striped table-bordered table-hover">

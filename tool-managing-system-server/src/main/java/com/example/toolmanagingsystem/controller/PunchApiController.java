@@ -81,10 +81,10 @@ public class PunchApiController
         return ApiResponse.success(registeredPunchList.size());
     }
 
-    @GetMapping("/display")
-    public List<Punch> returnPunchList(@RequestParam HashMap<String, Object> params) // 단일 값을 받던지, 다수를 받으려면 Map;
+    @GetMapping()
+    public ApiResponse returnPunchList(@RequestParam HashMap<String, Object> params) // 단일 값을 받던지, 다수를 받으려면 Map;
     {
-        System.out.println("params");
+        System.out.println("returnPunchList");
         System.out.println(params);
 
         List<Punch> punchList = new ArrayList<>();
@@ -97,7 +97,7 @@ public class PunchApiController
         }
 
         if (params.isEmpty()) {
-            return punchList;
+            return ApiResponse.success(punchList);
         } else {
             for (Punch punch: punchList)
             {
@@ -105,7 +105,7 @@ public class PunchApiController
                     filteredPunchList.add(punch);
                 }
             }
-            return filteredPunchList;
+            return ApiResponse.success(filteredPunchList);
         }
     }
 
