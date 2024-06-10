@@ -37,6 +37,7 @@ public class MedicineApiController
     )
     {
         System.out.println("registerMedicine");
+        System.out.println(staticPath);
 
         String filePath = this.saveSpecificationFile(specificationFile);
         Medicine medicine = new Medicine(medicineName, filePath);
