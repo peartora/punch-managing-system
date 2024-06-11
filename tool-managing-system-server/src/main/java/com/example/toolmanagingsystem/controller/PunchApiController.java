@@ -2,13 +2,15 @@ package com.example.toolmanagingsystem.controller;
 
 import com.example.toolmanagingsystem.dao.PunchDao;
 import com.example.toolmanagingsystem.dto.ApiResponse;
-import com.example.toolmanagingsystem.dto.request.*;
-import com.example.toolmanagingsystem.dto.response.*;
+import com.example.toolmanagingsystem.dto.request.punch.PunchAddCleanHistoryRequestDto;
+import com.example.toolmanagingsystem.dto.request.punch.PunchRegisterRequestDto;
+import com.example.toolmanagingsystem.dto.request.punch.PunchScrapRequestDao;
+import com.example.toolmanagingsystem.dto.request.punch.PunchStatusUpdateRequestDto;
 import com.example.toolmanagingsystem.entity.*;
 import com.example.toolmanagingsystem.entity.punch.Punch;
 import com.example.toolmanagingsystem.entity.punch.PunchDelete;
 import com.example.toolmanagingsystem.entity.punch.PunchStatus;
-import com.example.toolmanagingsystem.error.BusinessError;
+import com.example.toolmanagingsystem.error.NoCleanHistoryException;
 import com.example.toolmanagingsystem.error.punch.DBError;
 import com.example.toolmanagingsystem.error.punch.PunchIdAlreadyExistedException;
 import com.example.toolmanagingsystem.error.punch.PunchIdNotExistedException;
@@ -20,6 +22,7 @@ import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.Column;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,6 +46,7 @@ public class PunchApiController
     private final SupplierRepository punchSupplierRepository;
     private final PunchDeleteRepository punchDeleteRepository;
     private final InsepctionRepository inspectionRepository;
+    private final CleanHistoryRepository cleanHistoryRepository;
     private final PunchDao dao;
 
     @Value("${TOOL_MANAGING_SYSTEM_STATIC_PATH}")
@@ -213,12 +217,44 @@ public class PunchApiController
     }
 
     @PostMapping("/addCleanHistory")
-    public void addCleanHistory(@RequestBody HashMap<String, Object> params)
+    public ApiResponse addCleanHistory(@RequestBody List<PunchAddCleanHistoryRequestDto> requestDtoList)
     {
-        System.out.println("params");
-        System.out.println(params);
+        System.out.println("addCleanHistory");
+        System.out.println(requestDtoList);
 
-        this.dao.addCleanHistory(params);
+        if (requestDtoList.size() == 0)
+        {
+            throw new NoCleanHistoryException();
+        }
+
+        List<CleanHistory> cleanHistoryList = new ArrayList<>();
+
+        for (PunchAddCleanHistoryRequestDto requestDto: requestDtoList)
+        {
+            String punchNumber = requestDto.getPunchId();
+            LocalDateTime date = requestDto.getCleanTimeDate();
+            String username = requestDto.getUsername();
+            String batch = requestDto.getBatch();
+            String comment = requestDto.getComment();
+
+            CleanHistory cleanHistory = new CleanHistory(punchNumber, date, username, batch, comment);
+            cleanHistoryList.add(cleanHistory);
+        }
+
+        List<CleanHistory> savedCleanHistoryList = new ArrayList<>();
+
+        try
+        {
+            savedCleanHistoryList = this.cleanHistoryRepository.saveAll(cleanHistoryList);
+        }
+        catch (Exception e)
+        {
+            throw new DBError();
+        }
+
+        System.out.println(savedCleanHistoryList.size());
+
+        return ApiResponse.success(savedCleanHistoryList.size());
     }
 
     @GetMapping("/getCleanHistory")

@@ -1,6 +1,5 @@
 package com.example.toolmanagingsystem.dao;
 
-import com.example.toolmanagingsystem.dto.request.PunchScrapRequestDao;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -41,6 +40,7 @@ public class PunchDao
 
         return this.template.queryForObject("select count(*) from `punch` where `number` = :punchId", idMap, Integer.class);
     }
+
 
     public void addCleanHistory(HashMap<String, Object> param)
     {

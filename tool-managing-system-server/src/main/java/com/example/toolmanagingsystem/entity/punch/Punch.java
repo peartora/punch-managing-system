@@ -1,6 +1,6 @@
 package com.example.toolmanagingsystem.entity.punch;
 
-import com.example.toolmanagingsystem.dto.request.PunchRegisterRequestDto;
+import com.example.toolmanagingsystem.dto.request.punch.PunchRegisterRequestDto;
 import com.example.toolmanagingsystem.entity.Medicine;
 import com.example.toolmanagingsystem.entity.Supplier;
 import jakarta.persistence.*;

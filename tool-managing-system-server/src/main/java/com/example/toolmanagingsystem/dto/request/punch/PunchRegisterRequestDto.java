@@ -1,4 +1,4 @@
-package com.example.toolmanagingsystem.dto.request;
+package com.example.toolmanagingsystem.dto.request.punch;
 
 import lombok.Data;
 
