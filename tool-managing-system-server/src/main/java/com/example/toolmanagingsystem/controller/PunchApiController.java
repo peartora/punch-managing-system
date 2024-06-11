@@ -9,6 +9,7 @@ import com.example.toolmanagingsystem.entity.punch.Punch;
 import com.example.toolmanagingsystem.entity.punch.PunchDelete;
 import com.example.toolmanagingsystem.entity.punch.PunchStatus;
 import com.example.toolmanagingsystem.error.BusinessError;
+import com.example.toolmanagingsystem.error.punch.DBError;
 import com.example.toolmanagingsystem.error.punch.PunchIdAlreadyExistedException;
 import com.example.toolmanagingsystem.error.punch.PunchIdNotExistedException;
 import com.example.toolmanagingsystem.repository.*;
@@ -85,41 +86,60 @@ public class PunchApiController
     @GetMapping()
     public ApiResponse returnPunchList(@RequestParam HashMap<String, Object> params) // 단일 값을 받던지, 다수를 받으려면 Map;
     {
-        System.out.println("returnPunchList");
+        System.out.println("====================returnPunchList====================");
         System.out.println(params);
 
         List<Punch> punchList = new ArrayList<>();
-        List<Punch> filteredPunchList = new ArrayList<>();
 
-        Iterable<Punch> punchIterable = this.punchRepository.findAll();
-        for (Punch punch: punchIterable)
+
+        if (params.isEmpty())
         {
-            punchList.add(punch);
+             punchList = this.punchRepository.findAllPunch();
+        }
+        else
+        {
+            System.out.println("YES");
+
+            LocalDate startDate = (LocalDate) params.get("startDate");
+            LocalDate endDate = (LocalDate) params.get("endDate");
+            String punchPosition = (String) params.get("punchPosition");
+            String supplier = (String) params.get("supplier");
+            String status = (String) params.get("status");
+            String medicine = (String) params.get("medicine");
+            String medicineType = (String) params.get("medicineType");
+
+            punchList = this.punchRepository.findFilteredPunch(startDate, endDate, punchPosition, supplier, status, medicine, medicineType);
+
+            System.out.println(punchList);
+
         }
 
-        if (params.isEmpty()) {
-            return ApiResponse.success(punchList);
-        } else {
-            for (Punch punch: punchList)
-            {
-                if (this.filterPunch(punch, params)) {
-                    filteredPunchList.add(punch);
-                }
-            }
-            return ApiResponse.success(filteredPunchList);
-        }
-    }
 
-    @GetMapping("/duplicate")
-    public int returnCheckResult(@RequestParam String punchId)
-    {
-        int count = this.dao.checkDuplicate(punchId);
-
-        return count;
+        return ApiResponse.success(punchList);
+//        List<Punch> punchList = new ArrayList<>();
+//        List<Punch> filteredPunchList = new ArrayList<>();
+//
+//        Iterable<Punch> punchIterable = this.punchRepository.findAll();
+//        for (Punch punch: punchIterable)
+//        {
+//            punchList.add(punch);
+//        }
+//
+//        if (params.isEmpty()) {
+//            return ApiResponse.success(punchList);
+//        } else {
+//            for (Punch punch: punchList)
+//            {
+//                if (this.filterPunch(punch, params)) {
+//                    filteredPunchList.add(punch);
+//                }
+//            }
+//            return ApiResponse.success(filteredPunchList);
+//        }
     }
 
     @PostMapping("/updateStatus")
-    public PunchStatusUpdateResponseDto updateNewStatus(@RequestBody List<PunchStatusUpdateRequestDto> punchStatusUpdateRequestDtoList)
+    public ApiResponse updateNewStatus(@RequestBody List<PunchStatusUpdateRequestDto> punchStatusUpdateRequestDtoList)
     {
         System.out.println("updateNewStatus");
 
@@ -131,27 +151,26 @@ public class PunchApiController
             System.out.println(punchStatusUpdateRequestDto);
 
             String punchId = punchStatusUpdateRequestDto.getPunchId();
+
             Punch punch = this.punchRepository.findByPunchId(punchId);
+
+            if (punch == null)
+            {
+                throw new PunchIdNotExistedException();
+            }
+
             punch.setPunchStatus(PunchStatus.valueOf(punchStatusUpdateRequestDto.getNewStatus()));
             punchList.add(punch);
         }
         try
         {
-            System.out.println("ok");
             this.punchRepository.saveAll(punchList);
-            PunchStatusUpdateResponseDto punchStatusUpdateResponseDto = new PunchStatusUpdateResponseDto(
-                    punchList.size(), punchList.get(0).getPunchStatus().toString(), "OK"
-            );
-            return punchStatusUpdateResponseDto;
         }
         catch (Exception e)
         {
-            System.out.println("nok");
-            PunchStatusUpdateResponseDto punchStatusUpdateResponseDto = new PunchStatusUpdateResponseDto(
-                    0, punchList.get(0).getPunchStatus().toString(), "NOK"
-            );
-            return punchStatusUpdateResponseDto;
+            throw new DBError();
         }
+        return ApiResponse.success(punchList.size());
     }
 
     @PostMapping("/recover")

@@ -27,7 +27,6 @@ public class Punch
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private PunchStatus punchStatus;
-
     private String specification;
     @ManyToOne
     @JoinColumn(name = "medicine_id")
