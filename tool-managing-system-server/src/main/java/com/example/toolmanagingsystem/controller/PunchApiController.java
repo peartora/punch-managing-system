@@ -251,19 +251,25 @@ public class PunchApiController
         {
             throw new DBError();
         }
-
-        System.out.println(savedCleanHistoryList.size());
-
         return ApiResponse.success(savedCleanHistoryList.size());
     }
 
     @GetMapping("/getCleanHistory")
-    public List<Map<String, Object>> retrieveHistory(@RequestParam String punchId)
+    public ApiResponse retrieveHistory(@RequestParam String punchId)
     {
         System.out.println("getCleanHistory");
         System.out.println(punchId);
 
-        return this.dao.retrievCleanHistory(punchId);
+        // punchId 검사 로직?
+        Punch punch = this.punchRepository.findByPunchId(punchId);
+
+        if (punch == null)
+        {
+            throw new PunchIdNotExistedException();
+        }
+
+        List<CleanHistory> cleanHistoryList = this.cleanHistoryRepository.returnCleanHistoryListByPunchId(punchId);
+        return ApiResponse.success(cleanHistoryList);
     }
 
     @GetMapping("/getInspectionHistory")

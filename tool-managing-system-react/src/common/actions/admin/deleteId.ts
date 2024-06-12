@@ -15,7 +15,7 @@ export const deleteUser = async function (
   let deletedUsername;
 
   try {
-    deletedUsername = request.post(
+    deletedUsername = await request.post(
       "/api/tool-managing-system/admin/delete_user",
       body
     );

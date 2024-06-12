@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import dayjs from "dayjs";
 
-import { request } from "@/common/utils/ajax";
+import { getCleanHistory } from "@/common/actions/punch/getCleanHistory";
 
 let _uniqueId = 1;
 
@@ -15,49 +15,32 @@ export function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
   const [uniqueId] = useState(() => _uniqueId++);
   const [cleanHistory, setCleanHistory] = useState<object[]>([]);
 
-  const clickHandler = function () {
+  const clickHandler = async function () {
     const query = new URLSearchParams();
     query.append("punchId", punchId);
 
-    request
-      .get(`/api/tool-managing-system/getCleanHistory?${query.toString()}`)
-      .then((response) => {
-        console.log("response");
-        console.log(response);
+    let output;
 
-        if (!response.ok)
-          throw new Error(
-            `${punchId}의 청소이력을 로딩하는 중 error 발생 하였습니다.`
-          );
-        return response.json();
-      })
-      .then(
-        (
-          response: Array<{
-            "when-cleaned": string;
-            username: string;
-            batch: string;
-            comment: string;
-          }>
-        ) => {
-          const dateArray: object[] = response.map((item) => {
-            return {
-              date: dayjs(item["when-cleaned"]).format(
-                "YYYY년 MM월 DD일 HH시 mm분"
-              ),
-              username: item["username"],
-              batch: item["batch"],
-              comment: item["comment"],
-            };
-          });
+    try {
+      output = await getCleanHistory();
+    } catch (error) {
+      alert(`${error.message}`);
+      return;
+    }
 
-          console.log("dateArray");
-          console.log(dateArray);
+    const dateArray: object[] = output.map((item) => {
+      return {
+        date: dayjs(item["when-cleaned"]).format("YYYY년 MM월 DD일 HH시 mm분"),
+        username: item["username"],
+        batch: item["batch"],
+        comment: item["comment"],
+      };
+    });
 
-          setCleanHistory([...dateArray]);
-        }
-      )
-      .catch((error) => console.error(error));
+    console.log("dateArray");
+    console.log(dateArray);
+
+    setCleanHistory([...dateArray]);
   };
 
   return (
@@ -93,12 +76,6 @@ export function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
                       청소시간: {history.date}, 담당자: {history.username},
                       배치정보: {history.batch}, 기타: {history.comment}
                     </li>
-                    // <li key={history.date}>
-                    // <AElementForCleanHistory
-                    //   punchId={punchId}
-                    //   date={history.date}
-                    // />
-                    // </li>
                   ))}
               </ul>
             </div>

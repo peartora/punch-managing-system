@@ -5,7 +5,9 @@ export const getMedicineList = async () => {
   let output;
 
   try {
-    output = request.get(`api/tool-managing-system/meidicine/getMedicine`);
+    output = await request.get(
+      `api/tool-managing-system/meidicine/getMedicine`
+    );
   } catch (error) {
     if (error instanceof BusinessError) {
       if (error.code === "NO_MEDICINE_REGISTERED") {
