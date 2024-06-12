@@ -22,7 +22,7 @@ export function CleaningHistoryTd({ latestCleaningHistory, punchId }: Props) {
     let output;
 
     try {
-      output = await getCleanHistory();
+      output = await getCleanHistory(query);
     } catch (error) {
       alert(`${error.message}`);
       return;

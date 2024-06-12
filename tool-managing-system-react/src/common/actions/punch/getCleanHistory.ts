@@ -1,12 +1,12 @@
 import { request } from "@/common/utils/ajax";
 import { BusinessError } from "@/common/error";
 
-export const getCleanHistory = async () => {
+export const getCleanHistory = async (query) => {
   let output;
 
   try {
     output = await request.get(
-      `/api/tool-managing-system/punch/getCleanHistory`
+      `/api/tool-managing-system/punch/getCleanHistory?${query.toString()}`
     );
   } catch (error) {
     if (error instanceof BusinessError) {
