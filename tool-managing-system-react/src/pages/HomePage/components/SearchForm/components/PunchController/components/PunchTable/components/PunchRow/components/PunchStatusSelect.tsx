@@ -100,19 +100,19 @@ export function PunchStatusSelect({
       alert(`${output} 펀치가 폐기 상태가 되었습니다.`);
       refetch();
     } else {
-      const confirmResult = confirm(
-        `펀치 Id: ${punchId}의 상태를 변경 하시겠습니까?`
-      );
+      const result = confirm(`펀치 Id: ${punchId}의 상태를 변경 하시겠습니까?`);
 
-      if (!confirmResult) {
+      if (!result) {
         alert(`상태 변경이 취소 되었습니다.`);
         return;
       }
 
-      const data: Data = {
-        punchId,
-        newStatus,
-      };
+      const data: Data[] = [
+        {
+          punchId,
+          newStatus,
+        },
+      ];
 
       let output;
 
@@ -123,7 +123,7 @@ export function PunchStatusSelect({
         return;
       }
 
-      alert(`${output}`);
+      alert(`${punchId}의 상태가 ${newStatus} 상태로 변경 되었습니다.`);
       refetch();
     }
   }
