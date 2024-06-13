@@ -199,21 +199,48 @@ public class PunchApiController
 
     @Transactional
     @PostMapping("/updateStatus/scrap")
-    public void scrapPunch(@RequestBody PunchScrapRequestDao punchScrapRequestDao)
+    public ApiResponse scrapPunch(@RequestBody PunchScrapRequestDao punchScrapRequestDao)
     {
         System.out.println("scrapPunch");
         System.out.println(punchScrapRequestDao);
 
         Punch punch = this.punchRepository.findByPunchId(punchScrapRequestDao.getPunchId());
+
+        if (punch == null)
+        {
+            throw new PunchIdNotExistedException();
+        }
+
+        PunchStatus previousPunchStatus = punch.getPunchStatus();
+
         punch.setPunchStatus(PunchStatus.폐기);
         this.punchRepository.save(punch);
 
         Medicine medicine = punch.getMedicine();
-        PunchStatus previousStatus = punch.getPunchStatus();
         String reason = punchScrapRequestDao.getReason();
 
-        PunchDelete punchDelete = new PunchDelete(punch.getPunchId(), medicine.getMedicine(), previousStatus, reason, LocalDate.now());
-        this.punchDeleteRepository.save(punchDelete);
+        System.out.println("medicine");
+        System.out.println(medicine);
+
+        System.out.println("previousPunchStatus");
+        System.out.println(previousPunchStatus);
+
+        System.out.println("reason");
+        System.out.println(reason);
+
+
+
+        PunchDelete punchDelete = new PunchDelete(punch.getPunchId(), medicine.getMedicine(), previousPunchStatus, reason, LocalDate.now());
+        try
+        {
+            this.punchDeleteRepository.save(punchDelete);
+        }
+        catch (Exception e)
+        {
+            throw new PunchIdAlreadyExistedException();
+        }
+
+        return ApiResponse.success(punch.getPunchId());
     }
 
     @PostMapping("/addCleanHistory")
