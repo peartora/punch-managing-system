@@ -4,7 +4,9 @@ import com.example.toolmanagingsystem.dto.ApiResponse;
 import com.example.toolmanagingsystem.dto.request.user.LoginRequestDto;
 import com.example.toolmanagingsystem.dto.request.user.UserRegisterRequestDto;
 import com.example.toolmanagingsystem.dto.response.user.LoginResponseDto;
+import com.example.toolmanagingsystem.entity.punch.PunchStatus;
 import com.example.toolmanagingsystem.entity.user.User;
+import com.example.toolmanagingsystem.entity.user.UserRole;
 import com.example.toolmanagingsystem.error.user.*;
 import com.example.toolmanagingsystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,17 @@ public class UserApiService
     @Autowired
     UserRepository userRepository;
     LoginResponseDto responseDto;
+
+    public boolean checkUserAuthority(String username, List<String> targetList)
+    {
+        User user = this.userRepository.findByUsername(username);
+        String userRole = user.getUserRole().toString();
+
+        return targetList.contains(userRole);
+    }
+
+
+
 
     public boolean isPasswordSame(UserRegisterRequestDto requestDto) throws PasswordNotSameException
     {

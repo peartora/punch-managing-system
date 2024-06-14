@@ -7,14 +7,17 @@ import com.example.toolmanagingsystem.entity.*;
 import com.example.toolmanagingsystem.entity.punch.Punch;
 import com.example.toolmanagingsystem.entity.punch.PunchDelete;
 import com.example.toolmanagingsystem.entity.punch.PunchStatus;
+import com.example.toolmanagingsystem.entity.user.UserRole;
 import com.example.toolmanagingsystem.error.NoCleanHistoryException;
 import com.example.toolmanagingsystem.error.punch.DBError;
 import com.example.toolmanagingsystem.error.punch.DeletePunchListNotExistException;
 import com.example.toolmanagingsystem.error.punch.PunchIdAlreadyExistedException;
 import com.example.toolmanagingsystem.error.punch.PunchIdNotExistedException;
+import com.example.toolmanagingsystem.error.user.NotAuthorizeRequestException;
 import com.example.toolmanagingsystem.repository.*;
 import com.example.toolmanagingsystem.repository.punch.PunchDeleteRepository;
 import com.example.toolmanagingsystem.repository.punch.PunchRepository;
+import com.example.toolmanagingsystem.service.userService.UserApiService;
 import com.example.toolmanagingsystem.utils.FileHandling;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -45,6 +48,8 @@ public class PunchApiController
     private final PunchDeleteRepository punchDeleteRepository;
     private final InsepctionRepository inspectionRepository;
     private final CleanHistoryRepository cleanHistoryRepository;
+
+    private final UserApiService userApiService;
     private final PunchDao dao;
 
     @Value("${TOOL_MANAGING_SYSTEM_STATIC_PATH}")
@@ -175,20 +180,44 @@ public class PunchApiController
         return ApiResponse.success(punchList.size());
     }
 
-    @PostMapping("")
+    @Transactional
+    @PostMapping("/restorePunchFromDeleteHistory")
     public ApiResponse restorePunchFromDeleteHistory(@RequestBody PunchRestoreFromDeleteHistoryRequestDto punchRestoreFromDeleteHistoryRequestDto)
     {
         System.out.println("restorePunchFromDeleteHistory");
         System.out.println(punchRestoreFromDeleteHistoryRequestDto);
 
+        String punchId = punchRestoreFromDeleteHistoryRequestDto.getPunch();
+
         String username = punchRestoreFromDeleteHistoryRequestDto.getUsername();
-        User user = this.
+        List<String> targetList = new ArrayList<>();
+        targetList.add("ADMIN");
+        targetList.add("MANAGER");
 
-        if ()
+        boolean checkResult = this.userApiService.checkUserAuthority(username, targetList);
 
+        if (!checkResult)
+        {
+            throw new NotAuthorizeRequestException();
+        }
 
+        Punch punch = this.punchRepository.findByPunchId(punchId);
 
+        if (punch == null)
+        {
+            throw new PunchIdNotExistedException();
+        }
 
+        punch.setPunchStatus(PunchStatus.valueOf(punchRestoreFromDeleteHistoryRequestDto.getPreviousPunchStatus()));
+        this.punchRepository.save(punch);
+        this.punchDeleteRepository.deleteByPunch(punchId);
+
+        List<PunchDelete> deleteHistory = this.punchDeleteRepository.findAll();
+
+        System.out.println("deleteHistory=============================");
+        System.out.println(deleteHistory);
+
+        return ApiResponse.success(deleteHistory);
     }
 
 

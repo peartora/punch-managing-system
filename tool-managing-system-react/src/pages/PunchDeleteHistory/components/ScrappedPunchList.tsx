@@ -1,6 +1,6 @@
 import { useAuth } from "@/common/contexts/auth";
 
-import { request } from "@/common/utils/ajax";
+import { restorePunchFromDeleteHistory } from "@/common/actions/punch/restorePunchFromDeleteHistory";
 
 type PunchListType = {
   punch: string;
@@ -28,12 +28,34 @@ export function ScrappedPunchList({
   const userObject = useAuth();
   const username = userObject["user"];
 
-  const clickHandler = function (punch: any) {
+  const clickHandler = async function (punch: any) {
+    const result = confirm(`선택 된 펀치를 이전 상태로 복구 하시겠습니까?`);
+
+    if (!result) {
+      alert(`복구 요청이 취소 되었습니다.`);
+      return;
+    }
+
     const body = {
       username,
       punch: punch["punch"],
-      newStatus: punch["previousPunchStatus"],
+      previousPunchStatus: punch["previousPunchStatus"],
     };
+
+    let output;
+
+    try {
+      output = await restorePunchFromDeleteHistory(body);
+    } catch (error) {
+      alert(`${error.message}`);
+    }
+
+    alert(`Id: ${body.punch}가 이전 상태로 복구 되었습니다.`);
+
+    console.log(`punch`);
+    console.log(`${output}`);
+
+    setScrappedPunchList(output);
   };
 
   return (
