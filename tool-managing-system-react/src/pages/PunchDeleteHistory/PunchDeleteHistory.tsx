@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { useBringMedicineList } from "@/common/hooks/useBringMedicineList";
-import { request } from "@/common/utils/ajax";
+import { getDeleteHistory } from "@/common/actions/punch/getDeleteHistory";
 import { NavBar } from "@/common/components/NavBar";
 
 import { ScrappedPunchList } from "./components/ScrappedPunchList";
@@ -13,31 +13,24 @@ export function PunchDeleteHistory() {
 
   const { medicineNameList } = useBringMedicineList();
 
-  function selectMedicine(event: React.ChangeEvent<HTMLSelectElement>) {
+  async function selectMedicine(event: React.ChangeEvent<HTMLSelectElement>) {
     selectedMedicine = event.target.value;
 
     setScrappedPunchList([]);
 
     const query = new URLSearchParams();
-    query.append("medicine", selectedMedicine);
+    query.append("medicineName", selectedMedicine);
 
-    request
-      .get(`/api/tool-managing-system/display-scrapped?${query}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(
-            `폐각 펀치 list를 불러 오는 중 error가 발생 하였습니다.`
-          );
-        }
-        return response.json();
-      })
-      .then((result) => {
-        console.log(`scrappedPunchList`);
-        console.log(result);
+    let output;
 
-        setScrappedPunchList(result);
-      })
-      .catch((error) => alert(error));
+    try {
+      output = await getDeleteHistory(query);
+    } catch (error) {
+      alert(`${selectedMedicine}에 등록된 펀치 중 삭제 내역은 없습니다.`);
+      return;
+    }
+
+    setScrappedPunchList(output);
   }
 
   return (

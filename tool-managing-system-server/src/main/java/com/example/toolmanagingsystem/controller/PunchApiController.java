@@ -2,16 +2,14 @@ package com.example.toolmanagingsystem.controller;
 
 import com.example.toolmanagingsystem.dao.PunchDao;
 import com.example.toolmanagingsystem.dto.ApiResponse;
-import com.example.toolmanagingsystem.dto.request.punch.PunchAddCleanHistoryRequestDto;
-import com.example.toolmanagingsystem.dto.request.punch.PunchRegisterRequestDto;
-import com.example.toolmanagingsystem.dto.request.punch.PunchScrapRequestDao;
-import com.example.toolmanagingsystem.dto.request.punch.PunchStatusUpdateRequestDto;
+import com.example.toolmanagingsystem.dto.request.punch.*;
 import com.example.toolmanagingsystem.entity.*;
 import com.example.toolmanagingsystem.entity.punch.Punch;
 import com.example.toolmanagingsystem.entity.punch.PunchDelete;
 import com.example.toolmanagingsystem.entity.punch.PunchStatus;
 import com.example.toolmanagingsystem.error.NoCleanHistoryException;
 import com.example.toolmanagingsystem.error.punch.DBError;
+import com.example.toolmanagingsystem.error.punch.DeletePunchListNotExistException;
 import com.example.toolmanagingsystem.error.punch.PunchIdAlreadyExistedException;
 import com.example.toolmanagingsystem.error.punch.PunchIdNotExistedException;
 import com.example.toolmanagingsystem.repository.*;
@@ -176,6 +174,28 @@ public class PunchApiController
         }
         return ApiResponse.success(punchList.size());
     }
+
+    @PostMapping("")
+    public ApiResponse restorePunchFromDeleteHistory(@RequestBody PunchRestoreFromDeleteHistoryRequestDto punchRestoreFromDeleteHistoryRequestDto)
+    {
+        System.out.println("restorePunchFromDeleteHistory");
+        System.out.println(punchRestoreFromDeleteHistoryRequestDto);
+
+        String username = punchRestoreFromDeleteHistoryRequestDto.getUsername();
+        User user = this.
+
+        if ()
+
+
+
+
+    }
+
+
+
+
+
+
 
     @PostMapping("/recover")
     public int recoverPunchFromDeleteStatus(@RequestBody Map<String, Object> params)
@@ -394,6 +414,32 @@ public class PunchApiController
         {
             return "NOK";
         }
+    }
+
+    @GetMapping("/getDeletedPunchList")
+    public ApiResponse getDeletedPunchList(@RequestParam String medicineName)
+    {
+        System.out.println("getDeletedPunchList");
+        System.out.println(medicineName);
+
+        List<PunchDelete> punchDeleteList = new ArrayList<>();
+
+        if (Objects.equals(medicineName, "All"))
+        {
+            punchDeleteList = this.punchDeleteRepository.findAll();
+        }
+        else
+        {
+            punchDeleteList = this.punchDeleteRepository.findByMedicine(medicineName);
+        }
+
+        if (punchDeleteList.size() == 0)
+        {
+            throw new DeletePunchListNotExistException();
+        }
+
+        return ApiResponse.success(punchDeleteList);
+
     }
 
 
