@@ -15,11 +15,11 @@ public interface PunchRepository extends JpaRepository<Punch, Long>, JpaSpecific
 {
     Punch findByPunchId(String punchId);
 
-//    @Query("select p from punch p")
-//    List<Punch> findAllPunch();
-
-    @Query("select p from punch p join CleanHistory c on p.punchId = c.punchNumber")
+    @Query("select p from punch p")
     List<Punch> findAllPunch();
+
+//    @Query("select p from punch p join CleanHistory c on p.punchId = c.punchNumber")
+//    List<Punch> findAllPunch();
 
     @Query("select p from punch p where " +
             "(:startDate is null or p.date >= :startDate) and " +

@@ -8,11 +8,13 @@ import com.example.toolmanagingsystem.error.supplier.SupplierNotExistedException
 import com.example.toolmanagingsystem.repository.SupplierRepository;
 import com.example.toolmanagingsystem.service.supplierService.SupplierApiService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/tool-managing-system/supplier")
 @RequiredArgsConstructor
@@ -24,7 +26,7 @@ public class SupplierController
     @GetMapping
     public ApiResponse getSupplierList()
     {
-        System.out.println("getSupplierList");
+        log.debug("getSupplierList");
 
         List<Supplier> supplierList = this.supplierRepository.findAll();
 
@@ -46,8 +48,8 @@ public class SupplierController
     @PostMapping
     public ApiResponse registerSupplier(@RequestBody SupplierRegisterRequestDto requestDto)
     {
-        System.out.println("registerSupplier");
-        System.out.println(requestDto);
+        log.debug("registerSupplier");
+        log.debug("{}", requestDto);
 
         Supplier supplier = new Supplier(requestDto.getSupplier());
 

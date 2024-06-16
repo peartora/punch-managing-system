@@ -8,3 +8,12 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL57Dialect
+
+logging:
+  level:
+    "com.example.toolmanagingsystem": INFO
+  file:
+    name: "./logs/toolmanagingsystem.log"
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB

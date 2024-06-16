@@ -9,6 +9,7 @@ import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.repository.UserRepository;
 import com.example.toolmanagingsystem.service.userService.UserApiService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.util.Objects;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/tool-managing-system/auth")
 @RequiredArgsConstructor
@@ -34,8 +36,8 @@ public class AuthApiController
     @PostMapping("/password_change")
     public PasswordChangeResponseDto changePassword (@RequestBody PasswordChangeRequestDto requestDto)
     {
-        System.out.println("changePassword");
-        System.out.println(requestDto);
+        log.debug("changePassword");
+        log.debug("{}", requestDto);
 
         String username = requestDto.getUsername();
         User user = this.userRepository.findByUsername(username);

@@ -2,12 +2,14 @@ package com.example.toolmanagingsystem.dao;
 
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.*;
 
+@Slf4j
 @Component
 public class PunchDao
 {
@@ -26,8 +28,8 @@ public class PunchDao
 
     public int deletePunchFromDeleteHistory(Map<String, Object> params)
     {
-        System.out.println("params");
-        System.out.println(params);
+        log.debug("params");
+        log.debug("{}", params);
 
 
         return this.template.update("delete from `delete-history` where `punch-number` = :punchId", params);
@@ -55,8 +57,8 @@ public class PunchDao
                 information.put(key, map.get(key));
             }
 
-            System.out.println("information");
-            System.out.println(information);
+            log.debug("information");
+            log.debug("{}", information);
 
 
 

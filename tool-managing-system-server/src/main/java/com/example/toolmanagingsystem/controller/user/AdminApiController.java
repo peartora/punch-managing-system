@@ -10,10 +10,12 @@ import com.example.toolmanagingsystem.error.user.UserIsNotExistException;
 import com.example.toolmanagingsystem.repository.UserRepository;
 import com.example.toolmanagingsystem.service.userService.UserApiService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/tool-managing-system/admin")
 @RequiredArgsConstructor
@@ -25,7 +27,7 @@ public class AdminApiController
     @GetMapping("/idList")
     public List<Map<String, Object>> returnIdList()
     {
-        System.out.println("returnIdList");
+        log.debug("returnIdList");
 
         List<Map<String, Object>> idList = new ArrayList<>();
         Iterable<User> userIterableList = this.userRepository.findAll();
@@ -46,8 +48,8 @@ public class AdminApiController
     @PostMapping("/approveId")
     public ApiResponse approveId(@RequestBody Map<String, Object> params)
     {
-        System.out.println("approveId");
-        System.out.println(params);
+        log.debug("approveId");
+        log.debug("{}", params);
 
         User user = this.userRepository.findByUsername(params.get("username").toString());
 
@@ -68,34 +70,34 @@ public class AdminApiController
     @PostMapping("/resetPassword")
     public ApiResponse resetPassword(@RequestBody ResetPasswordRequestDto requestDto)
     {
-        System.out.println("resetPassword");
-        System.out.println(requestDto);
+        log.debug("resetPassword");
+        log.debug("{}", requestDto);
 
         User user = this.userRepository.findByUsername(requestDto.getUsername());
         User loginUser = this.userRepository.findByUsername(requestDto.getLoginUsername());
 
         if (user == null)
         {
-            System.out.println("user is null");
+            log.debug("user is null");
             throw new UserIsNotExistException();
         }
 
         if (!Objects.equals(loginUser.getUserRole().toString(), "ADMIN"))
         {
-            System.out.println("not authorized");
+            log.debug("not authorized");
             throw new NotAuthorizeRequestException();
         }
 
         String currentPassword = user.getPassword();
         String newPassword = requestDto.getNewPassword();
 
-        System.out.println("currentPassword: " + currentPassword);
-        System.out.println("newPassword: " + newPassword);
+        log.debug("currentPassword: " + currentPassword);
+        log.debug("newPassword: " + newPassword);
 
 
         if (currentPassword.equals(newPassword))
         {
-            System.out.println("password is same for resetPassword");
+            log.debug("password is same for resetPassword");
             throw new NewPasswordSameWithCurrentPasswordException();
         }
 
@@ -113,8 +115,8 @@ public class AdminApiController
     @PostMapping("/delete_user")
     public ApiResponse deleteUser(@RequestBody Map<String, Object> params)
     {
-        System.out.println("deleteUser");
-        System.out.println(params);
+        log.debug("deleteUser");
+        log.debug("{}", params);
 
         User user = this.userRepository.findByUsername(params.get("username").toString());
 

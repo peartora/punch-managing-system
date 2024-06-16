@@ -13,10 +13,12 @@ import com.example.toolmanagingsystem.error.user.*;
 import com.example.toolmanagingsystem.repository.UserRepository;
 import com.example.toolmanagingsystem.service.userService.UserApiService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/tool-managing-system/users")
 @RequiredArgsConstructor
@@ -28,7 +30,7 @@ public class UserApiController
     @GetMapping
     public ApiResponse returnUserList()
     {
-        System.out.println("returnUserList");
+        log.debug("returnUserList");
 
         Iterable<User> userIterable = this.userRepository.findAll();
 
@@ -46,15 +48,15 @@ public class UserApiController
     @PostMapping
     public ApiResponse registerUser (@RequestBody UserRegisterRequestDto requestDto)
     {
-        System.out.println("registerUser");
-        System.out.println(requestDto);
+        log.debug("registerUser");
+        log.debug("{}", requestDto);
 
         boolean isPasswordSame = this.userApiService.isPasswordSame(requestDto);
         boolean isPasswordLongEnough = this.userApiService.isPasswordLongEnough(requestDto);
 
         if (isPasswordSame && isPasswordLongEnough)
         {
-            System.out.println("isPasswordSame && isPasswordLongEnough");
+            log.debug("isPasswordSame && isPasswordLongEnough");
 
             User user = new User(requestDto);
 
@@ -77,8 +79,8 @@ public class UserApiController
     @PostMapping("/login")
     public ApiResponse loginUser(@RequestBody LoginRequestDto requestDto)
     {
-        System.out.println("loginUser");
-        System.out.println(requestDto);
+        log.debug("loginUser");
+        log.debug("{}", requestDto);
 
         return this.userApiService.login(requestDto);
     }
@@ -87,8 +89,8 @@ public class UserApiController
     @PostMapping("/authority")
     public String returnAuthority(@RequestBody Map<String, Object> params)
     {
-        System.out.println("returnAuthority");
-        System.out.println(params);
+        log.debug("returnAuthority");
+        log.debug("{}", params);
 
         User user = this.userRepository.findByUsername(params.get("username").toString());
         return user.getUserRole().toString();
@@ -97,13 +99,13 @@ public class UserApiController
     @PostMapping("/my_page")
     public ApiResponse createMyPage(@RequestBody MyPageRequestDto requestDto)
     {
-        System.out.println("createMyPage");
-        System.out.println(requestDto);
+        log.debug("createMyPage");
+        log.debug("{}", requestDto);
 
         User user = this.userRepository.findByUsername(requestDto.getUsername());
 
-        System.out.println("user");
-        System.out.println(user);
+        log.debug("user");
+        log.debug("{}", user);
 
         MyPageResponseDto responseDto = new MyPageResponseDto(user.getUsername(), user.getUserRole(), user.getPasswordSetDate());
 
@@ -112,8 +114,8 @@ public class UserApiController
 
     @PostMapping("/passwordChange")
     public ApiResponse passwordChange(@RequestBody PasswordChangeRequestDto requestDto) {
-        System.out.println("passwordChange");
-        System.out.println(requestDto);
+        log.debug("passwordChange");
+        log.debug("{}", requestDto);
 
         String username = requestDto.getUsername();
         String newPassword = requestDto.getNewPassword();

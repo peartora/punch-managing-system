@@ -9,6 +9,7 @@ import com.example.toolmanagingsystem.error.medicine.SpecificationFileNotExistEx
 import com.example.toolmanagingsystem.repository.MedicineRepository;
 import com.example.toolmanagingsystem.utils.FileHandling;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +21,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/tool-managing-system/meidicine")
 @RequiredArgsConstructor
@@ -36,8 +38,8 @@ public class MedicineApiController
             @RequestPart("specificationFile") MultipartFile specificationFile
     )
     {
-        System.out.println("registerMedicine");
-        System.out.println(staticPath);
+        log.debug("registerMedicine");
+        log.debug("{}", staticPath);
 
         String filePath = this.saveSpecificationFile(specificationFile);
         Medicine medicine = new Medicine(medicineName, filePath);
@@ -62,7 +64,7 @@ public class MedicineApiController
     @GetMapping("/getMedicine")
     public ApiResponse returnMedicine()
     {
-        System.out.println("returnMedicine");
+        log.debug("returnMedicine");
 
         List<Medicine> medicineList = this.medicineRepository.findAll();
 
@@ -96,7 +98,7 @@ public class MedicineApiController
             @RequestParam(value = "specificationFile", required = false) MultipartFile specificationFile
     )
     {
-        System.out.println("update_specification");
+        log.debug("update_specification");
         String strFilePath = this.saveSpecificationFile(specificationFile);
 
         Medicine currentMedicine = this.medicineRepository.findByMedicine(medicineName);

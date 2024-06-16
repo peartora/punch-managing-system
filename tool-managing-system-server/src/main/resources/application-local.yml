@@ -1,0 +1,9 @@
+logging:
+  level:
+    "com.example.toolmanagingsystem": DEBUG
+  file:
+    name: "./logs/toolmanagingsystem.log"
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      file-name-pattern: "${LOG_FILE}.%d{yyyy-MM-dd}.%i.log"

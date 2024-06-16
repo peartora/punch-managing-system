@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.Column;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,13 +36,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/tool-managing-system/punch")
 @RequiredArgsConstructor
 public class PunchApiController
 {
-//    private final Logger logger;
-
     private final PunchRepository punchRepository;
     private final MedicineRepository medicineRepository;
     private final SupplierRepository punchSupplierRepository;
@@ -58,8 +58,8 @@ public class PunchApiController
     @PostMapping()
     public ApiResponse registerPunch(@RequestBody List<PunchRegisterRequestDto> punchRegisterRequestDtoList)
     {
-        System.out.println("registerPunch");
-        System.out.println(punchRegisterRequestDtoList);
+        log.debug("registerPunch");
+        log.debug("{}", punchRegisterRequestDtoList);
 
         List<Punch> entityList = new ArrayList<>();
 
@@ -91,10 +91,11 @@ public class PunchApiController
     }
 
     @GetMapping()
-    public ApiResponse returnPunchList(@RequestParam HashMap<String, Object> params) // 단일 값을 받던지, 다수를 받으려면 Map;
+    public List<Punch> returnPunchList(@RequestParam HashMap<String, Object> params) // 단일 값을 받던지, 다수를 받으려면 Map;
     {
-        System.out.println("====================returnPunchList====================");
-        System.out.println(params);
+
+        log.debug("====================returnPunchList====================");
+        log.debug("{}", params);
 
         List<Punch> punchList = new ArrayList<>();
 
@@ -105,7 +106,7 @@ public class PunchApiController
         }
         else
         {
-            System.out.println("YES");
+            log.debug("YES");
 
             LocalDate startDate = (LocalDate) params.get("startDate");
             LocalDate endDate = (LocalDate) params.get("endDate");
@@ -115,14 +116,14 @@ public class PunchApiController
             String medicine = (String) params.get("medicine");
             String medicineType = (String) params.get("medicineType");
 
-            punchList = this.punchRepository.findFilteredPunch(startDate, endDate, punchPosition, supplier, status, medicine, medicineType);
+//            punchList = this.punchRepository.findFilteredPunch(startDate, endDate, punchPosition, supplier, status, medicine, medicineType);
+            punchList = this.punchRepository.findAllPunch();
 
-            System.out.println(punchList);
 
         }
 
-
-        return ApiResponse.success(punchList);
+        log.debug("{}", punchList);
+        return punchList;
 //        List<Punch> punchList = new ArrayList<>();
 //        List<Punch> filteredPunchList = new ArrayList<>();
 //
@@ -148,14 +149,14 @@ public class PunchApiController
     @PostMapping("/updateStatus")
     public ApiResponse updateNewStatus(@RequestBody List<PunchStatusUpdateRequestDto> punchStatusUpdateRequestDtoList)
     {
-        System.out.println("updateNewStatus");
+        log.debug("updateNewStatus");
 
         List<Punch> punchList = new ArrayList<>();
 
         for (PunchStatusUpdateRequestDto punchStatusUpdateRequestDto : punchStatusUpdateRequestDtoList)
         {
-            System.out.println("punchStatusUpdateRequestDto");
-            System.out.println(punchStatusUpdateRequestDto);
+            log.debug("punchStatusUpdateRequestDto");
+            log.debug("{}", punchStatusUpdateRequestDto);
 
             String punchId = punchStatusUpdateRequestDto.getPunchId();
 
@@ -184,8 +185,8 @@ public class PunchApiController
     @PostMapping("/restorePunchFromDeleteHistory")
     public ApiResponse restorePunchFromDeleteHistory(@RequestBody PunchRestoreFromDeleteHistoryRequestDto punchRestoreFromDeleteHistoryRequestDto)
     {
-        System.out.println("restorePunchFromDeleteHistory");
-        System.out.println(punchRestoreFromDeleteHistoryRequestDto);
+        log.debug("restorePunchFromDeleteHistory");
+        log.debug("{}", punchRestoreFromDeleteHistoryRequestDto);
 
         String punchId = punchRestoreFromDeleteHistoryRequestDto.getPunch();
 
@@ -214,8 +215,8 @@ public class PunchApiController
 
         List<PunchDelete> deleteHistory = this.punchDeleteRepository.findAll();
 
-        System.out.println("deleteHistory=============================");
-        System.out.println(deleteHistory);
+        log.debug("deleteHistory=============================");
+        log.debug("{}", deleteHistory);
 
         return ApiResponse.success(deleteHistory);
     }
@@ -229,9 +230,9 @@ public class PunchApiController
     @PostMapping("/recover")
     public int recoverPunchFromDeleteStatus(@RequestBody Map<String, Object> params)
     {
-        System.out.println("recoverPunchFromDeleteStatus");
-        System.out.println("params");
-        System.out.println(params);
+        log.debug("recoverPunchFromDeleteStatus");
+        log.debug("params");
+        log.debug("{}", params);
 
         return this.dao.updateNewStatusForRecoveryPunch(params);
     }
@@ -239,9 +240,9 @@ public class PunchApiController
     @PostMapping("/delete")
     public int deletePunchFromDeleteHistory(@RequestBody Map<String, Object> params)
     {
-        System.out.println("deletePunchFromDeleteHistory");
-        System.out.println(params);
-        System.out.println("params");
+        log.debug("deletePunchFromDeleteHistory");
+        log.debug("{}", params);
+        log.debug("params");
 
         return this.dao.deletePunchFromDeleteHistory(params);
     }
@@ -250,8 +251,8 @@ public class PunchApiController
     @PostMapping("/updateStatus/scrap")
     public ApiResponse scrapPunch(@RequestBody PunchScrapRequestDao punchScrapRequestDao)
     {
-        System.out.println("scrapPunch");
-        System.out.println(punchScrapRequestDao);
+        log.debug("scrapPunch");
+        log.debug("{}", punchScrapRequestDao);
 
         Punch punch = this.punchRepository.findByPunchId(punchScrapRequestDao.getPunchId());
 
@@ -268,14 +269,14 @@ public class PunchApiController
         Medicine medicine = punch.getMedicine();
         String reason = punchScrapRequestDao.getReason();
 
-        System.out.println("medicine");
-        System.out.println(medicine);
+        log.debug("medicine");
+        log.debug("{}", medicine);
 
-        System.out.println("previousPunchStatus");
-        System.out.println(previousPunchStatus);
+        log.debug("previousPunchStatus");
+        log.debug("{}", previousPunchStatus);
 
-        System.out.println("reason");
-        System.out.println(reason);
+        log.debug("reason");
+        log.debug("{}", reason);
 
 
 
@@ -295,8 +296,8 @@ public class PunchApiController
     @PostMapping("/addCleanHistory")
     public ApiResponse addCleanHistory(@RequestBody List<PunchAddCleanHistoryRequestDto> requestDtoList)
     {
-        System.out.println("addCleanHistory");
-        System.out.println(requestDtoList);
+        log.debug("addCleanHistory");
+        log.debug("{}", requestDtoList);
 
         if (requestDtoList.size() == 0)
         {
@@ -333,8 +334,8 @@ public class PunchApiController
     @GetMapping("/getCleanHistory")
     public ApiResponse retrieveHistory(@RequestParam String punchId)
     {
-        System.out.println("getCleanHistory");
-        System.out.println(punchId);
+        log.debug("getCleanHistory");
+        log.debug("{}", punchId);
 
         // punchId 검사 로직?
         Punch punch = this.punchRepository.findByPunchId(punchId);
@@ -351,9 +352,9 @@ public class PunchApiController
     @GetMapping("/getInspectionHistory")
     public List<InspectionHistoryVO> retrieveInspectionHistory(@RequestParam String punchId)
     {
-        System.out.println("getInspectionHistory");
-        System.out.println("punchId");
-        System.out.println(punchId);
+        log.debug("getInspectionHistory");
+        log.debug("punchId");
+        log.debug("{}", punchId);
 
         return this.dao.retrievInspectionHistory(punchId);
     }
@@ -361,13 +362,13 @@ public class PunchApiController
     @GetMapping("/getSpecification")
     public String retrieveSpecification(@RequestParam String punchId)
     {
-        System.out.println("getSpecification");
-        System.out.println("punchId");
-        System.out.println(punchId);
+        log.debug("getSpecification");
+        log.debug("punchId");
+        log.debug("{}", punchId);
 
         String result = this.dao.retrievSpecification(punchId);
 
-        System.out.println(result);
+        log.debug("{}", result);
         return this.dao.retrievSpecification(punchId);
     }
 
@@ -375,7 +376,7 @@ public class PunchApiController
     @PostMapping("/updateInspectionResultAndStatus")
     public ApiResponse updateInspectionResult(MultipartHttpServletRequest params) throws JsonProcessingException
     {
-        System.out.println("updateInspectionResult");
+        log.debug("updateInspectionResult");
 
         Map<String, MultipartFile> fileMap = params.getFileMap();
         String filePath = saveInspectionFile(fileMap.get("inspectionResultPdfFile"));
@@ -419,8 +420,8 @@ public class PunchApiController
     @GetMapping("/created-date")
     public String returnCreatedDate(@RequestParam Map<String, Object> params)
     {
-        System.out.println("returnCreatedDate");
-        System.out.println(params);
+        log.debug("returnCreatedDate");
+        log.debug("{}", params);
 
         return dao.returnCreatedDate(params);
     }
@@ -430,8 +431,8 @@ public class PunchApiController
     @PostMapping("/resetId")
     public String resetId(@RequestBody Map<String, Object> params)
     {
-        System.out.println("resetId");
-        System.out.println(params);
+        log.debug("resetId");
+        log.debug("{}", params);
 
         int effectedRow = this.dao.resetId(params);
 
@@ -448,8 +449,8 @@ public class PunchApiController
     @GetMapping("/getDeletedPunchList")
     public ApiResponse getDeletedPunchList(@RequestParam String medicineName)
     {
-        System.out.println("getDeletedPunchList");
-        System.out.println(medicineName);
+        log.debug("getDeletedPunchList");
+        log.debug("{}", medicineName);
 
         List<PunchDelete> punchDeleteList = new ArrayList<>();
 
@@ -491,48 +492,48 @@ public class PunchApiController
 
         String strStartDate = (String) params.get("startDate");
         LocalDate startDate = LocalDate.parse(strStartDate);
-        System.out.println("startDate:");
-        System.out.println(startDate);
+        log.debug("startDate:");
+        log.debug("{}", startDate);
 
 
         String strEndDate = (String) params.get("endDate");
         LocalDate endDate = LocalDate.parse(strEndDate);
-        System.out.println("endDate:");
-        System.out.println(endDate);
+        log.debug("endDate:");
+        log.debug("{}", endDate);
 
         String punchPosition = (String) params.get("punchPosition");
-        System.out.println("punchPosition:");
-        System.out.println(punchPosition);
+        log.debug("punchPosition:");
+        log.debug("{}", punchPosition);
 
         String supplier = (String) params.get("supplier");
-        System.out.println("supplier:");
-        System.out.println(supplier);
+        log.debug("supplier:");
+        log.debug("{}", supplier);
 
         String strStatus = (String) params.get("status");
-        System.out.println("strStatus:");
-        System.out.println(strStatus);
+        log.debug("strStatus:");
+        log.debug("{}", strStatus);
 
         PunchStatus punchStatus = null;
 
         if (!Objects.equals(strStatus, "All")) {
             punchStatus = PunchStatus.valueOf(strStatus);
-            System.out.println("punchStatus:");
-            System.out.println(punchStatus);
+            log.debug("punchStatus:");
+            log.debug("{}", punchStatus);
         }
 
         String storageLocation = (String) params.get("storageLocation");
-        System.out.println("storageLocation:");
-        System.out.println(storageLocation);
+        log.debug("storageLocation:");
+        log.debug("{}", storageLocation);
 
         String medicine = (String) params.get("medicine");
-        System.out.println("medicine:");
-        System.out.println(medicine);
+        log.debug("medicine:");
+        log.debug("{}", medicine);
 
         String medicineType = (String) params.get("medicineType");
-        System.out.println("medicineType:");
-        System.out.println(medicineType);
+        log.debug("medicineType:");
+        log.debug("{}", medicineType);
 
-        System.out.println("===========================================================");
+        log.debug("===========================================================");
 
         if (punch.getDate().isBefore(startDate) || punch.getDate().isAfter(endDate))
         {
