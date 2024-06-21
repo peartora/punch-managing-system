@@ -26,15 +26,6 @@ public class UserApiController
     private final UserRepository userRepository;
     private final UserApiService userApiService;
 
-    @GetMapping
-    public ApiResponse returnUserList()
-    {
-        System.out.println("returnUserList");
-
-        List<User> userList = this.userRepository.findAll();
-        return ApiResponse.success(userList);
-    }
-
     @PostMapping
     public ApiResponse registerUser (@RequestBody @Valid UserRegisterRequestDto requestDto)
     {
@@ -52,6 +43,15 @@ public class UserApiController
         return this.userApiService.login(requestDto);
     }
 
+    @PostMapping("/passwordChange")
+    public ApiResponse passwordChange(@RequestBody PasswordChangeRequestDto requestDto) {
+        System.out.println("passwordChange");
+        System.out.println(requestDto);
+
+        return this.userApiService.passwordChange(requestDto);
+    }
+
+    // below...
 
     @PostMapping("/authority")
     public String returnAuthority(@RequestBody Map<String, Object> params)
@@ -79,42 +79,12 @@ public class UserApiController
         return ApiResponse.success(responseDto);
     }
 
-    @PostMapping("/passwordChange")
-    public ApiResponse passwordChange(@RequestBody PasswordChangeRequestDto requestDto) {
-        System.out.println("passwordChange");
-        System.out.println(requestDto);
+    @GetMapping
+    public ApiResponse returnUserList()
+    {
+        System.out.println("returnUserList");
 
-        String username = requestDto.getUsername();
-        String newPassword = requestDto.getNewPassword();
-        String newPasswordForConfirmation = requestDto.getNewPasswordForConfirmation();
-
-        if (!Objects.equals(newPassword, newPasswordForConfirmation))
-        {
-            throw new PasswordNotSameException();
-        }
-
-        if (newPassword.length() < 6)
-        {
-            throw new PasswordLengthIsNotEnoughException();
-        }
-
-        User user = this.userRepository.findByUsername(username);
-
-        if (user == null)
-        {
-            throw new UserIsNotExistException();
-        }
-
-        if (Objects.equals(user.getPassword(), newPassword))
-        {
-            throw new NewPasswordSameWithCurrentPasswordException();
-        }
-
-        user.setPassword(newPassword);
-        user = this.userApiService.initializeUser(user);
-
-        this.userRepository.save(user);
-
-        return ApiResponse.success(username);
+        List<User> userList = this.userRepository.findAll();
+        return ApiResponse.success(userList);
     }
 }

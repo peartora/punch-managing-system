@@ -2,6 +2,7 @@ package com.example.toolmanagingsystem.service.userService;
 
 import com.example.toolmanagingsystem.dto.ApiResponse;
 import com.example.toolmanagingsystem.dto.request.user.LoginRequestDto;
+import com.example.toolmanagingsystem.dto.request.user.PasswordChangeRequestDto;
 import com.example.toolmanagingsystem.dto.request.user.UserRegisterRequestDto;
 import com.example.toolmanagingsystem.dto.response.user.LoginResponseDto;
 import com.example.toolmanagingsystem.entity.punch.PunchStatus;
@@ -30,9 +31,14 @@ public class UserApiService
         String passwordConfirmation = requestDto.getPasswordConfirmation();
 
         this.isPasswordSame(password, passwordConfirmation);
-        this.isPasswordLongEnough(requestDto);
+        this.isPasswordLongEnough(password);
 
         User user = new User(requestDto);
+
+        user.setApproved(false);
+        user.setNotExpired(true);
+        user.setNotLocked(true);
+        user.setTrialCount(0);
 
         try
         {
@@ -85,6 +91,30 @@ public class UserApiService
         return ApiResponse.success(username);
     }
 
+    public ApiResponse passwordChange(PasswordChangeRequestDto requestDto)
+    {
+        String username = requestDto.getUsername();
+        this.validateUser(username);
+
+        String newPassword = requestDto.getNewPassword();
+        String newPasswordConfirmation = requestDto.getNewPasswordForConfirmation();
+
+        this.isPasswordSame(newPassword, newPasswordConfirmation);
+        this.isPasswordLongEnough(newPassword);
+
+        User user = this.userRepository.findByUsername(username);
+
+        this.isNewPasswordSameWithCurrentPassword(user.getPassword(), newPassword);
+
+        user.setPassword(newPassword);
+        user.setPasswordSetDate(LocalDate.now());
+        user.setTrialCount(0);
+
+        this.userRepository.save(user);
+
+        return ApiResponse.success(username);
+    }
+
     public boolean checkUserAuthority(String username, List<String> targetList)
     {
         User user = this.userRepository.findByUsername(username);
@@ -93,32 +123,27 @@ public class UserApiService
         return targetList.contains(userRole);
     }
 
-    private void increaseTrialcount(User user) {
-        int trialCount = user.getTrialCount();
-
-        if (trialCount == 4) {
-            user.setTrialCount(5);
-            user.setNotLocked(false);
-            this.userRepository.save(user);
-
-            throw new UserIsLockedException();
-        } else {
-            user.setTrialCount(trialCount + 1);
-            this.userRepository.save(user);
-        }
-    }
-
-    public User initializeUser(User user)
-    {
-        user.setTrialCount(0);
-        user.setPasswordSetDate(LocalDate.now());
-        user.setNotExpired(true);
-        user.setNotLocked(true);
-
-        return user;
-    }
-
-
+//    public User initializeUser(String action, User user)
+//    {
+//        if (Objects.equals(action, "register"))
+//        {
+//            user.setTrialCount(0);
+//            user.setPasswordSetDate(LocalDate.now());
+//            user.setNotExpired(true);
+//            user.setNotLocked(false);
+//        }
+//        else if (Objects.equals(action, "approve"))
+//        {
+//            user.setNotLocked(true);
+//        }
+//        else if (Objects.equals(action, "resetPassword"))
+//        {
+//            user.setNotLocked(true);
+//            user.setTrialCount(0);
+//            user.setPasswordSetDate(LocalDate.now());
+//        }
+//        return user;
+//    }
 
 //    @Scheduled 이 함수는, 매일 자정 패스워드 유효 여부 확인
     public void isPasswordValid() {
@@ -147,18 +172,27 @@ public class UserApiService
         }
     }
 
-    private void isPasswordLongEnough(UserRegisterRequestDto requestDto) throws PasswordLengthIsNotEnoughException
+    private void isNewPasswordSameWithCurrentPassword(String currentPassword, String newPassword) throws NewPasswordSameWithCurrentPasswordException
     {
-        String password = requestDto.getPassword();
+        if (currentPassword.equals(newPassword))
+        {
+            throw new NewPasswordSameWithCurrentPasswordException();
+        }
+    }
 
+    private void isPasswordLongEnough(String password) throws PasswordLengthIsNotEnoughException
+    {
         if (password.length() < 6)
         {
             throw new PasswordLengthIsNotEnoughException();
         }
     }
 
-    private void validateUser(String username)
+    public void validateUser(String username)
     {
+        System.out.println("username");
+        System.out.println(username);
+
         User user = this.userRepository.findByUsername(username);
 
         if (user == null)

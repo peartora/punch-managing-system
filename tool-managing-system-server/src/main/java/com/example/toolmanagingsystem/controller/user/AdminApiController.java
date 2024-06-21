@@ -8,10 +8,12 @@ import com.example.toolmanagingsystem.error.user.NotAuthorizeRequestException;
 import com.example.toolmanagingsystem.error.user.PasswordLengthIsNotEnoughException;
 import com.example.toolmanagingsystem.error.user.UserIsNotExistException;
 import com.example.toolmanagingsystem.repository.UserRepository;
+import com.example.toolmanagingsystem.service.userService.AdminApiService;
 import com.example.toolmanagingsystem.service.userService.UserApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -21,6 +23,7 @@ public class AdminApiController
 {
     private final UserRepository userRepository;
     private final UserApiService userApiService;
+    private final AdminApiService adminApiService;
 
     @GetMapping("/idList")
     public List<Map<String, Object>> returnIdList()
@@ -44,25 +47,10 @@ public class AdminApiController
     }
 
     @PostMapping("/approveId")
-    public ApiResponse approveId(@RequestBody Map<String, Object> params)
+    public ApiResponse approveId(@RequestBody Map<String, String> params)
     {
         System.out.println("approveId");
-        System.out.println(params);
-
-        User user = this.userRepository.findByUsername(params.get("username").toString());
-
-        if (user == null)
-        {
-            throw new UserIsNotExistException();
-        }
-
-        user.setApproved(true);
-        user.setNotExpired(true);
-        user.setNotLocked(true);
-
-        this.userRepository.save(user);
-
-        return ApiResponse.success(params.get("username"));
+        return this.adminApiService.approveId(params);
     }
 
     @PostMapping("/resetPassword")
@@ -104,7 +92,11 @@ public class AdminApiController
         }
 
         user.setPassword(newPassword);
-        user = userApiService.initializeUser(user);
+        user.setNotLocked(true);
+        user.setTrialCount(0);
+        user.setPasswordSetDate(LocalDate.now());
+
+//        user = userApiService.initializeUser("resetPassword", user);
         this.userRepository.save(user);
 
         return ApiResponse.success(requestDto.getUsername());
