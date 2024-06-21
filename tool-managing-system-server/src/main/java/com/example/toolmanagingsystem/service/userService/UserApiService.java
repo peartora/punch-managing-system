@@ -222,5 +222,4 @@ public class UserApiService
             throw new UserIsExpiredException();
         }
     }
-
 }

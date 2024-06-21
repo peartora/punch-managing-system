@@ -59,47 +59,7 @@ public class AdminApiController
         System.out.println("resetPassword");
         System.out.println(requestDto);
 
-        User user = this.userRepository.findByUsername(requestDto.getUsername());
-        User loginUser = this.userRepository.findByUsername(requestDto.getLoginUsername());
-
-        if (user == null)
-        {
-            System.out.println("user is null");
-            throw new UserIsNotExistException();
-        }
-
-        if (!Objects.equals(loginUser.getUserRole().toString(), "ADMIN"))
-        {
-            System.out.println("not authorized");
-            throw new NotAuthorizeRequestException();
-        }
-
-        String currentPassword = user.getPassword();
-        String newPassword = requestDto.getNewPassword();
-
-        System.out.println("currentPassword: " + currentPassword);
-        System.out.println("newPassword: " + newPassword);
-
-
-        if (currentPassword.equals(newPassword))
-        {
-            System.out.println("password is same for resetPassword");
-            throw new NewPasswordSameWithCurrentPasswordException();
-        }
-
-        if (newPassword.length() < 6) {
-            throw new PasswordLengthIsNotEnoughException();
-        }
-
-        user.setPassword(newPassword);
-        user.setNotLocked(true);
-        user.setTrialCount(0);
-        user.setPasswordSetDate(LocalDate.now());
-
-//        user = userApiService.initializeUser("resetPassword", user);
-        this.userRepository.save(user);
-
-        return ApiResponse.success(requestDto.getUsername());
+        this.adminApiService.resetPassword(requestDto)
     }
 
     @PostMapping("/delete_user")
