@@ -62,6 +62,23 @@ public class AdminApiService {
         return ApiResponse.success(requestDto.getUsername());
     }
 
+    public ApiResponse deleteUser(Map<String, Object> params)
+    {
+        String username = (String) params.get("username");
+        this.userApiService.validateUser(username);
+        User user = this.userRepository.findByUsername(username);
+
+        String loginUsername = (String) params.get("loginUsername");
+        this.userApiService.validateUser(loginUsername);
+        User loginUser = this.userRepository.findByUsername(loginUsername);
+
+        this.checkUserAuthority(loginUser, "deleteUser");
+
+        this.userRepository.delete(user);
+
+        return ApiResponse.success(username);
+    }
+
     public void checkUserAuthority(User user, String action)
     {
         String userRole = user.getUserRole().toString();
@@ -69,17 +86,12 @@ public class AdminApiService {
         switch (action)
         {
             case "restorePunch":
-                if (!Objects.equals(userRole, "ADMIN") || !Objects.equals(userRole, "MANAGER"))
-                {
-                    throw new NotAuthorizeRequestException();
-                }
+                this.authorizeRestorePunch(userRole);
                 break;
 
             case "resetPassword":
-                if (!Objects.equals(userRole, "ADMIN"))
-                {
-                    throw new NotAuthorizeRequestException();
-                }
+            case "deleteUser":
+                this.authorizeAdminOnly(userRole);
                 break;
 
             default:
@@ -87,4 +99,15 @@ public class AdminApiService {
         }
     }
 
+    private void authorizeRestorePunch(String userRole) {
+        if (!Objects.equals(userRole, "ADMIN") && !Objects.equals(userRole, "MANAGER")) {
+            throw new NotAuthorizeRequestException();
+        }
+    }
+
+    private void authorizeAdminOnly(String userRole) {
+        if (!Objects.equals(userRole, "ADMIN")) {
+            throw new NotAuthorizeRequestException();
+        }
+    }
 }

@@ -68,14 +68,6 @@ public class AdminApiController
         System.out.println("deleteUser");
         System.out.println(params);
 
-        User user = this.userRepository.findByUsername(params.get("username").toString());
-
-        if (user == null)
-        {
-            throw new UserIsNotExistException();
-        }
-
-        this.userRepository.delete(user);
-        return ApiResponse.success(params.get("username"));
+        return this.adminApiService.deleteUser(params);
     }
 }
