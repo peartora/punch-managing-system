@@ -48,9 +48,7 @@ export function CreateId() {
 
     console.log(`output`, output);
 
-    const returnedUsername = username;
-
-    alert(`Id: ${returnedUsername}이(가) 등록 되었습니다.`);
+    alert(`Id: ${output}이(가) 등록 되었습니다.`);
     navigate(`/sign-in`);
   };
 

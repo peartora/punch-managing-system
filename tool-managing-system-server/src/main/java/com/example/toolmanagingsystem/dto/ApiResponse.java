@@ -57,6 +57,14 @@ public final class ApiResponse
         return res;
     }
 
+//    public static ApiResponse inputValidError(MethodArgumentNotValidException error) {
+//        System.out.println("ApiResponse.error called");
+//
+//        ApiResponse res = new ApiResponse();
+//        res.error = new ErrorResponse("INPUT_VALID_ERROR", "사용자 인풋검증 에러가 발생 했습니다.", error);
+//        return res;
+//    }
+
     public static ApiResponse internalServerError(Exception error) {
         System.out.println("ApiResponse.internalServerError called");
 

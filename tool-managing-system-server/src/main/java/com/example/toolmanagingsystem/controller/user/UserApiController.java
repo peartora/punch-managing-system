@@ -12,6 +12,7 @@ import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.error.user.*;
 import com.example.toolmanagingsystem.repository.UserRepository;
 import com.example.toolmanagingsystem.service.userService.UserApiService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,48 +31,16 @@ public class UserApiController
     {
         System.out.println("returnUserList");
 
-        Iterable<User> userIterable = this.userRepository.findAll();
-
-        List<User> userList = new ArrayList<>();
-        for (User user : userIterable) {
-            userList.add(user);
-        }
-
-        Map<String, List<User>> userListMap = new HashMap<>();
-        userListMap.put("userList", userList);
-
-        return ApiResponse.success(userListMap);
+        List<User> userList = this.userRepository.findAll();
+        return ApiResponse.success(userList);
     }
 
     @PostMapping
-    public ApiResponse registerUser (@RequestBody UserRegisterRequestDto requestDto)
+    public ApiResponse registerUser (@RequestBody @Valid UserRegisterRequestDto requestDto)
     {
         System.out.println("registerUser");
-        System.out.println(requestDto);
 
-        boolean isPasswordSame = this.userApiService.isPasswordSame(requestDto);
-        boolean isPasswordLongEnough = this.userApiService.isPasswordLongEnough(requestDto);
-
-        if (isPasswordSame && isPasswordLongEnough)
-        {
-            System.out.println("isPasswordSame && isPasswordLongEnough");
-
-            User user = new User(requestDto);
-
-            try
-            {
-                this.userRepository.save(user);
-            }
-            catch (Exception e)
-            {
-                throw new DuplicatedUsernameException();
-            }
-        }
-
-        Map<String, String> usernameMap = new HashMap<>();
-        usernameMap.put("username", requestDto.getUsername());
-
-        return ApiResponse.success(usernameMap);
+        return this.userApiService.registerUser(requestDto);
     }
 
     @PostMapping("/login")

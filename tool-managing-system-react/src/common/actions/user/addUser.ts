@@ -25,6 +25,12 @@ export const addUser = async (input: AddUserInput): Promise<AddUserOutput> => {
         throw new Error("==비밀번호가 너무 짧습니다.==");
       } else if (error.code === "USER_PASSWORD_NOT_SAME") {
         throw new Error("==비밀번호 확인이 일치하지 않습니다.==");
+      } else {
+        throw new Error("==알수없습니다.==");
+      }
+    } else {
+      if (error.code === "INPUT_VALID_ERROR") {
+        throw new Error("input valid error 발생 하였습니다.");
       }
     }
 

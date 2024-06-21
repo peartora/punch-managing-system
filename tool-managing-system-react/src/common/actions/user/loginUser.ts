@@ -25,8 +25,8 @@ export const loginUser = async (
         throw new Error("==미승인 된 유저 입니다.==");
       } else if (error.code === "USER_IS_LOCKED") {
         throw new Error("==잠긴 계정 입니다.==");
-      } else if (error.code === "PUSER_PASSWORD_NOT_SAME") {
-        throw new Error("==비밀번호가 일치하지 않습니다.==");
+      } else if (error.code === "LOGIN_PASSWORD_IS_NOT_CORRECT") {
+        throw new Error("==로그인 비밀번호가 다릅니다.==");
       } else if (error.code === "USER_IS_EXPIRED") {
         throw new Error("==계정이 만료 되었습니다.==");
       }

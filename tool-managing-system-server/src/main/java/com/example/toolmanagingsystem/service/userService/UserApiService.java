@@ -9,9 +9,12 @@ import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.entity.user.UserRole;
 import com.example.toolmanagingsystem.error.user.*;
 import com.example.toolmanagingsystem.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -20,7 +23,67 @@ public class UserApiService
 {
     @Autowired
     UserRepository userRepository;
-    LoginResponseDto responseDto;
+
+    public ApiResponse registerUser(@RequestBody UserRegisterRequestDto requestDto)
+    {
+        String password = requestDto.getPassword();
+        String passwordConfirmation = requestDto.getPasswordConfirmation();
+
+        this.isPasswordSame(password, passwordConfirmation);
+        this.isPasswordLongEnough(requestDto);
+
+        User user = new User(requestDto);
+
+        try
+        {
+            this.userRepository.save(user);
+        }
+        catch (Exception e)
+        {
+            throw new DuplicatedUsernameException();
+        }
+
+        return ApiResponse.success(user.getUsername());
+    }
+
+    public ApiResponse login(LoginRequestDto requestDto) {
+        String username = requestDto.getUsername();
+
+        this.validateUser(username);
+
+        User user = this.userRepository.findByUsername(username);
+
+        this.isUserApproved(user);
+        this.isUserNotLocked(user);
+        this.isUserNotExpired(user);
+
+        String password = requestDto.getPassword();
+        String passwordConfirmation = user.getPassword();
+
+        if (!Objects.equals(password, passwordConfirmation))
+        {
+            int loginTrialCount = user.getTrialCount();
+
+            if (loginTrialCount == 4)
+            {
+                user.setTrialCount(5);
+                user.setNotLocked(false);
+            }
+            else
+            {
+                user.setTrialCount(loginTrialCount + 1);
+            }
+            this.userRepository.save(user);
+            throw new UserLoginPasswordNotCorrectException();
+        }
+        else
+        {
+            user.setTrialCount(0);
+        }
+
+        this.userRepository.save(user);
+        return ApiResponse.success(username);
+    }
 
     public boolean checkUserAuthority(String username, List<String> targetList)
     {
@@ -28,90 +91,6 @@ public class UserApiService
         String userRole = user.getUserRole().toString();
 
         return targetList.contains(userRole);
-    }
-
-
-
-
-    public boolean isPasswordSame(UserRegisterRequestDto requestDto) throws PasswordNotSameException
-    {
-        String password = requestDto.getPassword();
-        String passwordConfirmation = requestDto.getPasswordConfirmation();
-
-        if (!password.equals(passwordConfirmation))
-        {
-            throw new PasswordNotSameException();
-        }
-        return true;
-    }
-
-    public boolean isPasswordLongEnough(UserRegisterRequestDto requestDto) throws PasswordLengthIsNotEnoughException
-    {
-        String password = requestDto.getPassword();
-
-        if (password.length() < 6)
-        {
-            throw new PasswordLengthIsNotEnoughException();
-        }
-        return true;
-    }
-
-    public ApiResponse login(LoginRequestDto requestDto) {
-        User user;
-
-        try
-        {
-            user = this.userRepository.findByUsername(requestDto.getUsername());
-        }
-        catch (Exception e)
-        {
-            throw new UserIsNotExistException();
-        }
-
-        this.isUserApproved(user);
-        this.isUserNotLocked(user);
-        this.isUserNotExpired(user);
-        this.isPasswordSame(user, requestDto.getPassword());
-
-        Map<String, String> usernameMap = new HashMap<>();
-        usernameMap.put("username", user.getUsername());
-
-        return ApiResponse.success(usernameMap);
-    }
-
-    private void isUserApproved(User user)
-    {
-        if (!user.isApproved())
-        {
-            throw new UserIsNotApprovedException();
-        }
-    }
-
-    private void isUserNotLocked(User user) {
-        if (!user.isNotLocked())
-        {
-            throw new UserIsLockedException();
-        }
-    }
-
-    private void isUserNotExpired(User user) {
-        if (!user.isNotExpired())
-        {
-            throw new UserIsExpiredException();
-        }
-    }
-
-    private void isPasswordSame(User user, String password) {
-        if (!Objects.equals(user.getPassword(), password))
-        {
-            this.increaseTrialcount(user);
-            throw new PasswordNotSameException();
-        }
-        else
-        {
-            user.setTrialCount(0);
-            this.userRepository.save(user);
-        }
     }
 
     private void increaseTrialcount(User user) {
@@ -159,4 +138,55 @@ public class UserApiService
         }
         this.userRepository.saveAll(userList);
     }
+
+    private void isPasswordSame(String password, String passwordConfirmation) throws PasswordNotSameException
+    {
+        if (!password.equals(passwordConfirmation))
+        {
+            throw new PasswordNotSameException();
+        }
+    }
+
+    private void isPasswordLongEnough(UserRegisterRequestDto requestDto) throws PasswordLengthIsNotEnoughException
+    {
+        String password = requestDto.getPassword();
+
+        if (password.length() < 6)
+        {
+            throw new PasswordLengthIsNotEnoughException();
+        }
+    }
+
+    private void validateUser(String username)
+    {
+        User user = this.userRepository.findByUsername(username);
+
+        if (user == null)
+        {
+            throw new UserIsNotExistException();
+        }
+    }
+
+    private void isUserApproved(User user)
+    {
+        if (!user.isApproved())
+        {
+            throw new UserIsNotApprovedException();
+        }
+    }
+
+    private void isUserNotLocked(User user) {
+        if (!user.isNotLocked())
+        {
+            throw new UserIsLockedException();
+        }
+    }
+
+    private void isUserNotExpired(User user) {
+        if (!user.isNotExpired())
+        {
+            throw new UserIsExpiredException();
+        }
+    }
+
 }
