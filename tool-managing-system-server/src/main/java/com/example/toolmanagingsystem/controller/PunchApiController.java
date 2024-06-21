@@ -7,6 +7,7 @@ import com.example.toolmanagingsystem.entity.*;
 import com.example.toolmanagingsystem.entity.punch.Punch;
 import com.example.toolmanagingsystem.entity.punch.PunchDelete;
 import com.example.toolmanagingsystem.entity.punch.PunchStatus;
+import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.entity.user.UserRole;
 import com.example.toolmanagingsystem.error.NoCleanHistoryException;
 import com.example.toolmanagingsystem.error.punch.DBError;
@@ -17,6 +18,7 @@ import com.example.toolmanagingsystem.error.user.NotAuthorizeRequestException;
 import com.example.toolmanagingsystem.repository.*;
 import com.example.toolmanagingsystem.repository.punch.PunchDeleteRepository;
 import com.example.toolmanagingsystem.repository.punch.PunchRepository;
+import com.example.toolmanagingsystem.service.userService.AdminApiService;
 import com.example.toolmanagingsystem.service.userService.UserApiService;
 import com.example.toolmanagingsystem.utils.FileHandling;
 import com.example.toolmanagingsystem.vo.InspectionHistoryVO;
@@ -48,8 +50,9 @@ public class PunchApiController
     private final PunchDeleteRepository punchDeleteRepository;
     private final InsepctionRepository inspectionRepository;
     private final CleanHistoryRepository cleanHistoryRepository;
-
     private final UserApiService userApiService;
+    private final AdminApiService adminApiService;
+    private final UserRepository userRepository;
     private final PunchDao dao;
 
     @Value("${TOOL_MANAGING_SYSTEM_STATIC_PATH}")
@@ -190,16 +193,11 @@ public class PunchApiController
         String punchId = punchRestoreFromDeleteHistoryRequestDto.getPunch();
 
         String username = punchRestoreFromDeleteHistoryRequestDto.getUsername();
-        List<String> targetList = new ArrayList<>();
-        targetList.add("ADMIN");
-        targetList.add("MANAGER");
 
-        boolean checkResult = this.userApiService.checkUserAuthority(username, targetList);
+        this.userApiService.validateUser(username);
+        User user = this.userRepository.findByUsername(username);
 
-        if (!checkResult)
-        {
-            throw new NotAuthorizeRequestException();
-        }
+        this.adminApiService.checkUserAuthority(user, "restorePunch");
 
         Punch punch = this.punchRepository.findByPunchId(punchId);
 

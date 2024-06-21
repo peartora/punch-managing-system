@@ -115,13 +115,7 @@ public class UserApiService
         return ApiResponse.success(username);
     }
 
-    public boolean checkUserAuthority(String username, List<String> targetList)
-    {
-        User user = this.userRepository.findByUsername(username);
-        String userRole = user.getUserRole().toString();
 
-        return targetList.contains(userRole);
-    }
 
 //    public User initializeUser(String action, User user)
 //    {
@@ -172,7 +166,7 @@ public class UserApiService
         }
     }
 
-    private void isNewPasswordSameWithCurrentPassword(String currentPassword, String newPassword) throws NewPasswordSameWithCurrentPasswordException
+    public void isNewPasswordSameWithCurrentPassword(String currentPassword, String newPassword) throws NewPasswordSameWithCurrentPasswordException
     {
         if (currentPassword.equals(newPassword))
         {
@@ -180,7 +174,7 @@ public class UserApiService
         }
     }
 
-    private void isPasswordLongEnough(String password) throws PasswordLengthIsNotEnoughException
+    public void isPasswordLongEnough(String password) throws PasswordLengthIsNotEnoughException
     {
         if (password.length() < 6)
         {

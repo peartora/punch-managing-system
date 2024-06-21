@@ -59,7 +59,7 @@ public class AdminApiController
         System.out.println("resetPassword");
         System.out.println(requestDto);
 
-        this.adminApiService.resetPassword(requestDto)
+        return this.adminApiService.resetPassword(requestDto);
     }
 
     @PostMapping("/delete_user")

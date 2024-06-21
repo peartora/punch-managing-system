@@ -53,16 +53,6 @@ public class UserApiController
 
     // below...
 
-    @PostMapping("/authority")
-    public String returnAuthority(@RequestBody Map<String, Object> params)
-    {
-        System.out.println("returnAuthority");
-        System.out.println(params);
-
-        User user = this.userRepository.findByUsername(params.get("username").toString());
-        return user.getUserRole().toString();
-    }
-
     @PostMapping("/my_page")
     public ApiResponse createMyPage(@RequestBody MyPageRequestDto requestDto)
     {

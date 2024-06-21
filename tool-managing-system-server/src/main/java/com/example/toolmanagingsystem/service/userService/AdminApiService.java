@@ -3,16 +3,14 @@ package com.example.toolmanagingsystem.service.userService;
 import com.example.toolmanagingsystem.dto.ApiResponse;
 import com.example.toolmanagingsystem.dto.request.user.ResetPasswordRequestDto;
 import com.example.toolmanagingsystem.entity.user.User;
-import com.example.toolmanagingsystem.error.user.NewPasswordSameWithCurrentPasswordException;
-import com.example.toolmanagingsystem.error.user.NotAuthorizeRequestException;
-import com.example.toolmanagingsystem.error.user.PasswordLengthIsNotEnoughException;
-import com.example.toolmanagingsystem.error.user.UserIsNotExistException;
+import com.example.toolmanagingsystem.error.user.*;
 import com.example.toolmanagingsystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -47,38 +45,46 @@ public class AdminApiService {
         this.userApiService.validateUser(loginUsername);
         User loginUser = this.userRepository.findByUsername(loginUsername);
 
-        if (!Objects.equals(loginUser.getUserRole().toString(), "ADMIN"))
-        {
-            System.out.println("not authorized");
-            throw new NotAuthorizeRequestException();
-        }
+        this.checkUserAuthority(loginUser, "resetPassword");
 
         String currentPassword = user.getPassword();
         String newPassword = requestDto.getNewPassword();
 
-        System.out.println("currentPassword: " + currentPassword);
-        System.out.println("newPassword: " + newPassword);
-
-
-        if (currentPassword.equals(newPassword))
-        {
-            System.out.println("password is same for resetPassword");
-            throw new NewPasswordSameWithCurrentPasswordException();
-        }
-
-        if (newPassword.length() < 6) {
-            throw new PasswordLengthIsNotEnoughException();
-        }
+        this.userApiService.isNewPasswordSameWithCurrentPassword(currentPassword, newPassword);
+        this.userApiService.isPasswordLongEnough(newPassword);
 
         user.setPassword(newPassword);
         user.setNotLocked(true);
         user.setTrialCount(0);
         user.setPasswordSetDate(LocalDate.now());
 
-//        user = userApiService.initializeUser("resetPassword", user);
         this.userRepository.save(user);
-
         return ApiResponse.success(requestDto.getUsername());
+    }
+
+    public void checkUserAuthority(User user, String action)
+    {
+        String userRole = user.getUserRole().toString();
+
+        switch (action)
+        {
+            case "restorePunch":
+                if (!Objects.equals(userRole, "ADMIN") || !Objects.equals(userRole, "MANAGER"))
+                {
+                    throw new NotAuthorizeRequestException();
+                }
+                break;
+
+            case "resetPassword":
+                if (!Objects.equals(userRole, "ADMIN"))
+                {
+                    throw new NotAuthorizeRequestException();
+                }
+                break;
+
+            default:
+                throw new CorrectActionWasNotDefinedException();
+        }
     }
 
 }
