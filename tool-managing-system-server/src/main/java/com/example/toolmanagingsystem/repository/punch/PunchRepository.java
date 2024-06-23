@@ -1,6 +1,9 @@
 package com.example.toolmanagingsystem.repository.punch;
 
+import com.example.toolmanagingsystem.entity.Medicine;
+import com.example.toolmanagingsystem.entity.Supplier;
 import com.example.toolmanagingsystem.entity.punch.Punch;
+import com.example.toolmanagingsystem.entity.punch.PunchStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -15,27 +18,25 @@ public interface PunchRepository extends JpaRepository<Punch, Long>, JpaSpecific
 {
     Punch findByPunchId(String punchId);
 
-//    @Query("select p from punch p")
-//    List<Punch> findAllPunch();
+    @Query("select p from punch p")
+    List<Punch> findAll();
 
-    @Query("select p from punch p join CleanHistory c on p.punchId = c.punchNumber")
-    List<Punch> findAllPunch();
-
-    @Query("select p from punch p where " +
-            "(:startDate is null or p.date >= :startDate) and " +
-            "(:endDate is null or p.date <= :endDate) and " +
-            "(:punchPosition = 'All' or p.punchPosition = :punchPosition) and " +
-            "(:supplier = 'All' or p.supplier = :supplier) and " +
-            "(:status = 'All' or p.punchStatus = :status) and " +
-            "(:medicine = 'All' or p.medicine = :medicine) and " +
-            "(:medicineType = 'All' or p.medicineType = :medicineType)")
-    List<Punch> findFilteredPunch(
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate,
+    @Query(
+            "select p from punch p where " +
+                    "(:punchStatus is null or p.punchStatus = :punchStatus) and " +
+                    "(:punchPosition is null or p.punchPosition = :punchPosition) and " +
+                    "(:medicineType is null or p.medicineType = :medicineType) and " +
+                    "(:supplier is null or p.supplier = :supplier) and " +
+                    "(:medicine is null or p.medicine = :medicine) and " +
+                    "(:startDate is null or :endDate is null or p.date between :startDate and :endDate)"
+    )
+    List<Punch> findSelectedPunch(
+            @Param("punchStatus") PunchStatus punchStatus,
             @Param("punchPosition") String punchPosition,
-            @Param("supplier") String supplier,
-            @Param("status") String status,
-            @Param("medicine") String medicine,
-            @Param("medicineType") String medicineType
+            @Param("medicineType") String medicineType,
+            @Param("supplier") Supplier supplier,
+            @Param("medicine") Medicine medicine,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
     );
 }

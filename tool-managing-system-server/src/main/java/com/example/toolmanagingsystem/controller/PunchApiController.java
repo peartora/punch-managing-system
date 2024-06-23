@@ -29,6 +29,7 @@ import jakarta.persistence.Column;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -94,58 +95,87 @@ public class PunchApiController
     }
 
     @GetMapping()
-    public ApiResponse returnPunchList(@RequestParam HashMap<String, Object> params) // 단일 값을 받던지, 다수를 받으려면 Map;
+    public ApiResponse returnPunchList(@RequestParam Map<String, Object> params) // 단일 값을 받던지, 다수를 받으려면 Map;
     {
         System.out.println("====================returnPunchList====================");
         System.out.println(params);
 
-        List<Punch> punchList = new ArrayList<>();
+        LocalDate startDate = LocalDate.MIN;
+        LocalDate endDate = LocalDate.MAX;
+
+        Object objStartDate = params.get("startDate");
+        if (objStartDate != null)
+        {
+            startDate = LocalDate.parse(objStartDate.toString());
+        }
+
+        Object objEndDate = params.get("endDate");
+        if (objEndDate != null)
+        {
+            endDate = LocalDate.parse(objEndDate.toString());
+        }
+
+        String punchPosition = (String) params.get("punchPosition");
+        String supplierName = (String) params.get("supplier");
+        String status = (String) params.get("status");
+        String medicineName = (String) params.get("medicine");
+        String medicineType = (String) params.get("medicineType");
+
+        Supplier supplier = this.punchSupplierRepository.findBySupplier(supplierName);
+        Medicine medicine = this.medicineRepository.findByMedicine(medicineName);
+
+        PunchStatus parseStatus;
+
+        if (status != null && !status.equals(""))
+        {
+            parseStatus = PunchStatus.parseStatus(status);
+        }
+        else
+        {
+            parseStatus = null;
+        }
+
+        System.out.println("startDate");
+        System.out.println(startDate);
+
+        System.out.println("endDate");
+        System.out.println(endDate);
+
+        System.out.println("punchPosition");
+        System.out.println(punchPosition);
+
+        System.out.println("supplierName");
+        System.out.println(supplierName);
+
+        System.out.println("status");
+        System.out.println(status);
+
+        System.out.println("parseStatus");
+        System.out.println(parseStatus);
+
+        System.out.println("medicineName");
+        System.out.println(medicineName);
+
+        System.out.println("medicineType");
+        System.out.println(medicineType);
 
 
         if (params.isEmpty())
         {
-             punchList = this.punchRepository.findAllPunch();
-        }
-        else
-        {
-            System.out.println("YES");
-
-            LocalDate startDate = (LocalDate) params.get("startDate");
-            LocalDate endDate = (LocalDate) params.get("endDate");
-            String punchPosition = (String) params.get("punchPosition");
-            String supplier = (String) params.get("supplier");
-            String status = (String) params.get("status");
-            String medicine = (String) params.get("medicine");
-            String medicineType = (String) params.get("medicineType");
-
-            punchList = this.punchRepository.findFilteredPunch(startDate, endDate, punchPosition, supplier, status, medicine, medicineType);
-
-            System.out.println(punchList);
-
+            return ApiResponse.success(this.punchRepository.findAll());
         }
 
-
+        List<Punch> punchList = new ArrayList<>();
+        punchList = this.punchRepository.findSelectedPunch(
+                parseStatus,
+                punchPosition,
+                medicineType,
+                supplier,
+                medicine,
+                startDate,
+                endDate
+        );
         return ApiResponse.success(punchList);
-//        List<Punch> punchList = new ArrayList<>();
-//        List<Punch> filteredPunchList = new ArrayList<>();
-//
-//        Iterable<Punch> punchIterable = this.punchRepository.findAll();
-//        for (Punch punch: punchIterable)
-//        {
-//            punchList.add(punch);
-//        }
-//
-//        if (params.isEmpty()) {
-//            return ApiResponse.success(punchList);
-//        } else {
-//            for (Punch punch: punchList)
-//            {
-//                if (this.filterPunch(punch, params)) {
-//                    filteredPunchList.add(punch);
-//                }
-//            }
-//            return ApiResponse.success(filteredPunchList);
-//        }
     }
 
     @PostMapping("/updateStatus")

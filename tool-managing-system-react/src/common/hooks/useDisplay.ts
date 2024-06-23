@@ -10,7 +10,8 @@ export const useDisplay = function (params?: URLSearchParams) {
   const [isLoading, setLoading] = useState(true);
   const [rows, setRows] = useState<Array<PunchRowType>>([]);
 
-  console.log(`params in useDisplay called`, `${params}`);
+  console.log(`params in useDisplay called`);
+  console.log(`===================================================${params}`);
 
   useEffect(() => {
     console.log(`effect happen`);
@@ -19,6 +20,7 @@ export const useDisplay = function (params?: URLSearchParams) {
     }
 
     let query = "";
+
     if (params) {
       query = params.toString();
     }

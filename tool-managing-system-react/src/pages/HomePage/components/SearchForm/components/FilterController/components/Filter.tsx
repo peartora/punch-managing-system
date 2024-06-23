@@ -27,6 +27,10 @@ export function Filter(props: Props) {
     for (const key in formData) {
       const value = formData[key as keyof FormData];
 
+      console.log(`value`);
+      console.log(value);
+      console.log(typeof value);
+
       if (key == "startDate") {
         if (value == "") {
           const formatedValue = dayjs("1990-01-01").format("YYYY-MM-DD");
@@ -37,18 +41,24 @@ export function Filter(props: Props) {
 
       if (key == "endDate") {
         if (value == "") {
-          const formatedValue = dayjs().format("YYYY-MM-DD");
+          const formatedValue = dayjs("2099-12-31").format("YYYY-MM-DD");
           newParams.append(key, formatedValue);
           continue;
         }
       }
 
-      if (value instanceof Date) {
-        const formatedValue = dayjs(value).format("YYYY-MM-DD");
-        newParams.append(key, formatedValue);
+      if (value == "") {
+        newParams.append(key, null);
       } else {
         newParams.append(key, value.toString());
       }
+
+      // if (value instanceof Date) {
+      //   const formatedValue = dayjs(value).format("YYYY-MM-DD");
+      //   newParams.append(key, formatedValue);
+      // } else {
+      //   newParams.append(key, value.toString());
+      // }
     }
 
     console.log(`filter component`);
@@ -103,7 +113,7 @@ export function Filter(props: Props) {
             펀치 타입:{" "}
           </label>
           <select
-            required
+            // required
             id="punchPosition"
             className="form-select"
             value={formData.punchPosition}
@@ -120,7 +130,7 @@ export function Filter(props: Props) {
             <option value="상부">상부</option>
             <option value="하부">하부</option>
             <option value="다이">다이</option>
-            <option value="All">All</option>
+            {/* <option value="All">All</option> */}
           </select>
         </div>
 
@@ -129,7 +139,7 @@ export function Filter(props: Props) {
             업체:
           </label>
           <select
-            required
+            // required
             id="supplier"
             className="form-select"
             value={formData["supplier"]}
@@ -150,7 +160,7 @@ export function Filter(props: Props) {
                 </option>
               );
             })}
-            <option value="All">All</option>
+            {/* <option value="All">All</option> */}
           </select>
         </div>
 
@@ -159,7 +169,7 @@ export function Filter(props: Props) {
             펀치 상태:{" "}
           </label>
           <select
-            required
+            // required
             id="punchStatus"
             className="form-select"
             value={formData.status}
@@ -176,7 +186,7 @@ export function Filter(props: Props) {
             <option value="사용대기">사용대기</option>
             <option value="사용가능">사용가능</option>
             <option value="사용중">사용중</option>
-            <option value="All">All</option>
+            {/* <option value="All">All</option> */}
           </select>
         </div>
 
@@ -185,7 +195,7 @@ export function Filter(props: Props) {
             제품:
           </label>
           <select
-            required
+            // required
             id="medicine"
             className="form-select"
             value={formData["medicine"]}
@@ -206,7 +216,7 @@ export function Filter(props: Props) {
                 </option>
               );
             })}
-            <option value="All">All</option>
+            {/* <option value="All">All</option> */}
           </select>
         </div>
 
@@ -215,7 +225,7 @@ export function Filter(props: Props) {
             제품 타입:{" "}
           </label>
           <select
-            required
+            // required
             id="medicineType"
             className="form-select"
             value={formData.medicineType}
@@ -232,7 +242,7 @@ export function Filter(props: Props) {
             <option value="BB">BB</option>
             <option value="B">B</option>
             <option value="D">D</option>
-            <option value="All">All</option>
+            {/* <option value="All">All</option> */}
           </select>
         </div>
       </div>

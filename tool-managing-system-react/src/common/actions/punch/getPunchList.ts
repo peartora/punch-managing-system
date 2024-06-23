@@ -2,8 +2,11 @@ import { request } from "@/common/utils/ajax";
 import { BusinessError } from "@/common/error";
 
 export const getPunchList = async function (query: string) {
-  console.log(`getPunchList called`);
+  console.log(
+    `================================================getPunchList called`
+  );
   console.log(`query`, query);
+  console.log(`/api/tool-managing-system/punch?${query}`);
 
   let output;
 

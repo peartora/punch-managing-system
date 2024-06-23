@@ -27,4 +27,18 @@ public enum PunchStatus
             default -> throw new IllegalStateException("Unexpected value: " + statusValue);
         };
     }
+
+    public static PunchStatus parseStatus(String status)
+    {
+        System.out.println("status in parseStatus");
+        System.out.println(status);
+        return switch (status)
+        {
+            case "사용대기" -> PunchStatus.사용대기;
+            case "사용가능" -> PunchStatus.사용가능;
+            case "사용중" -> PunchStatus.사용중;
+            case "폐기" -> PunchStatus.폐기;
+            default -> throw new IllegalStateException("Unexpected value: " + status);
+        };
+    }
 }
