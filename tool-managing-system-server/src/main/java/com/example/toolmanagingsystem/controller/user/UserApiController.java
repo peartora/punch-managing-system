@@ -14,6 +14,7 @@ import com.example.toolmanagingsystem.repository.UserRepository;
 import com.example.toolmanagingsystem.service.userService.UserApiService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;

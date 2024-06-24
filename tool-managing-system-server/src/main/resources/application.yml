@@ -18,4 +18,13 @@ spring:
 server:
   port: 7070
 
+logging:
+  level:
+    root: INFO
+
+  file:
+    name: C:\Users\lsm1dae\Desktop\tool-management-static\resources\log\user.log
+    max-size: 10MB
+
 TOOL_MANAGING_SYSTEM_STATIC_PATH: C:\Users\lsm1dae\Desktop\tool-management-static\
+

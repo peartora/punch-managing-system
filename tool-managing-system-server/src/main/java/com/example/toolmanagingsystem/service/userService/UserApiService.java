@@ -12,6 +12,7 @@ import com.example.toolmanagingsystem.error.UnknownInputValidationException;
 import com.example.toolmanagingsystem.error.user.*;
 import com.example.toolmanagingsystem.repository.UserRepository;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -22,6 +23,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
+@Slf4j
 @Service
 public class UserApiService
 {
@@ -51,6 +53,7 @@ public class UserApiService
             throw new DuplicatedUsernameException();
         }
 
+        log.info("User Id: {}가 등록 되었습니다.", user.getUsername());
         return ApiResponse.success(user.getUsername());
     }
 
