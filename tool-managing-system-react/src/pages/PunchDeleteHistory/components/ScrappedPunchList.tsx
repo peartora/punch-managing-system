@@ -48,6 +48,7 @@ export function ScrappedPunchList({
       output = await restorePunchFromDeleteHistory(body);
     } catch (error) {
       alert(`${error.message}`);
+      return;
     }
 
     alert(`Id: ${body.punch}가 이전 상태로 복구 되었습니다.`);

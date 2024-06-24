@@ -51,7 +51,6 @@ public class AdminApiService {
         String newPassword = requestDto.getNewPassword();
 
         this.userApiService.isNewPasswordSameWithCurrentPassword(currentPassword, newPassword);
-        this.userApiService.isPasswordLongEnough(newPassword);
 
         user.setPassword(newPassword);
         user.setNotLocked(true);

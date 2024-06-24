@@ -159,7 +159,6 @@ public class PunchApiController
         System.out.println("medicineType");
         System.out.println(medicineType);
 
-
         if (params.isEmpty())
         {
             return ApiResponse.success(this.punchRepository.findAll());

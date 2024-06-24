@@ -34,7 +34,6 @@ public class UserApiService
         String passwordConfirmation = requestDto.getPasswordConfirmation();
 
         this.isPasswordSame(password, passwordConfirmation);
-//        this.isPasswordLongEnough(password);
 
         User user = new User(requestDto);
 
@@ -103,7 +102,6 @@ public class UserApiService
         String newPasswordConfirmation = requestDto.getNewPasswordForConfirmation();
 
         this.isPasswordSame(newPassword, newPasswordConfirmation);
-        this.isPasswordLongEnough(newPassword);
 
         User user = this.userRepository.findByUsername(username);
 
@@ -174,14 +172,6 @@ public class UserApiService
         if (currentPassword.equals(newPassword))
         {
             throw new NewPasswordSameWithCurrentPasswordException();
-        }
-    }
-
-    public void isPasswordLongEnough(String password) throws PasswordLengthIsNotEnoughException
-    {
-        if (password.length() < 6)
-        {
-            throw new PasswordLengthIsNotEnoughException();
         }
     }
 
