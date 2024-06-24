@@ -8,11 +8,14 @@ import com.example.toolmanagingsystem.dto.response.user.LoginResponseDto;
 import com.example.toolmanagingsystem.entity.punch.PunchStatus;
 import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.entity.user.UserRole;
+import com.example.toolmanagingsystem.error.UnknownInputValidationException;
 import com.example.toolmanagingsystem.error.user.*;
 import com.example.toolmanagingsystem.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.sql.SQLException;
@@ -31,7 +34,7 @@ public class UserApiService
         String passwordConfirmation = requestDto.getPasswordConfirmation();
 
         this.isPasswordSame(password, passwordConfirmation);
-        this.isPasswordLongEnough(password);
+//        this.isPasswordLongEnough(password);
 
         User user = new User(requestDto);
 
@@ -192,6 +195,24 @@ public class UserApiService
         if (user == null)
         {
             throw new UserIsNotExistException();
+        }
+    }
+
+    public void validateUserFormFields(BindingResult bindingResult)
+    {
+        if (bindingResult.hasErrors())
+        {
+            List<FieldError> fieldErrorList = bindingResult.getFieldErrors();
+            for (FieldError fieldError: fieldErrorList)
+            {
+                String errorCode = fieldError.getCode();
+
+                switch (errorCode)
+                {
+                    case "Size" : throw new PasswordLengthIsNotEnoughException();
+                    default : throw new UnknownInputValidationException();
+                }
+            }
         }
     }
 

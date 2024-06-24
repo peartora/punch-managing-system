@@ -11,9 +11,9 @@ public class UserRegisterRequestDto
 {
     @NotNull
     private String username;
-//    @Size(min = 6)
+    @Size(min = 6)
     private String password;
-//    @Size(min = 6)
+    @Size(min = 6)
     private String passwordConfirmation;
     @NotNull
     private String role;

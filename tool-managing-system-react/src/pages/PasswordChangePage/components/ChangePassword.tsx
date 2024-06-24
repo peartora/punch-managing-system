@@ -26,10 +26,10 @@ export function ChangePassword() {
       return;
     }
 
-    if (newPassword.length < 6) {
-      alert(`입력된 비밀번호가 짧습니다.`);
-      return;
-    }
+    // if (newPassword.length < 6) {
+    //   alert(`입력된 비밀번호가 짧습니다.`);
+    //   return;
+    // }
 
     const body: PasswordChangeInput = {
       username,

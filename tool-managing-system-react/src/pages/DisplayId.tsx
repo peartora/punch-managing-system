@@ -31,10 +31,10 @@ export function DisplayId({ user, loginUser, refetchForUserList }: IdProps) {
   ) {
     e.preventDefault();
 
-    if (newPassword.length < 6) {
-      alert("비밀번호는 6자 이상으로 설정 되어야 합니다.");
-      return;
-    }
+    // if (newPassword.length < 6) {
+    //   alert("비밀번호는 6자 이상으로 설정 되어야 합니다.");
+    //   return;
+    // }
 
     const body: ResetPasswordInput = {
       username: user.username,

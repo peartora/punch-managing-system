@@ -1,14 +1,11 @@
-spring:
-  web:
-    resources:
-      static-locations:
-        - file:${TOOL_MANAGING_SYSTEM_STATIC_PATH}
-    jpa:
-      properties:
-        hibernate:
-          dialect: org.hibernate.dialect.MySQL57Dialect
 
-server:
-  port: 7070
+
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306//PUNCH_MANAGEMENT_SYSTEM
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password:
 
 TOOL_MANAGING_SYSTEM_STATIC_PATH: C:\Users\lsm1dae\Desktop\tool-management-static\

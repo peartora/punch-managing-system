@@ -14,6 +14,8 @@ import com.example.toolmanagingsystem.repository.UserRepository;
 import com.example.toolmanagingsystem.service.userService.UserApiService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -27,9 +29,10 @@ public class UserApiController
     private final UserApiService userApiService;
 
     @PostMapping
-    public ApiResponse registerUser (@RequestBody @Valid UserRegisterRequestDto requestDto)
+    public ApiResponse registerUser (@RequestBody @Valid UserRegisterRequestDto requestDto, BindingResult bindingResult)
     {
         System.out.println("registerUser");
+        this.userApiService.validateUserFormFields(bindingResult);
 
         return this.userApiService.registerUser(requestDto);
     }
@@ -44,9 +47,10 @@ public class UserApiController
     }
 
     @PostMapping("/passwordChange")
-    public ApiResponse passwordChange(@RequestBody PasswordChangeRequestDto requestDto) {
+    public ApiResponse passwordChange(@RequestBody PasswordChangeRequestDto requestDto, BindingResult bindingResult) {
         System.out.println("passwordChange");
         System.out.println(requestDto);
+        this.userApiService.validateUserFormFields(bindingResult);
 
         return this.userApiService.passwordChange(requestDto);
     }

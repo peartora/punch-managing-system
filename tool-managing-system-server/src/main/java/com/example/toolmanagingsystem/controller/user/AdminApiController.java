@@ -11,6 +11,7 @@ import com.example.toolmanagingsystem.repository.UserRepository;
 import com.example.toolmanagingsystem.service.userService.AdminApiService;
 import com.example.toolmanagingsystem.service.userService.UserApiService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -54,10 +55,11 @@ public class AdminApiController
     }
 
     @PostMapping("/resetPassword")
-    public ApiResponse resetPassword(@RequestBody ResetPasswordRequestDto requestDto)
+    public ApiResponse resetPassword(@RequestBody ResetPasswordRequestDto requestDto, BindingResult bindingResult)
     {
         System.out.println("resetPassword");
         System.out.println(requestDto);
+        this.userApiService.validateUserFormFields(bindingResult);
 
         return this.adminApiService.resetPassword(requestDto);
     }
