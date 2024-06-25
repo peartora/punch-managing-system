@@ -32,6 +32,8 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler
     {
         System.out.println("Exception Handler for INTERNAL_SERVER_ERROR");
 
+        exception.printStackTrace();
+
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.internalServerError(exception));

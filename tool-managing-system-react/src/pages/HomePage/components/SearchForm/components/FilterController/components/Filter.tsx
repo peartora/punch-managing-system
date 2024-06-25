@@ -47,18 +47,9 @@ export function Filter(props: Props) {
         }
       }
 
-      if (value == "") {
-        newParams.append(key, null);
-      } else {
+      if (value != null && typeof value === "string" && value.length > 0) {
         newParams.append(key, value.toString());
       }
-
-      // if (value instanceof Date) {
-      //   const formatedValue = dayjs(value).format("YYYY-MM-DD");
-      //   newParams.append(key, formatedValue);
-      // } else {
-      //   newParams.append(key, value.toString());
-      // }
     }
 
     console.log(`filter component`);
@@ -80,12 +71,12 @@ export function Filter(props: Props) {
             type="date"
             placeholder="시작 날짜"
             onChange={(event) => {
-              const dateValue = new Date(event.target.value);
+              const startDate = event.currentTarget.valueAsDate ?? "";
               setFormData((prevState) => ({
                 ...prevState,
-                startDate: dateValue,
+                startDate,
               }));
-            }}
+            }} // setFormData가 실제 실행 될 때는 event 객체가 소멸 했을지 남아 있을지 보장 되지 않음.
           />
         </div>
 
@@ -99,10 +90,10 @@ export function Filter(props: Props) {
             type="date"
             placeholder="종료 날짜"
             onChange={(event) => {
-              const dateValue = new Date(event.target.value);
+              const endDate = event.currentTarget.valueAsDate ?? "";
               setFormData((prevState) => ({
                 ...prevState,
-                endDate: dateValue,
+                endDate,
               }));
             }}
           />
@@ -124,9 +115,7 @@ export function Filter(props: Props) {
               }));
             }}
           >
-            <option value="" disabled>
-              선택 하세요.
-            </option>
+            <option value="">선택 하세요.</option>
             <option value="상부">상부</option>
             <option value="하부">하부</option>
             <option value="다이">다이</option>
@@ -150,9 +139,7 @@ export function Filter(props: Props) {
               }));
             }}
           >
-            <option value="" disabled>
-              선택 하세요.
-            </option>
+            <option value="">선택 하세요.</option>
             {props.supplierList.map((supplierName) => {
               return (
                 <option key={supplierName} value={supplierName}>
@@ -180,9 +167,7 @@ export function Filter(props: Props) {
               }));
             }}
           >
-            <option value="" disabled>
-              선택 하세요.
-            </option>
+            <option value="">선택 하세요.</option>
             <option value="사용대기">사용대기</option>
             <option value="사용가능">사용가능</option>
             <option value="사용중">사용중</option>
@@ -206,9 +191,7 @@ export function Filter(props: Props) {
               }));
             }}
           >
-            <option value="" disabled>
-              선택 하세요.
-            </option>
+            <option value="">선택 하세요.</option>
             {props.medicineNameList.map((medicineName) => {
               return (
                 <option key={medicineName} value={medicineName}>
@@ -236,9 +219,7 @@ export function Filter(props: Props) {
               }));
             }}
           >
-            <option value="" disabled>
-              선택 하세요.
-            </option>
+            <option value="">선택 하세요.</option>
             <option value="BB">BB</option>
             <option value="B">B</option>
             <option value="D">D</option>

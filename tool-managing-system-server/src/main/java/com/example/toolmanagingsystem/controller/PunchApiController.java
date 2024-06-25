@@ -93,15 +93,14 @@ public class PunchApiController
         }
         return ApiResponse.success(registeredPunchList.size());
     }
-
     @GetMapping()
     public ApiResponse returnPunchList(@RequestParam Map<String, Object> params) // 단일 값을 받던지, 다수를 받으려면 Map;
     {
         System.out.println("====================returnPunchList====================");
         System.out.println(params);
 
-        LocalDate startDate = LocalDate.MIN;
-        LocalDate endDate = LocalDate.MAX;
+        LocalDate startDate = LocalDate.parse("1000-01-01");
+        LocalDate endDate = LocalDate.parse("9999-12-01");
 
         Object objStartDate = params.get("startDate");
         if (objStartDate != null)

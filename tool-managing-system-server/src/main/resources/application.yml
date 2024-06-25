@@ -9,22 +9,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL57Dialect
 
-  datasource:
-    url: jdbc:mysql://10.14.2.108:3306/punch_management_system
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password:
-
 server:
   port: 7070
 
-logging:
-  level:
-    root: INFO
-
-  file:
-    name: C:\Users\lsm1dae\Desktop\tool-management-static\resources\log\user.log
-    max-size: 10MB
-
-TOOL_MANAGING_SYSTEM_STATIC_PATH: C:\Users\lsm1dae\Desktop\tool-management-static\
 
