@@ -18,7 +18,7 @@ export function TableHeader() {
         <th>Id</th>
         <th>제조사</th>
         <th>규격</th>
-        <th>검수이력 결과</th>
+        <th>검수이력</th>
         <th>펀치상태</th>
         <th>제품</th>
         <th>제품 type</th>

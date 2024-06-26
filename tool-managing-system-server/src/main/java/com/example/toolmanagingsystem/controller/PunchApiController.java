@@ -99,11 +99,13 @@ public class PunchApiController
         System.out.println("====================returnPunchList====================");
         System.out.println(requestDto);
 
-        List<Punch> punchList = new ArrayList<>();
+        List<Punch> punchListBeforeFilter = new ArrayList<>();
+
         if (requestDto.checkNull())
         {
-            punchList = this.punchRepository.findAll();
-            return ApiResponse.success(punchList);
+            punchListBeforeFilter = this.punchRepository.findAll();
+            List<Punch> punchListAfterFilter = this.filterPunchList(punchListBeforeFilter);
+            return ApiResponse.success(punchListAfterFilter);
         }
 
         String strPunchStatus = requestDto.getStatus();
@@ -120,8 +122,7 @@ public class PunchApiController
         String supplierName = requestDto.getSupplier();
         Supplier supplier = this.punchSupplierRepository.findBySupplier(supplierName);
 
-        System.out.println("it is not empty requestDto");
-        punchList = this.punchRepository.findSelectedPunch(
+        punchListBeforeFilter = this.punchRepository.findSelectedPunch(
                 punchStatus,
                 requestDto.getPunchPosition(),
                 requestDto.getMedicineType(),
@@ -131,7 +132,22 @@ public class PunchApiController
                 requestDto.getEndDate()
         );
 
-        return ApiResponse.success(punchList);
+        List<Punch> punchListAfterFilter = this.filterPunchList(punchListBeforeFilter);
+        return ApiResponse.success(punchListAfterFilter);
+    }
+
+    private List<Punch> filterPunchList(List<Punch> punchListBeforeFilter)
+    {
+        List<Punch> punchList = new ArrayList<>();
+        for (Punch punch: punchListBeforeFilter)
+        {
+            if (punch.getPunchStatus() != PunchStatus.폐기)
+            {
+                punchList.add(punch);
+            }
+        }
+
+        return punchList;
     }
 
     @PostMapping("/updateStatus")
