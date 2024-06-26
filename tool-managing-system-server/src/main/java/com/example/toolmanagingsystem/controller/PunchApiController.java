@@ -108,14 +108,6 @@ public class PunchApiController
             return ApiResponse.success(punchListAfterFilter);
         }
 
-        String strPunchStatus = requestDto.getStatus();
-        PunchStatus punchStatus = null;
-
-        if (requestDto.getStatus() != null)
-        {
-            punchStatus = PunchStatus.parseStatus(strPunchStatus);
-        }
-
         String medicineName = requestDto.getMedicine();
         Medicine medicine = this.medicineRepository.findByMedicine(medicineName);
 
@@ -123,7 +115,7 @@ public class PunchApiController
         Supplier supplier = this.punchSupplierRepository.findBySupplier(supplierName);
 
         punchListBeforeFilter = this.punchRepository.findSelectedPunch(
-                punchStatus,
+                requestDto.getStatus(),
                 requestDto.getPunchPosition(),
                 requestDto.getMedicineType(),
                 supplier,

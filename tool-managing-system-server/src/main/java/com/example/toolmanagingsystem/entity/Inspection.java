@@ -13,16 +13,12 @@ public class Inspection
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
-
     @Column(name = "punch_number")
     private String punchNumber;
-
     @Column(name = "when_inspected")
     private LocalDateTime date;
-
     @Column(name = "file_path")
     private String filePath;
-
     @Override
     public String toString() {
         return "Inspection{" +

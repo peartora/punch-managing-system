@@ -20,7 +20,7 @@ public class PunchReturnRequestDto
     @Nullable
     private final String supplier;
     @Nullable
-    private final String status;
+    private final PunchStatus status;
     @Nullable
     private final String medicine;
     @Nullable
