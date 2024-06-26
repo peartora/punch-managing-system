@@ -27,25 +27,25 @@ export function Filter(props: Props) {
     for (const key in formData) {
       const value = formData[key as keyof FormData];
 
-      console.log(`value`);
-      console.log(value);
-      console.log(typeof value);
+      //   console.log(`value`);
+      //   console.log(value);
+      //   console.log(typeof value);
 
-      if (key == "startDate") {
-        if (value == "") {
-          const formatedValue = dayjs("1990-01-01").format("YYYY-MM-DD");
-          newParams.append(key, formatedValue);
-          continue;
-        }
-      }
+      //   if (key == "startDate") {
+      //     if (value == "") {
+      //       const formatedValue = dayjs("1990-01-01").format("YYYY-MM-DD");
+      //       newParams.append(key, formatedValue);
+      //       continue;
+      //     }
+      //   }
 
-      if (key == "endDate") {
-        if (value == "") {
-          const formatedValue = dayjs("2099-12-31").format("YYYY-MM-DD");
-          newParams.append(key, formatedValue);
-          continue;
-        }
-      }
+      //   if (key == "endDate") {
+      //     if (value == "") {
+      //       const formatedValue = dayjs("2099-12-31").format("YYYY-MM-DD");
+      //       newParams.append(key, formatedValue);
+      //       continue;
+      //     }
+      //   }
 
       if (value != null && typeof value === "string" && value.length > 0) {
         newParams.append(key, value.toString());

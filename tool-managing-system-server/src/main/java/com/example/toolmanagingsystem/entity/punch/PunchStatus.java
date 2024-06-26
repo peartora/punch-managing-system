@@ -30,8 +30,6 @@ public enum PunchStatus
 
     public static PunchStatus parseStatus(String status)
     {
-        System.out.println("status in parseStatus");
-        System.out.println(status);
         return switch (status)
         {
             case "사용대기" -> PunchStatus.사용대기;

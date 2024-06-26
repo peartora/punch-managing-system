@@ -94,85 +94,43 @@ public class PunchApiController
         return ApiResponse.success(registeredPunchList.size());
     }
     @GetMapping()
-    public ApiResponse returnPunchList(@RequestParam Map<String, Object> params) // 단일 값을 받던지, 다수를 받으려면 Map;
+    public ApiResponse returnPunchList(@ModelAttribute PunchReturnRequestDto requestDto)
     {
         System.out.println("====================returnPunchList====================");
-        System.out.println(params);
-
-        LocalDate startDate = LocalDate.parse("1000-01-01");
-        LocalDate endDate = LocalDate.parse("9999-12-01");
-
-        Object objStartDate = params.get("startDate");
-        if (objStartDate != null)
-        {
-            startDate = LocalDate.parse(objStartDate.toString());
-        }
-
-        Object objEndDate = params.get("endDate");
-        if (objEndDate != null)
-        {
-            endDate = LocalDate.parse(objEndDate.toString());
-        }
-
-        String punchPosition = (String) params.get("punchPosition");
-        String supplierName = (String) params.get("supplier");
-        String status = (String) params.get("status");
-        String medicineName = (String) params.get("medicine");
-        String medicineType = (String) params.get("medicineType");
-
-        Supplier supplier = this.punchSupplierRepository.findBySupplier(supplierName);
-        Medicine medicine = this.medicineRepository.findByMedicine(medicineName);
-
-        PunchStatus parseStatus;
-
-        if (status != null && !status.equals(""))
-        {
-            parseStatus = PunchStatus.parseStatus(status);
-        }
-        else
-        {
-            parseStatus = null;
-        }
-
-        System.out.println("startDate");
-        System.out.println(startDate);
-
-        System.out.println("endDate");
-        System.out.println(endDate);
-
-        System.out.println("punchPosition");
-        System.out.println(punchPosition);
-
-        System.out.println("supplierName");
-        System.out.println(supplierName);
-
-        System.out.println("status");
-        System.out.println(status);
-
-        System.out.println("parseStatus");
-        System.out.println(parseStatus);
-
-        System.out.println("medicineName");
-        System.out.println(medicineName);
-
-        System.out.println("medicineType");
-        System.out.println(medicineType);
-
-        if (params.isEmpty())
-        {
-            return ApiResponse.success(this.punchRepository.findAll());
-        }
+        System.out.println(requestDto);
 
         List<Punch> punchList = new ArrayList<>();
+        if (requestDto.checkNull())
+        {
+            punchList = this.punchRepository.findAll();
+            return ApiResponse.success(punchList);
+        }
+
+        String strPunchStatus = requestDto.getStatus();
+        PunchStatus punchStatus = null;
+
+        if (requestDto.getStatus() != null)
+        {
+            punchStatus = PunchStatus.parseStatus(strPunchStatus);
+        }
+
+        String medicineName = requestDto.getMedicine();
+        Medicine medicine = this.medicineRepository.findByMedicine(medicineName);
+
+        String supplierName = requestDto.getSupplier();
+        Supplier supplier = this.punchSupplierRepository.findBySupplier(supplierName);
+
+        System.out.println("it is not empty requestDto");
         punchList = this.punchRepository.findSelectedPunch(
-                parseStatus,
-                punchPosition,
-                medicineType,
+                punchStatus,
+                requestDto.getPunchPosition(),
+                requestDto.getMedicineType(),
                 supplier,
                 medicine,
-                startDate,
-                endDate
+                requestDto.getStartDate(),
+                requestDto.getEndDate()
         );
+
         return ApiResponse.success(punchList);
     }
 
