@@ -14,6 +14,7 @@ import com.example.toolmanagingsystem.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -29,6 +30,8 @@ public class UserApiService
 {
     @Autowired
     UserRepository userRepository;
+    @Value("${PASSWORD_EXPIRE_PERIOD}")
+    private int passwordExpirePeriod;
 
     public ApiResponse registerUser(@RequestBody UserRegisterRequestDto requestDto)
     {
@@ -119,30 +122,6 @@ public class UserApiService
         return ApiResponse.success(username);
     }
 
-
-
-//    public User initializeUser(String action, User user)
-//    {
-//        if (Objects.equals(action, "register"))
-//        {
-//            user.setTrialCount(0);
-//            user.setPasswordSetDate(LocalDate.now());
-//            user.setNotExpired(true);
-//            user.setNotLocked(false);
-//        }
-//        else if (Objects.equals(action, "approve"))
-//        {
-//            user.setNotLocked(true);
-//        }
-//        else if (Objects.equals(action, "resetPassword"))
-//        {
-//            user.setNotLocked(true);
-//            user.setTrialCount(0);
-//            user.setPasswordSetDate(LocalDate.now());
-//        }
-//        return user;
-//    }
-
 //    @Scheduled 이 함수는, 매일 자정 패스워드 유효 여부 확인
     public void isPasswordValid() {
         Iterable<User> userIterable = this.userRepository.findAll();
@@ -151,11 +130,11 @@ public class UserApiService
         LocalDate today = LocalDate.now();
 
         for (User user: userIterable) {
-            LocalDate registerDate = user.getCreatedDate();
-            LocalDate sixMonthAfter = registerDate.plusMonths(6);
+            LocalDate passwordSetDate = user.getPasswordSetDate();
+            LocalDate expirationDate = passwordSetDate.plusMonths(this.passwordExpirePeriod);
 
-            if (sixMonthAfter.isBefore(today)) {
-                user.setNotExpired(true);
+            if (expirationDate.isBefore(today)) {
+                user.setNotExpired(false);
                 userList.add(user);
             }
         }

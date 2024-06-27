@@ -1,9 +1,15 @@
 package com.example.toolmanagingsystem.dto.request.punch;
 
+import com.example.toolmanagingsystem.entity.Medicine;
+import com.example.toolmanagingsystem.entity.Supplier;
 import com.example.toolmanagingsystem.entity.punch.PunchStatus;
+import com.example.toolmanagingsystem.repository.MedicineRepository;
+import com.example.toolmanagingsystem.repository.SupplierRepository;
 import jakarta.annotation.Nullable;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 

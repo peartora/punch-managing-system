@@ -12,4 +12,4 @@ spring:
 server:
   port: 7070
 
-
+PASSWORD_EXPIRE_PERIOD: 6
