@@ -70,11 +70,11 @@ public class PunchApiController
 
         for (PunchRegisterRequestDto punchRegisterRequestDto : punchRegisterRequestDtoList)
         {
-            String supplier = punchRegisterRequestDto.getSupplier();
-            Supplier punchSupplier = this.punchSupplierRepository.findBySupplier(supplier);
+            String supplierName = punchRegisterRequestDto.getSupplier();
+            Supplier punchSupplier = this.returnSupplier(supplierName);
 
             String medicineName = punchRegisterRequestDto.getMedicine();
-            Medicine medicine = this.medicineRepository.findByMedicine(medicineName);
+            Medicine medicine = this.returnMedicine(medicineName);
             String specificationPath = medicine.getSpecificationPath();
 
             Punch entity = new Punch(punchRegisterRequestDto, punchSupplier, medicine);
@@ -109,11 +109,12 @@ public class PunchApiController
             return ApiResponse.success(punchListAfterFilter);
         }
 
-        String medicineName = requestDto.getMedicine();
-        Medicine medicine = this.medicineRepository.findByMedicine(medicineName);
-
         String supplierName = requestDto.getSupplier();
-        Supplier supplier = this.punchSupplierRepository.findBySupplier(supplierName);
+        Supplier supplier = this.returnSupplier(supplierName);
+
+        String medicineName = requestDto.getMedicine();
+        Medicine medicine = this.returnMedicine(medicineName);
+
 
         punchListBeforeFilter = this.punchRepository.findFilteredPunchWithInspectionDate(
                 requestDto.getStatus(),
@@ -142,6 +143,16 @@ public class PunchApiController
         return punchList;
     }
 
+    private Supplier returnSupplier(String supplierName)
+    {
+        return this.punchSupplierRepository.findBySupplier(supplierName);
+    }
+
+    private Medicine returnMedicine(String medicineName)
+    {
+        return this.medicineRepository.findByMedicine(medicineName);
+    }
+
     @PostMapping("/updateStatus")
     public ApiResponse updateNewStatus(@RequestBody List<PunchStatusUpdateRequestDto> punchStatusUpdateRequestDtoList)
     {
@@ -155,13 +166,9 @@ public class PunchApiController
             System.out.println(punchStatusUpdateRequestDto);
 
             String punchId = punchStatusUpdateRequestDto.getPunchId();
+            this.validatePunch(punchId);
 
             Punch punch = this.punchRepository.findByPunchId(punchId);
-
-            if (punch == null)
-            {
-                throw new PunchIdNotExistedException();
-            }
 
             punch.setPunchStatus(PunchStatus.valueOf(punchStatusUpdateRequestDto.getNewStatus()));
             punchList.add(punch);
@@ -177,6 +184,16 @@ public class PunchApiController
         return ApiResponse.success(punchList.size());
     }
 
+    private void validatePunch(String punchId)
+    {
+        Punch punch = this.punchRepository.findByPunchId(punchId);
+
+        if (punch == null)
+        {
+            throw new PunchIdNotExistedException();
+        }
+    }
+
     @Transactional
     @PostMapping("/restorePunchFromDeleteHistory")
     public ApiResponse restorePunchFromDeleteHistory(@RequestBody PunchRestoreFromDeleteHistoryRequestDto punchRestoreFromDeleteHistoryRequestDto)
@@ -185,6 +202,7 @@ public class PunchApiController
         System.out.println(punchRestoreFromDeleteHistoryRequestDto);
 
         String punchId = punchRestoreFromDeleteHistoryRequestDto.getPunch();
+        this.validatePunch(punchId);
 
         String username = punchRestoreFromDeleteHistoryRequestDto.getUsername();
 
@@ -194,11 +212,6 @@ public class PunchApiController
         this.adminApiService.checkUserAuthority(user, "restorePunch");
 
         Punch punch = this.punchRepository.findByPunchId(punchId);
-
-        if (punch == null)
-        {
-            throw new PunchIdNotExistedException();
-        }
 
         punch.setPunchStatus(PunchStatus.valueOf(punchRestoreFromDeleteHistoryRequestDto.getPreviousPunchStatus()));
         this.punchRepository.save(punch);

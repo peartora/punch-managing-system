@@ -14,15 +14,20 @@ public class PunchRegisterRequestDto
     private String medicine;
     private String medicineType;
 
+    public PunchRegisterRequestDto()
+    {
+        super();
+    }
+
     @Override
     public String toString() {
         return "PunchRegisterRequestDto{" +
-                "punchId='" + punchId + '\'' +
-                ", date=" + date +
-                ", punchPosition='" + punchPosition + '\'' +
-                ", supplier='" + supplier + '\'' +
-                ", medicine='" + medicine + '\'' +
-                ", medicineType='" + medicineType + '\'' +
+                "punchId='" + this.punchId + '\'' +
+                ", date=" + this.date +
+                ", punchPosition='" + this.punchPosition + '\'' +
+                ", supplier='" + this.supplier + '\'' +
+                ", medicine='" + this.medicine + '\'' +
+                ", medicineType='" + this.medicineType + '\'' +
                 '}';
     }
 }

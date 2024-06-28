@@ -9,14 +9,11 @@ import com.example.toolmanagingsystem.dto.request.user.PasswordChangeRequestDto;
 import com.example.toolmanagingsystem.dto.request.user.UserRegisterRequestDto;
 import com.example.toolmanagingsystem.dto.response.user.MyPageResponseDto;
 import com.example.toolmanagingsystem.entity.user.User;
-import com.example.toolmanagingsystem.error.user.*;
 import com.example.toolmanagingsystem.repository.UserRepository;
 import com.example.toolmanagingsystem.service.userService.UserApiService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -51,8 +48,8 @@ public class UserApiController
     public ApiResponse passwordChange(@RequestBody PasswordChangeRequestDto requestDto, BindingResult bindingResult) {
         System.out.println("passwordChange");
         System.out.println(requestDto);
-        this.userApiService.validateUserFormFields(bindingResult);
 
+        this.userApiService.validateUserFormFields(bindingResult);
         return this.userApiService.passwordChange(requestDto);
     }
 
@@ -65,10 +62,6 @@ public class UserApiController
         System.out.println(requestDto);
 
         User user = this.userRepository.findByUsername(requestDto.getUsername());
-
-        System.out.println("user");
-        System.out.println(user);
-
         MyPageResponseDto responseDto = new MyPageResponseDto(user.getUsername(), user.getUserRole(), user.getPasswordSetDate());
 
         return ApiResponse.success(responseDto);

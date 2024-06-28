@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
-@RequiredArgsConstructor
 @Data
+@RequiredArgsConstructor
 public class PunchReturnRequestDto
 {
     @Nullable
