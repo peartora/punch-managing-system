@@ -14,15 +14,21 @@ export function PunchTable() {
     <>
       <TableHeader />
       <tbody>
-        {rows.map((row) => (
-          <PunchRow
-            key={row.punchId}
-            row={row}
-            refetch={refetch}
-            chekced={selection[row.punchId]}
-            handlerChangeForSingleBox={() => toggle(row.punchId)}
-          />
-        ))}
+        {rows.length === 0 ? (
+          <tr>
+            <td colSpan={9}>검색 조건에 맞는 펀치가 없습니다.</td>
+          </tr>
+        ) : (
+          rows.map((row) => (
+            <PunchRow
+              key={row.punchId}
+              row={row}
+              refetch={refetch}
+              chekced={selection[row.punchId]}
+              handlerChangeForSingleBox={() => toggle(row.punchId)}
+            />
+          ))
+        )}
       </tbody>
     </>
   );

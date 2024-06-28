@@ -8,6 +8,12 @@ export function InspectionHistoryTd({
   latestInspectionDate,
   inspectionFilePath,
 }: Props) {
+  console.log("latestInspectionDate");
+  console.log(latestInspectionDate);
+
+  console.log("inspectionFilePath");
+  console.log(inspectionFilePath);
+
   if (!latestInspectionDate || !inspectionFilePath) {
     return (
       <td>

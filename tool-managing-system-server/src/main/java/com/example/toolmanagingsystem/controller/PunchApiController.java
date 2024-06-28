@@ -3,6 +3,7 @@ package com.example.toolmanagingsystem.controller;
 import com.example.toolmanagingsystem.dao.PunchDao;
 import com.example.toolmanagingsystem.dto.ApiResponse;
 import com.example.toolmanagingsystem.dto.request.punch.*;
+import com.example.toolmanagingsystem.dto.response.PunchWithInspectionDateResponseDto;
 import com.example.toolmanagingsystem.entity.*;
 import com.example.toolmanagingsystem.entity.punch.Punch;
 import com.example.toolmanagingsystem.entity.punch.PunchDelete;
@@ -99,12 +100,12 @@ public class PunchApiController
         System.out.println("====================returnPunchList====================");
         System.out.println(requestDto);
 
-        List<Punch> punchListBeforeFilter = new ArrayList<>();
+        List<PunchWithInspectionDateResponseDto> punchListBeforeFilter = new ArrayList<>();
 
         if (requestDto.checkNull())
         {
-            punchListBeforeFilter = this.punchRepository.findAll();
-            List<Punch> punchListAfterFilter = this.filterPunchList(punchListBeforeFilter);
+            punchListBeforeFilter = this.punchRepository.findPunchWithInspectionDate();
+            List<PunchWithInspectionDateResponseDto> punchListAfterFilter = this.filterPunchList(punchListBeforeFilter);
             return ApiResponse.success(punchListAfterFilter);
         }
 
@@ -114,7 +115,7 @@ public class PunchApiController
         String supplierName = requestDto.getSupplier();
         Supplier supplier = this.punchSupplierRepository.findBySupplier(supplierName);
 
-        punchListBeforeFilter = this.punchRepository.findSelectedPunch(
+        punchListBeforeFilter = this.punchRepository.findFilteredPunchWithInspectionDate(
                 requestDto.getStatus(),
                 requestDto.getPunchPosition(),
                 requestDto.getMedicineType(),
@@ -124,21 +125,20 @@ public class PunchApiController
                 requestDto.getEndDate()
         );
 
-        List<Punch> punchListAfterFilter = this.filterPunchList(punchListBeforeFilter);
+        List<PunchWithInspectionDateResponseDto> punchListAfterFilter = this.filterPunchList(punchListBeforeFilter);
         return ApiResponse.success(punchListAfterFilter);
     }
 
-    private List<Punch> filterPunchList(List<Punch> punchListBeforeFilter)
+    private List<PunchWithInspectionDateResponseDto> filterPunchList(List<PunchWithInspectionDateResponseDto> punchListBeforeFilter)
     {
-        List<Punch> punchList = new ArrayList<>();
-        for (Punch punch: punchListBeforeFilter)
+        List<PunchWithInspectionDateResponseDto> punchList = new ArrayList<>();
+        for (PunchWithInspectionDateResponseDto punch: punchListBeforeFilter)
         {
             if (punch.getPunchStatus() != PunchStatus.폐기)
             {
                 punchList.add(punch);
             }
         }
-
         return punchList;
     }
 
@@ -398,10 +398,6 @@ public class PunchApiController
         return ApiResponse.success(savedPunchList.size());
     }
 
-
-
-
-
     @GetMapping("/created-date")
     public String returnCreatedDate(@RequestParam Map<String, Object> params)
     {
@@ -410,8 +406,6 @@ public class PunchApiController
 
         return dao.returnCreatedDate(params);
     }
-
-
 
     @PostMapping("/resetId")
     public String resetId(@RequestBody Map<String, Object> params)
@@ -467,104 +461,5 @@ public class PunchApiController
         FileHandling.fileHandling(strFilePath, specificationFile);
 
         return strFilePath;
-    }
-
-
-
-
-    private boolean filterPunch(Punch punch, HashMap<String, Object> params)
-    {
-
-        String strStartDate = (String) params.get("startDate");
-        LocalDate startDate = LocalDate.parse(strStartDate);
-        System.out.println("startDate:");
-        System.out.println(startDate);
-
-
-        String strEndDate = (String) params.get("endDate");
-        LocalDate endDate = LocalDate.parse(strEndDate);
-        System.out.println("endDate:");
-        System.out.println(endDate);
-
-        String punchPosition = (String) params.get("punchPosition");
-        System.out.println("punchPosition:");
-        System.out.println(punchPosition);
-
-        String supplier = (String) params.get("supplier");
-        System.out.println("supplier:");
-        System.out.println(supplier);
-
-        String strStatus = (String) params.get("status");
-        System.out.println("strStatus:");
-        System.out.println(strStatus);
-
-        PunchStatus punchStatus = null;
-
-        if (!Objects.equals(strStatus, "All")) {
-            punchStatus = PunchStatus.valueOf(strStatus);
-            System.out.println("punchStatus:");
-            System.out.println(punchStatus);
-        }
-
-        String storageLocation = (String) params.get("storageLocation");
-        System.out.println("storageLocation:");
-        System.out.println(storageLocation);
-
-        String medicine = (String) params.get("medicine");
-        System.out.println("medicine:");
-        System.out.println(medicine);
-
-        String medicineType = (String) params.get("medicineType");
-        System.out.println("medicineType:");
-        System.out.println(medicineType);
-
-        System.out.println("===========================================================");
-
-        if (punch.getDate().isBefore(startDate) || punch.getDate().isAfter(endDate))
-        {
-            return false;
-        }
-
-        if (!Objects.equals(punchPosition, "All"))
-        {
-            if (!Objects.equals(punch.getPunchPosition(), punchPosition))
-            {
-                return false;
-            }
-        }
-
-        if (!Objects.equals(supplier, "All"))
-        {
-            if (!Objects.equals(punch.getSupplier().getSupplier(), supplier))
-            {
-                return false;
-            }
-        }
-
-        if (!Objects.equals(strStatus, "All"))
-        {
-            if (!Objects.equals(punch.getPunchStatus().toString(), punchStatus.toString()))
-            {
-                return false;
-            }
-        }
-
-        if (!Objects.equals(medicine, "All"))
-        {
-            if (!Objects.equals(punch.getMedicine().getMedicine(), medicine))
-            {
-                return false;
-            }
-        }
-
-        if (!Objects.equals(medicineType, "All"))
-        {
-            if (!Objects.equals(punch.getMedicineType(), medicineType))
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

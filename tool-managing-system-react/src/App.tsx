@@ -66,7 +66,6 @@ const routerBeforeLogin = createHashRouter([
     path: "/sign-in",
     element: <LoginPage />,
   },
-
   {
     path: "/create-id",
     element: <CreateId />,

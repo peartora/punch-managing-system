@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -122,19 +123,23 @@ public class UserApiService
         return ApiResponse.success(username);
     }
 
-//    @Scheduled 이 함수는, 매일 자정 패스워드 유효 여부 확인
-    public void isPasswordValid() {
+    @Scheduled(cron = "0 * * * * *")
+    public void isPasswordValid()
+    {
+        System.out.println("password check");
         Iterable<User> userIterable = this.userRepository.findAll();
         List<User> userList = new ArrayList<>();
 
         LocalDate today = LocalDate.now();
 
-        for (User user: userIterable) {
+        for (User user: userIterable)
+        {
             LocalDate passwordSetDate = user.getPasswordSetDate();
             LocalDate expirationDate = passwordSetDate.plusMonths(this.passwordExpirePeriod);
 
-            if (expirationDate.isBefore(today)) {
-                user.setNotExpired(false);
+            if (expirationDate.isBefore(today))
+            {
+                user.setNotExpired(false); // 개인 user가, 비밀번호 변경을 통해 계정 만료를 해제 할 수 있음
                 userList.add(user);
             }
         }
