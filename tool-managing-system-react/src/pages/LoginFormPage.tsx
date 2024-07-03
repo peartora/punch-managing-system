@@ -79,7 +79,7 @@ export const LoginFormPage = () => {
         </div>
       </form>
 
-      <Link to="/password-change" style={{ marginRight: "20px" }}>
+      <Link to="/password-change-before-login" style={{ marginRight: "20px" }}>
         비밀번호 변경
       </Link>
       <Link to="/create-id">계정등록</Link>

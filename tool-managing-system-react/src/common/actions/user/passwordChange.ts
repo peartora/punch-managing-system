@@ -2,9 +2,9 @@ import { BusinessError } from "@/common/error";
 import { request } from "@/common/utils/ajax";
 
 export type PasswordChangeInput = {
-  username: string;
-  password: string;
-  passwordConfirmation?: string;
+  username?: string;
+  newPassword: string;
+  newPasswordForConfirmation?: string;
 };
 
 export type PasswordChangeOutput = {
