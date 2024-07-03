@@ -34,8 +34,8 @@ export type Reponse = {
 };
 
 export type FormData = {
-  startDate: Date | string;
-  endDate: Date | string;
+  startDate: string | Date;
+  endDate: string | Date;
   punchPosition: string;
   supplier: string;
   status: string;
