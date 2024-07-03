@@ -143,15 +143,7 @@ public class PunchApiController
         return punchList;
     }
 
-    private Supplier returnSupplier(String supplierName)
-    {
-        return this.punchSupplierRepository.findBySupplier(supplierName);
-    }
 
-    private Medicine returnMedicine(String medicineName)
-    {
-        return this.medicineRepository.findByMedicine(medicineName);
-    }
 
     @PostMapping("/updateStatus")
     public ApiResponse updateNewStatus(@RequestBody List<PunchStatusUpdateRequestDto> punchStatusUpdateRequestDtoList)
@@ -182,6 +174,16 @@ public class PunchApiController
             throw new DBError();
         }
         return ApiResponse.success(punchList.size());
+    }
+
+    private Supplier returnSupplier(String supplierName)
+    {
+        return this.punchSupplierRepository.findBySupplier(supplierName);
+    }
+
+    private Medicine returnMedicine(String medicineName)
+    {
+        return this.medicineRepository.findByMedicine(medicineName);
     }
 
     private void validatePunch(String punchId)
@@ -411,33 +413,6 @@ public class PunchApiController
         return ApiResponse.success(savedPunchList.size());
     }
 
-    @GetMapping("/created-date")
-    public String returnCreatedDate(@RequestParam Map<String, Object> params)
-    {
-        System.out.println("returnCreatedDate");
-        System.out.println(params);
-
-        return dao.returnCreatedDate(params);
-    }
-
-    @PostMapping("/resetId")
-    public String resetId(@RequestBody Map<String, Object> params)
-    {
-        System.out.println("resetId");
-        System.out.println(params);
-
-        int effectedRow = this.dao.resetId(params);
-
-        if (effectedRow == 1)
-        {
-            return "OK";
-        }
-        else
-        {
-            return "NOK";
-        }
-    }
-
     @GetMapping("/getDeletedPunchList")
     public ApiResponse getDeletedPunchList(@RequestParam String medicineName)
     {
@@ -468,7 +443,6 @@ public class PunchApiController
     private String saveInspectionFile(MultipartFile specificationFile)
     {
         String fileName = specificationFile.getOriginalFilename();
-        // String strFilePath = "C:\\Users\\lsm1dae\\Desktop\\inspection\\" + fileName;
         String strFilePath = this.staticPath + "resources\\pdf\\inspection\\" + fileName;
 
         FileHandling.fileHandling(strFilePath, specificationFile);
