@@ -23,4 +23,4 @@ logging:
     name: C:\Users\peart\Desktop\tool-management-static\resources\log\user.log
     max-size: 10MB
 
-TOOL_MANAGING_SYSTEM_STATIC_PATH: C:\Users\peart\Desktop\tool-management-static
+TOOL_MANAGING_SYSTEM_STATIC_PATH: C:\Users\peart\Desktop\tool-management-static\
