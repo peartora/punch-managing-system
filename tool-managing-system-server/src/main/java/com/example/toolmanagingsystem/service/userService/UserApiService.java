@@ -77,6 +77,8 @@ public class UserApiService
 
         if (!Objects.equals(password, passwordConfirmation))
         {
+            log.info("User Id: {} 로그인 중 비밀번호가 틀렸습니다.", user.getUsername());
+
             int loginTrialCount = user.getTrialCount();
 
             if (loginTrialCount == 4)
@@ -95,8 +97,9 @@ public class UserApiService
         {
             user.setTrialCount(0);
         }
-
+        log.info("User Id: {}가 로그인 되었습니다.", user.getUsername());
         this.userRepository.save(user);
+
         return ApiResponse.success(username);
     }
 
@@ -120,6 +123,7 @@ public class UserApiService
 
         this.userRepository.save(user);
 
+        log.info("User Id: {}의 비밀번호가 변경 되었습니다.", user.getUsername());
         return ApiResponse.success(username);
     }
 
@@ -139,6 +143,7 @@ public class UserApiService
 
             if (expirationDate.isBefore(today))
             {
+                log.info("User Id: {}의 비밀번호가 만료 되었습니다.", user.getUsername());
                 user.setNotExpired(false); // 개인 user가, 비밀번호 변경을 통해 계정 만료를 해제 할 수 있음
                 userList.add(user);
             }

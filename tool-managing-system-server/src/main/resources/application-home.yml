@@ -6,19 +6,6 @@ spring:
     password:
 
 logging:
-  level:
-    root: INFO
-    org:
-      hibernate:
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
-        orm:
-          jdbc:
-            bind: TRACE
-
   file:
     name: C:\Users\peart\Desktop\tool-management-static\resources\log\user.log
     max-size: 10MB

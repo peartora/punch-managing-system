@@ -6,8 +6,6 @@ spring:
     password:
 
 logging:
-  level:
-    root: INFO
   file:
     name: C:\Users\lsm1dae\Desktop\tool-management-static\resources\log\user.log
     max-size: 10MB
