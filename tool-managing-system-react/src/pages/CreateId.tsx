@@ -20,15 +20,20 @@ export function CreateId() {
   const submitHandler = async function (e: React.FormEvent) {
     e.preventDefault();
 
-    //if (password !== passwordConfirmation) {
-    //alert("입력 된 비밀번호 2개가 일치 하지 않습니다.");
-    //return;
-    //}
+    if (username === "") {
+      alert("User 이름이 입력 되지 않았습니다.");
+      return;
+    }
 
-    //if (password.length < 6) {
-    //  alert("비밀번호는 6자 이상으로 설정 되어야 합니다.");
-    //  return;
-    //}
+    if (password !== passwordConfirmation) {
+      alert("입력 된 비밀번호 2개가 일치 하지 않습니다.");
+      return;
+    }
+
+    if (password.length < 6) {
+      alert("비밀번호는 6자리 이상 되어야 합니다.");
+      return;
+    }
 
     const input: AddUserInput = {
       username,

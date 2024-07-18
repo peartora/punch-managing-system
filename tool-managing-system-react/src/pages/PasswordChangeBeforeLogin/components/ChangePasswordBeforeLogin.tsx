@@ -20,6 +20,11 @@ export function ChangePasswordBeforeLogin() {
   ) {
     event.preventDefault();
 
+    if (username === "") {
+      alert("User 이름이 입력 되지 않았습니다.");
+      return;
+    }
+
     if (newPassword !== newPasswordForConfirmation) {
       alert(`입력된 2개의 비밀번호가 다릅니다.`);
       return;

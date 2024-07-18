@@ -138,6 +138,11 @@ public class UserApiService
 
         for (User user: userIterable)
         {
+            if (!user.isNotExpired())
+            {
+                continue;
+            }
+
             LocalDate passwordSetDate = user.getPasswordSetDate();
             LocalDate expirationDate = passwordSetDate.plusMonths(this.passwordExpirePeriod);
 
