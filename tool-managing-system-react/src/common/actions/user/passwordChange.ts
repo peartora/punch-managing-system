@@ -25,7 +25,7 @@ export const passwordChange = async function (input: PasswordChangeInput) {
     } else if (error.code === "USER_PASSWORD_SHORT") {
       throw new Error("비밀번호는 6자리 이상 되어야 합니다.");
     } else if (error.code === "USER_IS_NOT_EXIST") {
-      throw new Error("=존재하지 않는 User 입니다.");
+      throw new Error("존재하지 않는 User 입니다.");
     } else if (error.code === "NEW_PASSWORD_SAME_WITH_CURRENT_PASSWORD") {
       throw new Error("신규 비밀번호는 기존 비밀번호와 달라야 합니다.");
     } else {
