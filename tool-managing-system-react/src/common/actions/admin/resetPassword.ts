@@ -26,19 +26,19 @@ export const resetPassword = async (
       console.log("Yes I am here");
 
       if (error.code === "USER_IS_NOT_EXIST") {
-        throw new Error("==user가 존재 하지 않습니다.==");
+        throw new Error("User가 존재 하지 않습니다.");
       } else if (error.code === "USER_IS_NOT_AUTHORIZED") {
-        throw new Error("==user is not authorized for this request==");
+        throw new Error("비밀번호를 reset 할 권한이 없습니다.");
       } else if (error.code === "USER_PASSWORD_SHORT") {
-        throw new Error("==password is short==");
+        throw new Error("비밀번호는 6자리 이상 되어야 합니다.");
       } else if (error.code === "NEW_PASSWORD_SAME_WITH_CURRENT_PASSWORD") {
-        throw new Error("==초기화 비밀번호는 기존 비밀번호와 달라야 합니다.==");
+        throw new Error("신규 비밀번호는 기존 비밀번호와 달라야 합니다.");
       } else {
-        throw new Error("==알 수 없는 오류가 발생했습니다.==");
+        throw new Error("알 수 없는 오류가 발생했습니다.");
       }
     }
-    console.log("if state exited");
-    throw new Error("==알 수 없는 오류가 발생했습니다.==");
+
+    throw new Error("알 수 없는 오류가 발생했습니다.");
   }
 
   return output as ResetPasswordOutput;

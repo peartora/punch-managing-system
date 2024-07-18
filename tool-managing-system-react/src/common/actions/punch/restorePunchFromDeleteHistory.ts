@@ -12,14 +12,14 @@ export const restorePunchFromDeleteHistory = async function (body) {
   } catch (error) {
     if (error instanceof BusinessError) {
       if (error.code === "PUNCH_ID_NOT_EXISTED") {
-        throw Error(`해당 ID의 펀치는 등록 되지 않았습니다.`);
+        throw Error(`등록되지 않은 펀치 입니다.`);
       } else if (error.code === "USER_IS_NOT_AUTHORIZED") {
-        throw Error(`현재 로그인 된 사용자는 해당 요청의 권한이 없습니다.`);
+        throw Error(`폐기 펀치 복구 권한이 없습니다.`);
       } else {
-        throw Error(`UNKNOWN_ERROR`);
+        throw Error(`등록되지 않은 펀치 입니다.`);
       }
     }
-    throw Error(`UNKNOWN_ERROR`);
+    throw Error(`등록되지 않은 펀치 입니다.`);
   }
   return output;
 };
