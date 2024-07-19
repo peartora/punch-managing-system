@@ -28,6 +28,10 @@ export const passwordChange = async function (input: PasswordChangeInput) {
       throw new Error("존재하지 않는 User 입니다.");
     } else if (error.code === "NEW_PASSWORD_SAME_WITH_CURRENT_PASSWORD") {
       throw new Error("신규 비밀번호는 기존 비밀번호와 달라야 합니다.");
+    } else if (error.code === "USER_IS_LOCKED") {
+      throw new Error(
+        "해당 User는 현재 잠금 상태 입니다. 관리자에게 문의 하세요."
+      );
     } else {
       throw new Error("알 수 없는 오류가 발생했습니다.");
     }

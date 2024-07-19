@@ -30,10 +30,10 @@ export function ChangePasswordBeforeLogin() {
       return;
     }
 
-    if (newPassword.length < 6) {
-      alert(`입력된 비밀번호가 짧습니다.`);
-      return;
-    }
+    // if (newPassword.length < 6) {
+    //   alert(`비밀번호는 6자리 이상 되어야 합니다.`);
+    //   return;
+    // }
 
     const body: PasswordChangeInput = {
       username,

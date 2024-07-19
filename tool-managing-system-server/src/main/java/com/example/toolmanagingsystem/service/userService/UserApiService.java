@@ -77,18 +77,19 @@ public class UserApiService
 
         if (!Objects.equals(password, passwordConfirmation))
         {
-            log.info("User Id: {} 로그인 중 비밀번호가 틀렸습니다.", user.getUsername());
-
             int loginTrialCount = user.getTrialCount();
 
             if (loginTrialCount == 4)
             {
                 user.setTrialCount(5);
                 user.setNotLocked(false);
+                log.info("User Id: {} 비밀번호 5회 틀렸습니다. 계정이 잠김 상태로 변경 됩니다.", user.getUsername());
             }
             else
             {
-                user.setTrialCount(loginTrialCount + 1);
+                int currentTrialCount = loginTrialCount + 1;
+                user.setTrialCount(currentTrialCount);
+                log.info("User Id: {} 로그인 중 비밀번호 {}회 틀렸습니다.", user.getUsername(), currentTrialCount);
             }
             this.userRepository.save(user);
             throw new UserLoginPasswordNotCorrectException();
@@ -108,18 +109,25 @@ public class UserApiService
         String username = requestDto.getUsername();
         this.validateUser(username);
 
+        User user = this.userRepository.findByUsername(username);
+
+        if (!user.isNotLocked())
+        {
+            throw new UserIsLockedException();
+        }
+
         String newPassword = requestDto.getNewPassword();
         String newPasswordConfirmation = requestDto.getNewPasswordForConfirmation();
 
         this.isPasswordSame(newPassword, newPasswordConfirmation);
 
-        User user = this.userRepository.findByUsername(username);
 
         this.isNewPasswordSameWithCurrentPassword(user.getPassword(), newPassword);
 
         user.setPassword(newPassword);
         user.setPasswordSetDate(LocalDate.now());
         user.setTrialCount(0);
+        user.setNotExpired(true);
 
         this.userRepository.save(user);
 
@@ -142,6 +150,8 @@ public class UserApiService
             {
                 continue;
             }
+
+            System.out.println(user.getUsername());
 
             LocalDate passwordSetDate = user.getPasswordSetDate();
             LocalDate expirationDate = passwordSetDate.plusMonths(this.passwordExpirePeriod);

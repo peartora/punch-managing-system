@@ -45,7 +45,7 @@ public class UserApiController
     }
 
     @PostMapping("/passwordChange")
-    public ApiResponse passwordChange(@RequestBody PasswordChangeRequestDto requestDto, BindingResult bindingResult) {
+    public ApiResponse passwordChange(@RequestBody @Valid PasswordChangeRequestDto requestDto, BindingResult bindingResult) {
         System.out.println("passwordChange");
         System.out.println(requestDto);
 

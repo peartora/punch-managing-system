@@ -8,6 +8,7 @@ import com.example.toolmanagingsystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -35,7 +36,7 @@ public class AdminApiService {
         return ApiResponse.success(username);
     }
 
-    public ApiResponse resetPassword(ResetPasswordRequestDto requestDto)
+    public ApiResponse resetPassword(ResetPasswordRequestDto requestDto, BindingResult bindingResult)
     {
         String username = requestDto.getUsername();
         this.userApiService.validateUser(username);
@@ -51,6 +52,7 @@ public class AdminApiService {
         String newPassword = requestDto.getNewPassword();
 
         this.userApiService.isNewPasswordSameWithCurrentPassword(currentPassword, newPassword);
+        this.userApiService.validateUserFormFields(bindingResult);
 
         user.setPassword(newPassword);
         user.setNotLocked(true);
