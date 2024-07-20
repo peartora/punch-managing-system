@@ -42,47 +42,63 @@ export const LoginFormPage = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          id:{" "}
-          <input
-            style={{ width: "300px" }}
-            className="form-control"
-            name="username"
-            type="text"
-            value={username}
-            required
-            onChange={(event) => setUserName(event.target.value)}
-          />
-        </div>
-        <div>
-          password:{" "}
-          <input
-            style={{ width: "300px" }}
-            className="form-control"
-            name="password"
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <button
-            className="btn btn-primary"
-            type="submit"
-            style={{ marginTop: "30px", marginBottom: "30px" }}
-          >
-            로그인
-          </button>
-        </div>
-      </form>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <div style={{ width: "400px", textAlign: "center" }}>
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: "15px", textAlign: "left" }}>
+            <label htmlFor="username">Id: </label>
+            <input
+              id="username"
+              style={{ width: "100%" }}
+              className="form-control"
+              name="username"
+              type="text"
+              value={username}
+              required
+              onChange={(event) => setUserName(event.target.value)}
+            />
+          </div>
+          <div style={{ marginBottom: "15px", textAlign: "left" }}>
+            <label htmlFor="password">Password: </label>
+            <input
+              id="password"
+              style={{ width: "100%" }}
+              className="form-control"
+              name="password"
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+            />
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <button
+              className="btn btn-primary"
+              type="submit"
+              style={{ marginTop: "30px", marginBottom: "30px" }}
+            >
+              로그인
+            </button>
+          </div>
+        </form>
 
-      <Link to="/password-change-before-login" style={{ marginRight: "20px" }}>
-        비밀번호 변경
-      </Link>
-      <Link to="/create-id">계정등록</Link>
+        <div style={{ marginTop: "20px" }}>
+          <Link
+            to="/password-change-before-login"
+            style={{ marginRight: "20px" }}
+          >
+            비밀번호 변경
+          </Link>
+          <Link to="/create-id">계정등록</Link>
+        </div>
+      </div>
     </div>
   );
 };

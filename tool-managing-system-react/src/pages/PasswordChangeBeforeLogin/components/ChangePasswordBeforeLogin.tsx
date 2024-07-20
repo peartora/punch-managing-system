@@ -30,10 +30,10 @@ export function ChangePasswordBeforeLogin() {
       return;
     }
 
-    // if (newPassword.length < 6) {
-    //   alert(`비밀번호는 6자리 이상 되어야 합니다.`);
-    //   return;
-    // }
+    if (newPassword.length < 6) {
+      alert(`비밀번호는 6자리 이상 되어야 합니다.`);
+      return;
+    }
 
     const body: PasswordChangeInput = {
       username,
@@ -57,46 +57,61 @@ export function ChangePasswordBeforeLogin() {
   };
 
   return (
-    <form style={{ marginTop: "30px" }} onSubmit={submitHandler}>
-      <div>
-        <label>
-          비밀번호를 변경할 userId를 입력 하세요.
-          <input
-            className="form-control"
-            type="text"
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </label>
-      </div>
-
-      <div>
-        <label>
-          Id: {username}의 변경할 비밀번호를 6자 이상 입력 하세요.
-          <input
-            className="form-control"
-            type="password"
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-        </label>
-      </div>
-
-      <div>
-        <label>
-          비밀번호를 한번 더 입력 하세요.
-          <input
-            className="form-control"
-            type="password"
-            onChange={(e) => setNewPasswordForConfirmation(e.target.value)}
-          />
-        </label>
-      </div>
-      <button
-        className="btn btn-primary"
-        style={{ marginTop: "30px" }}
-        type="submit"
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <form
+        style={{ width: "400px", textAlign: "center" }}
+        onSubmit={submitHandler}
       >
-        password 변경
-      </button>
-    </form>
+        <div style={{ marginTop: "30px", textAlign: "left" }}>
+          <label style={{ display: "block" }}>
+            비밀번호를 변경할 userId를 입력 하세요.
+            <input
+              className="form-control"
+              type="text"
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <div style={{ marginTop: "30px", textAlign: "left" }}>
+          <label style={{ display: "block" }}>
+            Id: {username}의 변경할 비밀번호를 6자 이상 입력 하세요.
+            <input
+              className="form-control"
+              type="password"
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <div style={{ marginTop: "30px", textAlign: "left" }}>
+          <label style={{ display: "block" }}>
+            비밀번호를 한번 더 입력 하세요.
+            <input
+              className="form-control"
+              type="password"
+              onChange={(e) => setNewPasswordForConfirmation(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <button
+            className="btn btn-primary"
+            style={{ marginTop: "30px" }}
+            type="submit"
+          >
+            password 변경
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
