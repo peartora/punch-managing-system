@@ -251,7 +251,7 @@ public class PunchApiController
     @PostMapping("/updateStatus/scrap")
     public ApiResponse scrapPunch(@RequestBody PunchScrapRequestDao punchScrapRequestDao)
     {
-        System.out.println("scrapPunch");
+        System.out.println("======================scrapPunch============================");
         System.out.println(punchScrapRequestDao);
 
         Punch punch = this.punchRepository.findByPunchId(punchScrapRequestDao.getPunchId());
@@ -278,17 +278,15 @@ public class PunchApiController
         System.out.println("reason");
         System.out.println(reason);
 
-
-
         PunchDelete punchDelete = new PunchDelete(punch.getPunchId(), medicine.getMedicine(), previousPunchStatus, reason, LocalDate.now());
-        try
-        {
+//        try
+//        {
             this.punchDeleteRepository.save(punchDelete);
-        }
-        catch (Exception e)
-        {
-            throw new PunchIdAlreadyExistedException();
-        }
+//        }
+//        catch (Exception e)
+//        {
+//            throw new PunchIdAlreadyExistedException();
+//        }
 
         return ApiResponse.success(punch.getPunchId());
     }
