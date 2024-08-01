@@ -5,6 +5,8 @@ import com.example.toolmanagingsystem.dto.ApiResponse;
 import com.example.toolmanagingsystem.dto.request.punch.*;
 import com.example.toolmanagingsystem.dto.response.PunchWithInspectionDateResponseDto;
 import com.example.toolmanagingsystem.entity.*;
+import com.example.toolmanagingsystem.entity.logging.Logging;
+import com.example.toolmanagingsystem.entity.logging.LoggingActivity;
 import com.example.toolmanagingsystem.entity.punch.Punch;
 import com.example.toolmanagingsystem.entity.punch.PunchDelete;
 import com.example.toolmanagingsystem.entity.punch.PunchStatus;
@@ -56,6 +58,7 @@ public class PunchApiController
     private final AdminApiService adminApiService;
     private final UserRepository userRepository;
     private final PunchDao dao;
+    private final LoggingRepository loggingRepository;
 
     @Value("${TOOL_MANAGING_SYSTEM_STATIC_PATH}")
     private String staticPath;
@@ -221,6 +224,9 @@ public class PunchApiController
 
         List<PunchDelete> deleteHistory = this.punchDeleteRepository.findAll();
 
+        Logging logging = new Logging(username, LoggingActivity.PUNCH_REACTIVATED_FROM_DELETE, "PunchId: " + punchId);
+        this.loggingRepository.save(logging);
+
         System.out.println("deleteHistory=============================");
         System.out.println(deleteHistory);
 
@@ -233,6 +239,8 @@ public class PunchApiController
         System.out.println("recoverPunchFromDeleteStatus");
         System.out.println("params");
         System.out.println(params);
+
+
 
         return this.dao.updateNewStatusForRecoveryPunch(params);
     }
@@ -254,7 +262,9 @@ public class PunchApiController
         System.out.println("scrapPunch");
         System.out.println(punchScrapRequestDao);
 
-        Punch punch = this.punchRepository.findByPunchId(punchScrapRequestDao.getPunchId());
+        String punchId = punchScrapRequestDao.getPunchId();
+
+        Punch punch = this.punchRepository.findByPunchId(punchId);
 
         if (punch == null)
         {
@@ -269,21 +279,13 @@ public class PunchApiController
         Medicine medicine = punch.getMedicine();
         String reason = punchScrapRequestDao.getReason();
 
-        System.out.println("medicine");
-        System.out.println(medicine);
-
-        System.out.println("previousPunchStatus");
-        System.out.println(previousPunchStatus);
-
-        System.out.println("reason");
-        System.out.println(reason);
-
-
-
         PunchDelete punchDelete = new PunchDelete(punch.getPunchId(), medicine.getMedicine(), previousPunchStatus, reason, LocalDate.now());
         try
         {
             this.punchDeleteRepository.save(punchDelete);
+
+            Logging logging = new Logging(punchScrapRequestDao.getUser(), LoggingActivity.PUNCH_SCRAP, "PunchId: " + punchId);
+            this.loggingRepository.save(logging);
         }
         catch (Exception e)
         {

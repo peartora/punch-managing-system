@@ -10,6 +10,7 @@ import com.example.toolmanagingsystem.dto.request.user.UserRegisterRequestDto;
 import com.example.toolmanagingsystem.dto.response.user.MyPageResponseDto;
 import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.repository.UserRepository;
+import com.example.toolmanagingsystem.service.userService.AdminApiService;
 import com.example.toolmanagingsystem.service.userService.UserApiService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class UserApiController
 {
     private final UserRepository userRepository;
     private final UserApiService userApiService;
+    private final AdminApiService adminApiService;
 
     @PostMapping
     public ApiResponse registerUser (@RequestBody @Valid UserRegisterRequestDto requestDto, BindingResult bindingResult)
@@ -74,5 +76,20 @@ public class UserApiController
 
         List<User> userList = this.userRepository.findAll();
         return ApiResponse.success(userList);
+    }
+
+    @PostMapping("/check_authority")
+    public ApiResponse checkAuthority(@RequestBody String username) {
+        System.out.println("checkAuthority");
+        System.out.println(username);
+
+        String result = username.replaceAll("^\"|\"$", "");
+
+
+        this.userApiService.validateUser(result);
+        User user = this.userRepository.findByUsername(result);
+
+        this.adminApiService.checkUserAuthority(user, "checkAuthority");
+        return ApiResponse.success(username);
     }
 }

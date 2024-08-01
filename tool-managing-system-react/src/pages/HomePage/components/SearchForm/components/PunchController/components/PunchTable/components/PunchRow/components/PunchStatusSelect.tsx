@@ -3,6 +3,7 @@ import { request } from "@/common/utils/ajax";
 
 import { scrapPunch } from "@/common/actions/punch/scrapPunch";
 import { updatePunchStatus } from "@/common/actions/punch/updatePunchStatus";
+import { useAuth } from "@/common/contexts/auth";
 
 type Props = {
   punchStatus: PunchStatus;
@@ -18,6 +19,7 @@ type Data = {
 };
 
 type DataForDelete = {
+  user: string | undefined;
   punchId: string;
   product: string;
   previousStatus: string;
@@ -32,6 +34,8 @@ export function PunchStatusSelect({
   product,
   refetch,
 }: Props) {
+  const { user } = useAuth();
+
   const results = options.map((option) => {
     const disabledOption = (
       <option key={option} value={option} disabled>
@@ -82,6 +86,7 @@ export function PunchStatusSelect({
       }
 
       const dataForDelete: DataForDelete = {
+        user,
         punchId,
         product,
         previousStatus: punchStatus,

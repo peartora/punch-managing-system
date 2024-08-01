@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PunchScrapRequestDao
 {
+    private String user;
     private String punchId;
     private String product;
     private String previousStatus;

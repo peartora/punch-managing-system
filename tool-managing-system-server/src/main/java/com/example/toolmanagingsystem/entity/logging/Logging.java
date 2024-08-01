@@ -17,13 +17,23 @@ public class Logging
     private LoggingActivity activity;
     @Column(name = "date_time")
     private LocalDateTime dateTime;
-
-    public Logging(String username, LoggingActivity activity, LocalDateTime dateTime)
+    @Column(name = "remarks")
+    private String remarks;
+    public Logging(String username, LoggingActivity activity, String remarks)
     {
         this.username = username;
         this.activity = activity;
-        this.dateTime = dateTime;
+        this.dateTime = LocalDateTime.now();
+        this.remarks = remarks;
     }
+
+    public Logging(String username, LoggingActivity activity)
+    {
+        this.username = username;
+        this.activity = activity;
+        this.dateTime = LocalDateTime.now();
+    }
+
 
     public Logging() {}
 
