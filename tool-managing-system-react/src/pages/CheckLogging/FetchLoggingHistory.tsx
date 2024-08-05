@@ -1,4 +1,8 @@
+import { useState } from "react";
+
 export function FetchLoggingHistory() {
+
+
   return (
     <table>
       <thead>
