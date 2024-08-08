@@ -5,11 +5,14 @@ import com.example.toolmanagingsystem.dto.request.user.LoginRequestDto;
 import com.example.toolmanagingsystem.dto.request.user.PasswordChangeRequestDto;
 import com.example.toolmanagingsystem.dto.request.user.UserRegisterRequestDto;
 import com.example.toolmanagingsystem.dto.response.user.LoginResponseDto;
+import com.example.toolmanagingsystem.entity.logging.Logging;
+import com.example.toolmanagingsystem.entity.logging.LoggingActivity;
 import com.example.toolmanagingsystem.entity.punch.PunchStatus;
 import com.example.toolmanagingsystem.entity.user.User;
 import com.example.toolmanagingsystem.entity.user.UserRole;
 import com.example.toolmanagingsystem.error.UnknownInputValidationException;
 import com.example.toolmanagingsystem.error.user.*;
+import com.example.toolmanagingsystem.repository.LoggingRepository;
 import com.example.toolmanagingsystem.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +34,8 @@ public class UserApiService
 {
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    LoggingRepository loggingRepository;
     @Value("${PASSWORD_EXPIRE_PERIOD}")
     private int passwordExpirePeriod;
 
@@ -57,7 +62,8 @@ public class UserApiService
             throw new DuplicatedUsernameException();
         }
 
-        log.info("User Id: {}가 등록 되었습니다.", user.getUsername());
+        Logging logging = new Logging(user.getUsername(), LoggingActivity.REGISTER);
+        this.loggingRepository.save(logging);
         return ApiResponse.success(user.getUsername());
     }
 
@@ -77,19 +83,24 @@ public class UserApiService
 
         if (!Objects.equals(password, passwordConfirmation))
         {
+            Logging logging = new Logging(user.getUsername(), LoggingActivity.LOGIN_FAIL);
+            this.loggingRepository.save(logging);
+
             int loginTrialCount = user.getTrialCount();
 
             if (loginTrialCount == 4)
             {
                 user.setTrialCount(5);
                 user.setNotLocked(false);
-                log.info("User Id: {} 비밀번호 5회 틀렸습니다. 계정이 잠김 상태로 변경 됩니다.", user.getUsername());
+
+//                log.info("User Id: {} 비밀번호 5회 틀렸습니다. 계정이 잠김 상태로 변경 됩니다.", user.getUsername());
+                Logging loggingUseridLocked = new Logging(user.getUsername(), LoggingActivity.LOCKED);
+                this.loggingRepository.save(loggingUseridLocked);
             }
             else
             {
                 int currentTrialCount = loginTrialCount + 1;
                 user.setTrialCount(currentTrialCount);
-                log.info("User Id: {} 로그인 중 비밀번호 {}회 틀렸습니다.", user.getUsername(), currentTrialCount);
             }
             this.userRepository.save(user);
             throw new UserLoginPasswordNotCorrectException();
@@ -98,7 +109,9 @@ public class UserApiService
         {
             user.setTrialCount(0);
         }
-        log.info("User Id: {}가 로그인 되었습니다.", user.getUsername());
+        Logging logging = new Logging(user.getUsername(), LoggingActivity.LOGIN);
+        this.loggingRepository.save(logging);
+//        log.info("User Id: {}가 로그인 되었습니다.", user.getUsername());
         this.userRepository.save(user);
 
         return ApiResponse.success(username);
@@ -131,7 +144,10 @@ public class UserApiService
 
         this.userRepository.save(user);
 
-        log.info("User Id: {}의 비밀번호가 변경 되었습니다.", user.getUsername());
+        Logging logging = new Logging(user.getUsername(), LoggingActivity.PASSWORD_CHANGE);
+        this.loggingRepository.save(logging);
+
+//        log.info("User Id: {}의 비밀번호가 변경 되었습니다.", user.getUsername());
         return ApiResponse.success(username);
     }
 
@@ -158,9 +174,11 @@ public class UserApiService
 
             if (expirationDate.isBefore(today))
             {
-                log.info("User Id: {}의 비밀번호가 만료 되었습니다.", user.getUsername());
+//                log.info("User Id: {}의 비밀번호가 만료 되었습니다.", user.getUsername());
                 user.setNotExpired(false); // 개인 user가, 비밀번호 변경을 통해 계정 만료를 해제 할 수 있음
                 userList.add(user);
+                Logging logging = new Logging(user.getUsername(), LoggingActivity.PASSWORD_EXPIRED);
+                this.loggingRepository.save(logging);
             }
         }
         this.userRepository.saveAll(userList);
@@ -191,6 +209,7 @@ public class UserApiService
 
         if (user == null)
         {
+            System.out.println("It`s null");
             throw new UserIsNotExistException();
         }
     }

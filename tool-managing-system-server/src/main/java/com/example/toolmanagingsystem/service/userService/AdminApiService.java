@@ -92,6 +92,7 @@ public class AdminApiService {
 
             case "resetPassword":
             case "deleteUser":
+            case "checkAuthority":
                 this.authorizeAdminOnly(userRole);
                 break;
 

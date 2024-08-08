@@ -49,6 +49,11 @@ export function NavBar() {
               폐기 펀치 list
             </Link>
           </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/check-logging">
+              로깅 확인
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>

@@ -14,6 +14,7 @@ import { PasswordChangePage } from "./pages/PasswordChangePage";
 import { MyPage } from "./pages/MyPage";
 import { CreateId } from "./pages/CreateId";
 import { ChangePasswordBeforeLogin } from "./pages/PasswordChangeBeforeLogin/components/ChangePasswordBeforeLogin";
+import { CheckLogging } from "./pages/CheckLogging/checkLogging";
 
 const routerAfterLogin = createHashRouter([
   {
@@ -55,6 +56,10 @@ const routerAfterLogin = createHashRouter([
   {
     path: "/password-change",
     element: <PasswordChangePage />,
+  },
+  {
+    path: "/check-logging",
+    element: <CheckLogging />,
   },
 ]);
 
